@@ -1,10 +1,8 @@
 //
 //  parseCSV.h
-//  Toddler Taxonomist
+//  Doctor Rogue
 //
-//  Created by Clay Heaton on 4/17/13.
-//  Copyright (c) 2013 The Perihelion Group. All rights reserved.
-//
+
 
 #import <Foundation/Foundation.h>
 

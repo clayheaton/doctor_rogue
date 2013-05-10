@@ -1,9 +1,5 @@
 //
 //  GameStartGenerator.h
-//  IndyTest
-//
-//  Created by Clay Heaton on 4/3/13.
-//  Copyright (c) 2013 The Perihelion Group. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -40,9 +36,11 @@ typedef enum
 - (void) prepareGame;
 
 - (NSString *)generatePlaceName;
+- (NSString *)generateTitleAndArtifact;
+
+// TODO: Implement these
 - (NSString *)generateCultureName;
 - (NSString *)generateDietyName;
 - (NSString *)generateTotemName;
-- (NSString *)generateTitleAndArtifact;
 
 @end

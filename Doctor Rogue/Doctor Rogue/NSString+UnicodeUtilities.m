@@ -1,9 +1,6 @@
 //
 //  NSString+UnicodeUtilities.m
-//  Toddler Taxonomist
-//
-//  Created by Clay Heaton on 4/30/13.
-//  Copyright (c) 2013 The Perihelion Group. All rights reserved.
+//  Doctor Rogue
 //
 
 #import "NSString+UnicodeUtilities.h"

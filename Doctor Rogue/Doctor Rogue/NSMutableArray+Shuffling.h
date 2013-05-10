@@ -1,6 +1,6 @@
 //
 //  NSMutableArray+Shuffling.h
-//  Toddler Taxonomist
+//  Doctor Rogue 
 //
 //
 // From http://stackoverflow.com/questions/56648/whats-the-best-way-to-shuffle-an-nsmutablearray

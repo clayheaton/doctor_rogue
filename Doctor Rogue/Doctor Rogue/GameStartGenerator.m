@@ -1,10 +1,6 @@
 //
 //  GameStartGenerator.m
-//  IndyTest
-//
-//  Created by Clay Heaton on 4/3/13.
-//  Copyright (c) 2013 The Perihelion Group. All rights reserved.
-//
+
 
 #import "GameStartGenerator.h"
 #import "parseCSV.h"
@@ -39,12 +35,14 @@ static GameStartGenerator *generator;
     return self;
 }
 
+// Called by MainMenuLayer when user enters a seed
 - (void) makeNewAdventureWithSeed:(uint)newSeed
 {
     srand(newSeed);
     [self prepareGame];
 }
 
+// Called by MainMenuLayer when user creates another random adventure
 - (void) makeNewAdventure
 {
     srand(arc4random());
@@ -109,21 +107,6 @@ static GameStartGenerator *generator;
     // NSLog(@"Place Name: %@", [placeName capitalizedString]);
     return [placeName capitalizedString];
 
-}
-
-- (NSString *)generateCultureName
-{
-    
-}
-
-- (NSString *)generateDietyName
-{
-    
-}
-
-- (NSString *)generateTotemName
-{
-    
 }
 
 - (NSString *)generateTitleAndArtifact
@@ -219,6 +202,22 @@ static GameStartGenerator *generator;
     
     return [NSString stringWithFormat:@"%@ %@ of %@", _artifactDescriptor, _artifactObject, _artifactType];
 
+}
+
+// TODO: Implement these
+- (NSString *)generateCultureName
+{
+    
+}
+
+- (NSString *)generateDietyName
+{
+    
+}
+
+- (NSString *)generateTotemName
+{
+    
 }
 
 @end

@@ -2,9 +2,7 @@
 //  MainMenuLayer.h
 //  Doctor Rogue
 //
-//  Created by Clay Heaton on 5/8/13.
-//  Copyright 2013 The Perihelion Group. All rights reserved.
-//
+
 
 #import <Foundation/Foundation.h>
 #import <GameKit/GameKit.h>
