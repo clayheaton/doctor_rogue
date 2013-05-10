@@ -163,7 +163,6 @@
 		6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */; };
 		6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */; };
 		6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */; };
-		6F369400173D63A6005BAC8B /* artifact_parts.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693FF173D63A6005BAC8B /* artifact_parts.csv */; };
 		6F369404173D685F005BAC8B /* item_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369401173D685F005BAC8B /* item_types.csv */; };
 		6F369405173D685F005BAC8B /* item_descriptors.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369402173D685F005BAC8B /* item_descriptors.csv */; };
 		6F369406173D685F005BAC8B /* item_objects.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369403173D685F005BAC8B /* item_objects.csv */; };
@@ -477,7 +476,6 @@
 		6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35-hd.png"; sourceTree = "<group>"; };
 		6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fedora-titles-35.fnt"; sourceTree = "<group>"; };
 		6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35.png"; sourceTree = "<group>"; };
-		6F3693FF173D63A6005BAC8B /* artifact_parts.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = artifact_parts.csv; sourceTree = "<group>"; };
 		6F369401173D685F005BAC8B /* item_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_types.csv; sourceTree = "<group>"; };
 		6F369402173D685F005BAC8B /* item_descriptors.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_descriptors.csv; sourceTree = "<group>"; };
 		6F369403173D685F005BAC8B /* item_objects.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_objects.csv; sourceTree = "<group>"; };
@@ -975,7 +973,6 @@
 			isa = PBXGroup;
 			children = (
 				6F3693D8173BE11C005BAC8B /* place_names.csv */,
-				6F3693FF173D63A6005BAC8B /* artifact_parts.csv */,
 				6F369401173D685F005BAC8B /* item_types.csv */,
 				6F369402173D685F005BAC8B /* item_descriptors.csv */,
 				6F369403173D685F005BAC8B /* item_objects.csv */,
@@ -1080,7 +1077,6 @@
 				6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */,
 				6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */,
 				6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */,
-				6F369400173D63A6005BAC8B /* artifact_parts.csv in Resources */,
 				6F369404173D685F005BAC8B /* item_types.csv in Resources */,
 				6F369405173D685F005BAC8B /* item_descriptors.csv in Resources */,
 				6F369406173D685F005BAC8B /* item_objects.csv in Resources */,
