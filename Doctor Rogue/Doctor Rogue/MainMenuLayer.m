@@ -133,7 +133,7 @@
     
     NSString *drString      = @"Doctor Chick";
     CCLabelBMFont *drTitle  = [CCLabelBMFont labelWithString:drString fntFile:@"fedora-color-100.fnt"];
-    drTitle.position        = ccp( size.width * 0.4 , size.height * 0.75 );
+    drTitle.position        = ccp( size.width * 0.4 , size.height * 0.80 );
     drTitle.rotation        = -15.0f;
     drTitle.alignment       = kCCTextAlignmentCenter;
     [self addChild:drTitle z:1 tag:9];

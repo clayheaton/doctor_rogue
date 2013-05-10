@@ -159,11 +159,15 @@
 		6F3693F2173BFB32005BAC8B /* fedora-color-100-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693EE173BFB32005BAC8B /* fedora-color-100-hd.png */; };
 		6F3693F3173BFB32005BAC8B /* fedora-color-100.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693EF173BFB32005BAC8B /* fedora-color-100.fnt */; };
 		6F3693F4173BFB32005BAC8B /* fedora-color-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F0173BFB32005BAC8B /* fedora-color-100.png */; };
-		6F3693F6173BFBE2005BAC8B /* artifact_parts.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F5173BFBE2005BAC8B /* artifact_parts.csv */; };
 		6F3693FB173BFD04005BAC8B /* fedora-titles-35-hd.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F7173BFD04005BAC8B /* fedora-titles-35-hd.fnt */; };
 		6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */; };
 		6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */; };
 		6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */; };
+		6F369400173D63A6005BAC8B /* artifact_parts.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693FF173D63A6005BAC8B /* artifact_parts.csv */; };
+		6F369404173D685F005BAC8B /* item_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369401173D685F005BAC8B /* item_types.csv */; };
+		6F369405173D685F005BAC8B /* item_descriptors.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369402173D685F005BAC8B /* item_descriptors.csv */; };
+		6F369406173D685F005BAC8B /* item_objects.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369403173D685F005BAC8B /* item_objects.csv */; };
+		6F369408173D6901005BAC8B /* case_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369407173D6901005BAC8B /* case_types.csv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -469,11 +473,15 @@
 		6F3693EE173BFB32005BAC8B /* fedora-color-100-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-color-100-hd.png"; sourceTree = "<group>"; };
 		6F3693EF173BFB32005BAC8B /* fedora-color-100.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fedora-color-100.fnt"; sourceTree = "<group>"; };
 		6F3693F0173BFB32005BAC8B /* fedora-color-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-color-100.png"; sourceTree = "<group>"; };
-		6F3693F5173BFBE2005BAC8B /* artifact_parts.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = artifact_parts.csv; sourceTree = "<group>"; };
 		6F3693F7173BFD04005BAC8B /* fedora-titles-35-hd.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fedora-titles-35-hd.fnt"; sourceTree = "<group>"; };
 		6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35-hd.png"; sourceTree = "<group>"; };
 		6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fedora-titles-35.fnt"; sourceTree = "<group>"; };
 		6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35.png"; sourceTree = "<group>"; };
+		6F3693FF173D63A6005BAC8B /* artifact_parts.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = artifact_parts.csv; sourceTree = "<group>"; };
+		6F369401173D685F005BAC8B /* item_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_types.csv; sourceTree = "<group>"; };
+		6F369402173D685F005BAC8B /* item_descriptors.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_descriptors.csv; sourceTree = "<group>"; };
+		6F369403173D685F005BAC8B /* item_objects.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_objects.csv; sourceTree = "<group>"; };
+		6F369407173D6901005BAC8B /* case_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = case_types.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -967,7 +975,11 @@
 			isa = PBXGroup;
 			children = (
 				6F3693D8173BE11C005BAC8B /* place_names.csv */,
-				6F3693F5173BFBE2005BAC8B /* artifact_parts.csv */,
+				6F3693FF173D63A6005BAC8B /* artifact_parts.csv */,
+				6F369401173D685F005BAC8B /* item_types.csv */,
+				6F369402173D685F005BAC8B /* item_descriptors.csv */,
+				6F369403173D685F005BAC8B /* item_objects.csv */,
+				6F369407173D6901005BAC8B /* case_types.csv */,
 				6F3693D1173B4AA9005BAC8B /* Countries.plist */,
 			);
 			name = "Data Sources";
@@ -1064,11 +1076,15 @@
 				6F3693F2173BFB32005BAC8B /* fedora-color-100-hd.png in Resources */,
 				6F3693F3173BFB32005BAC8B /* fedora-color-100.fnt in Resources */,
 				6F3693F4173BFB32005BAC8B /* fedora-color-100.png in Resources */,
-				6F3693F6173BFBE2005BAC8B /* artifact_parts.csv in Resources */,
 				6F3693FB173BFD04005BAC8B /* fedora-titles-35-hd.fnt in Resources */,
 				6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */,
 				6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */,
 				6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */,
+				6F369400173D63A6005BAC8B /* artifact_parts.csv in Resources */,
+				6F369404173D685F005BAC8B /* item_types.csv in Resources */,
+				6F369405173D685F005BAC8B /* item_descriptors.csv in Resources */,
+				6F369406173D685F005BAC8B /* item_objects.csv in Resources */,
+				6F369408173D6901005BAC8B /* case_types.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1303,6 +1319,7 @@
 				6F3693B3173B4109005BAC8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
