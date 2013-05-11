@@ -9,6 +9,7 @@
 // Needed to obtain the Navigation Controller
 #import "AppDelegate.h"
 #import "GameStartGenerator.h"
+#import "LoadingScene.h"
 
 #pragma mark - MainMenuLayer
 
@@ -58,6 +59,14 @@
         
         seedButtonLabel.position = ccp(size.width * 0.5, size.height * 0.25 - (refreshLabel.boundingBox.size.height * 2));
         [self addChild:seedButtonLabel z:1 tag:15];
+        
+        CCLabelTTF *startButtonLabel = [CCLabelTTF labelWithString:@"Start"
+                                                         fontName:[[UIFont systemFontOfSize:12] familyName]
+                                                         fontSize:36];
+        
+        startButtonLabel.position = ccp(size.width - 10, 10);
+        startButtonLabel.anchorPoint = ccp(1,0);
+        [self addChild:startButtonLabel z:1 tag:17];
 		
 		
 		/*
@@ -229,6 +238,20 @@
         [self editSeedWithSeed:[[GameStartGenerator generator] seed]];
         return;
     }
+
+    // Test Start
+    if (CGRectContainsPoint([self getChildByTag:17].boundingBox, touchLocGL)) {
+        CCScene *gameScene = [LoadingScene sceneWithTargetScene:LoadingTargetScene_MainGameScene];
+        
+        // Pause might allow to fade out music, etc.
+        [[CCDirector sharedDirector] performSelector:@selector(replaceScene:)
+                                          withObject:gameScene
+                                          afterDelay:1.0f];
+        
+        [self getChildByTag:17].visible = NO;
+        return;
+    }
+
 }
 
 

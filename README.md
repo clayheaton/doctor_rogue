@@ -18,6 +18,7 @@ Useful tools for working with the project and resources:
 * [Glyph Designer](http://www.71squared.com/en/glyphdesigner) (create bitmap fonts)
 * [Zwoptex](http://www.zwopple.com/zwoptex/) (pack textures)
 * [cocos2d](http://www.cocos2d-iphone.org) (game engine - download and look for tests for sample code)
+* [HKTMXTiledMap](http://www.cocos2d-iphone.org/forum/topic/17945/page/10#post-456910) (faster implementation of CCTMXTiledMap, but with only orthagonal view)
 
 -------
 

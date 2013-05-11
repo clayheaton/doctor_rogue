@@ -227,7 +227,7 @@
  
  */
 #ifndef CC_TEXTURE_ATLAS_USE_VAO
-#define CC_TEXTURE_ATLAS_USE_VAO 1
+#define CC_TEXTURE_ATLAS_USE_VAO 0 // CLAY CHANGE
 #endif
 
 
