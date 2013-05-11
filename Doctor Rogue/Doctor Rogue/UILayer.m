@@ -11,4 +11,13 @@
 
 @implementation UILayer
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.touchEnabled = NO; // Disabled for testing map scrolling
+    }
+    return self;
+}
+
 @end

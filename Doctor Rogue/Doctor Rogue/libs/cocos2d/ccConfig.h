@@ -106,6 +106,7 @@
 #define CC_ENABLE_DEPRECATED 1
 #endif
 
+// TODO: Clay, use the artifact fixer...
 
 /** @def CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
  If enabled, the texture coordinates will be calculated by using this formula:
@@ -128,7 +129,7 @@
  @since v0.99.5
  */
 #ifndef CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
-#define CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL 0
+#define CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL 1
 #endif
 
 /** @def CC_DIRECTOR_STATS_INTERVAL

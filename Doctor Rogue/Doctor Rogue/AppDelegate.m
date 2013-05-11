@@ -94,6 +94,7 @@
 	
 	// attach the openglView to the director
 	[director_ setView:glView];
+    [[director_ view] setMultipleTouchEnabled:YES]; // Duh.
 	
 	// 2D projection
 	[director_ setProjection:kCCDirectorProjection2D];

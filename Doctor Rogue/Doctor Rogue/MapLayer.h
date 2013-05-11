@@ -10,11 +10,14 @@
 #import "cocos2d.h"
 
 @class HKTMXTiledMap;
+@class CCPanZoomController;
 
 @interface MapLayer : CCLayer {
     
 }
 
-@property (strong, nonatomic) HKTMXTiledMap *currentMap;
-
+@property (retain, nonatomic) HKTMXTiledMap *currentMap;
+@property (assign, readwrite) CGPoint screenCenter;
+@property (assign, readwrite) CGPoint mapDimensions;
+@property (retain, readwrite) CCPanZoomController *panZoomController;
 @end

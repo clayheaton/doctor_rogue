@@ -9,51 +9,82 @@
 #import "MapLayer.h"
 #import "HKTMXTiledMap.h"
 #import "Constants.h"
+#import "CCPanZoomController.h"
 
 @interface MapLayer (PrivateMethods)
 - (void) loadMap;
 @end
 
 @implementation MapLayer
-@synthesize currentMap = _currentMap;
+@synthesize currentMap          = _currentMap;
+@synthesize screenCenter        = _screenCenter;
+@synthesize mapDimensions       = _mapDimensions;
+@synthesize panZoomController   = _panZoomController;
 
 - (id) init
 {
     self = [super init];
     if (self) {
-        self. touchEnabled = YES;
-        [self loadMap];
+        self.touchEnabled = YES;
+        
+        
+        HKTMXTiledMap *testMap = [HKTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"];
+        [self setUpWithMap:testMap];
     }
     return self;
 }
 
-#pragma mark Map Loading and Initialization
-- (void)loadMap
+#pragma mark onEnter and onExit
+- (void) onExit
 {
-    // CGSize screenSize = [[CCDirector sharedDirector] winSize];
-    // CGPoint screenCenter = CGPointMake(screenSize.width / 2, screenSize.height / 2);
+    [_currentMap release];
     
-    [self setCurrentMap:[HKTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"]];
+    [_panZoomController disable];
+    [_panZoomController release];
+    
+    [super onExit];
+}
+
+#pragma mark Map Loading and Initialization
+-(void) setUpWithMap:(HKTMXTiledMap *)mapToUse
+{
+    CCLOG(@"MapLayer: setUpWithMap");
+    
+    CGSize screenSize = [[CCDirector sharedDirector] winSize];
+    [self setScreenCenter:CGPointMake(screenSize.width / 2, screenSize.height / 2)];
+    
+    [self setCurrentMap:mapToUse];
     [self addChild:_currentMap z:-1 tag:kTag_MapLayer_currentMap];
     
-    // CCTMXLayer* layer = [_currentMap layerNamed:@"Collisions"];
-    // layer.visible = NO;
+    [_currentMap setAnchorPoint:ccp(0,0)];
     
-    /*
-    // Used to help restrict scrolling too far
-    borderSize = 20;
-    playableAreaMin = CGPointMake(borderSize, borderSize);
-    playableAreaMax = CGPointMake(currentMap.mapSize.width - 1 - borderSize, currentMap.mapSize.height - 1 - borderSize);
+    // Get the number of tiles W x H
+    CGSize ms = [_currentMap mapSize];
+    CGSize ts = [_currentMap tileSize];
     
-    [self createInitialGrid];
+    _mapDimensions = ccp(ms.width * ts.width, ms.height * ts.height);
     
+    CGPoint centerTile = CGPointMake((int)(ms.width * 0.5), (int)(ms.height * 0.5));
+    CCLOG(@"  centerTile: %f, %f", centerTile.x, centerTile.y);
     
-    // move map to the center of the screen
-    CGSize ms = [currentMap mapSize]; // number of tiles w and h
-    CGPoint centerTile = CGPointMake(ms.width * 0.5, ms.height * 0.5);
+    CGPoint mapCenterPoint = ccp((ms.width * ts.width) * 0.5, (ms.height * ts.height) * 0.5);
+    CGRect boundingRect = CGRectMake(0, 0, (ms.width * ts.width), ms.height * ts.height);
     
-    [self centerTileMapOnTileCoord:centerTile tileMap:currentMap];
-     */
+    // the pan/zoom controller
+    _panZoomController = [CCPanZoomController controllerWithNode:self];
+    _panZoomController.boundingRect = boundingRect;
+    _panZoomController.zoomOutLimit = 0.5f;
+    _panZoomController.zoomInLimit  = 1.0f;
+    _panZoomController.zoomOnDoubleTap = NO;
+    
+    [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
+    
+    [_panZoomController centerOnPoint:mapCenterPoint];
+    
+    // Set up the grid that we will use to refer to the tiles.
+    // [self establishMapGrid];
 }
+
+
 
 @end

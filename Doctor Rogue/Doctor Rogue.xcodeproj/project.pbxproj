@@ -17,6 +17,7 @@
 		6F359656173DCA1400C9C717 /* UILayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359655173DCA1400C9C717 /* UILayer.m */; };
 		6F35965A173DCCEB00C9C717 /* GameWorld.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359659173DCCEB00C9C717 /* GameWorld.m */; };
 		6F35965D173DD29000C9C717 /* LoadingScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F35965C173DD29000C9C717 /* LoadingScene.m */; };
+		6F359660173DE7C400C9C717 /* CCPanZoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F35965F173DE7C400C9C717 /* CCPanZoomController.m */; };
 		6F369205173B4106005BAC8B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F369204173B4106005BAC8B /* QuartzCore.framework */; };
 		6F369207173B4106005BAC8B /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F369206173B4106005BAC8B /* OpenGLES.framework */; };
 		6F369209173B4106005BAC8B /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F369208173B4106005BAC8B /* OpenAL.framework */; };
@@ -199,6 +200,8 @@
 		6F359659173DCCEB00C9C717 /* GameWorld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameWorld.m; sourceTree = "<group>"; };
 		6F35965B173DD29000C9C717 /* LoadingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingScene.h; sourceTree = "<group>"; };
 		6F35965C173DD29000C9C717 /* LoadingScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingScene.m; sourceTree = "<group>"; };
+		6F35965E173DE7C400C9C717 /* CCPanZoomController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPanZoomController.h; sourceTree = "<group>"; };
+		6F35965F173DE7C400C9C717 /* CCPanZoomController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCPanZoomController.m; sourceTree = "<group>"; };
 		6F369201173B4106005BAC8B /* Doctor Rogue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Doctor Rogue.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F369204173B4106005BAC8B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6F369206173B4106005BAC8B /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -535,6 +538,8 @@
 		6F35963E173DC48B00C9C717 /* Map Management */ = {
 			isa = PBXGroup;
 			children = (
+				6F35965E173DE7C400C9C717 /* CCPanZoomController.h */,
+				6F35965F173DE7C400C9C717 /* CCPanZoomController.m */,
 				6F359651173DC9E500C9C717 /* MapLayer.h */,
 				6F359652173DC9E500C9C717 /* MapLayer.m */,
 				6F359654173DCA1400C9C717 /* UILayer.h */,
@@ -1288,6 +1293,7 @@
 				6F359656173DCA1400C9C717 /* UILayer.m in Sources */,
 				6F35965A173DCCEB00C9C717 /* GameWorld.m in Sources */,
 				6F35965D173DD29000C9C717 /* LoadingScene.m in Sources */,
+				6F359660173DE7C400C9C717 /* CCPanZoomController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
