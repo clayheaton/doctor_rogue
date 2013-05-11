@@ -139,7 +139,7 @@
     [self addChild:drTitle z:1 tag:9];
     
     CCLabelBMFont *andThe   = [CCLabelBMFont labelWithString:@"and the" fntFile:@"fedora-titles-35.fnt"];
-    andThe.position         = ccp( size.width * 0.5 , size.height * 0.65 );
+    andThe.position         = ccp( size.width * 0.5 , size.height * 0.67 );
     andThe.alignment        = kCCTextAlignmentCenter;
     [self addChild:andThe z:1 tag:8];
     

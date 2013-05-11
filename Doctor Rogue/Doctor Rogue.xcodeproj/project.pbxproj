@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F359645173DC49E00C9C717 /* HKTMXLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359640173DC49E00C9C717 /* HKTMXLayer.m */; };
+		6F359646173DC49E00C9C717 /* HKTMXLayer+Experimental.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359642173DC49E00C9C717 /* HKTMXLayer+Experimental.m */; };
+		6F359647173DC49E00C9C717 /* HKTMXTiledMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359644173DC49E00C9C717 /* HKTMXTiledMap.m */; };
 		6F369205173B4106005BAC8B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F369204173B4106005BAC8B /* QuartzCore.framework */; };
 		6F369207173B4106005BAC8B /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F369206173B4106005BAC8B /* OpenGLES.framework */; };
 		6F369209173B4106005BAC8B /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F369208173B4106005BAC8B /* OpenAL.framework */; };
@@ -170,6 +173,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F35963F173DC49E00C9C717 /* HKTMXLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKTMXLayer.h; sourceTree = "<group>"; };
+		6F359640173DC49E00C9C717 /* HKTMXLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKTMXLayer.m; sourceTree = "<group>"; };
+		6F359641173DC49E00C9C717 /* HKTMXLayer+Experimental.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HKTMXLayer+Experimental.h"; sourceTree = "<group>"; };
+		6F359642173DC49E00C9C717 /* HKTMXLayer+Experimental.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "HKTMXLayer+Experimental.m"; sourceTree = "<group>"; };
+		6F359643173DC49E00C9C717 /* HKTMXTiledMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKTMXTiledMap.h; sourceTree = "<group>"; };
+		6F359644173DC49E00C9C717 /* HKTMXTiledMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKTMXTiledMap.m; sourceTree = "<group>"; };
 		6F369201173B4106005BAC8B /* Doctor Rogue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Doctor Rogue.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F369204173B4106005BAC8B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6F369206173B4106005BAC8B /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -503,6 +512,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F35963E173DC48B00C9C717 /* Map Management */ = {
+			isa = PBXGroup;
+			children = (
+				6F35963F173DC49E00C9C717 /* HKTMXLayer.h */,
+				6F359640173DC49E00C9C717 /* HKTMXLayer.m */,
+				6F359641173DC49E00C9C717 /* HKTMXLayer+Experimental.h */,
+				6F359642173DC49E00C9C717 /* HKTMXLayer+Experimental.m */,
+				6F359643173DC49E00C9C717 /* HKTMXTiledMap.h */,
+				6F359644173DC49E00C9C717 /* HKTMXTiledMap.m */,
+			);
+			name = "Map Management";
+			sourceTree = "<group>";
+		};
 		6F3691F8173B4106005BAC8B = {
 			isa = PBXGroup;
 			children = (
@@ -548,6 +570,7 @@
 				6F3693CD173B4A98005BAC8B /* GameStartGenerator.m */,
 				6F3693AC173B4109005BAC8B /* IntroLayer.h */,
 				6F3693AD173B4109005BAC8B /* IntroLayer.m */,
+				6F35963E173DC48B00C9C717 /* Map Management */,
 				6F3693DB173BE187005BAC8B /* Utility Classes */,
 				6F369219173B4107005BAC8B /* Resources */,
 				6F369231173B4107005BAC8B /* libs */,
@@ -1206,6 +1229,9 @@
 				6F3693E2173BE195005BAC8B /* parseCSV.m in Sources */,
 				6F3693E3173BE195005BAC8B /* NSMutableArray+Shuffling.m in Sources */,
 				6F3693E4173BE195005BAC8B /* NSString+UnicodeUtilities.m in Sources */,
+				6F359645173DC49E00C9C717 /* HKTMXLayer.m in Sources */,
+				6F359646173DC49E00C9C717 /* HKTMXLayer+Experimental.m in Sources */,
+				6F359647173DC49E00C9C717 /* HKTMXTiledMap.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
