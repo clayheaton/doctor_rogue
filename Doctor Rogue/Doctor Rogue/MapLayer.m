@@ -28,7 +28,7 @@
         self.touchEnabled = YES;
         
         
-        HKTMXTiledMap *testMap = [HKTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"];
+        CCTMXTiledMap *testMap = [CCTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"];
         [self setUpWithMap:testMap];
     }
     return self;
@@ -46,7 +46,7 @@
 }
 
 #pragma mark Map Loading and Initialization
--(void) setUpWithMap:(HKTMXTiledMap *)mapToUse
+-(void) setUpWithMap:(CCTMXTiledMap *)mapToUse
 {
     CCLOG(@"MapLayer: setUpWithMap");
     
@@ -69,10 +69,13 @@
     
     CGPoint mapCenterPoint = ccp((ms.width * ts.width) * 0.5, (ms.height * ts.height) * 0.5);
     CGRect boundingRect = CGRectMake(0, 0, (ms.width * ts.width), ms.height * ts.height);
+    CCLOG(@"boundingRect: %@", NSStringFromCGRect(boundingRect));
     
     // the pan/zoom controller
-    _panZoomController = [CCPanZoomController controllerWithNode:self];
+    // TODO: Figure out why I can't use HKTMXTiledMap here.
+    _panZoomController = [CCPanZoomController controllerWithNode:self];// [self getChildByTag:kTag_MapLayer_currentMap]];
     _panZoomController.boundingRect = boundingRect;
+    _panZoomController.windowRect   = CGRectMake(0, 0, screenSize.width, screenSize.height);
     _panZoomController.zoomOutLimit = 0.5f;
     _panZoomController.zoomInLimit  = 1.0f;
     _panZoomController.zoomOnDoubleTap = NO;
@@ -80,6 +83,7 @@
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
     
     [_panZoomController centerOnPoint:mapCenterPoint];
+
     
     // Set up the grid that we will use to refer to the tiles.
     // [self establishMapGrid];
