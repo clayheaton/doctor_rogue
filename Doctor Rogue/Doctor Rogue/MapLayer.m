@@ -28,7 +28,7 @@
         self.touchEnabled = YES;
         
         
-        CCTMXTiledMap *testMap = [CCTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"];
+        HKTMXTiledMap *testMap = [CCTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"];
         [self setUpWithMap:testMap];
     }
     return self;
@@ -46,7 +46,7 @@
 }
 
 #pragma mark Map Loading and Initialization
--(void) setUpWithMap:(CCTMXTiledMap *)mapToUse
+-(void) setUpWithMap:(HKTMXTiledMap *)mapToUse
 {
     CCLOG(@"MapLayer: setUpWithMap");
     
@@ -76,7 +76,7 @@
     _panZoomController = [CCPanZoomController controllerWithNode:self];// [self getChildByTag:kTag_MapLayer_currentMap]];
     _panZoomController.boundingRect = boundingRect;
     _panZoomController.windowRect   = CGRectMake(0, 0, screenSize.width, screenSize.height);
-    _panZoomController.zoomOutLimit = 0.5f;
+    _panZoomController.zoomOutLimit = 0.75f;
     _panZoomController.zoomInLimit  = 1.0f;
     _panZoomController.zoomOnDoubleTap = NO;
     
@@ -89,6 +89,26 @@
     // [self establishMapGrid];
 }
 
+- (void)draw
+{
+        [self drawGrid];
+}
+
+- (void)drawGrid
+{
+    glLineWidth(1);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    ccDrawColor4B(255, 255, 255, 40);
+    // ccDrawLine(ccp(0,0), mapDimensions);
+    CGSize ts = [_currentMap tileSize];
+    for (int i = 0; i < _currentMap.mapSize.width; i++) {
+        ccDrawLine(ccp(i * ts.width,0), ccp(i * ts.width,_currentMap.mapSize.height * ts.height));
+    }
+    for (int i = 0; i < _currentMap.mapSize.height; i++) {
+        ccDrawLine(ccp(0,i * ts.height), ccp(_currentMap.mapSize.width * ts.width, i * ts.height));
+    }
+}
 
 
 @end

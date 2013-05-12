@@ -16,7 +16,7 @@
     
 }
 
-@property (retain, nonatomic) CCTMXTiledMap *currentMap;
+@property (retain, nonatomic) HKTMXTiledMap *currentMap;
 @property (assign, readwrite) CGPoint screenCenter;
 @property (assign, readwrite) CGPoint mapDimensions;
 @property (retain, readwrite) CCPanZoomController *panZoomController;
