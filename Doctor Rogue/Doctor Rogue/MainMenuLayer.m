@@ -132,7 +132,7 @@
 	// cocos2d will automatically release all the children (Label)
 	
 	// don't forget to call "super dealloc"
-	[super dealloc];
+	// [super dealloc];
 }
 
 #pragma mark Title Creation
@@ -162,7 +162,9 @@
     
     CGSize size = [[CCDirector sharedDirector] winSize];
     
-    CCLabelBMFont *label = [CCLabelBMFont labelWithString:[[GameStartGenerator generator] gameTitle] fntFile:@"fedora-titles-50.fnt"];
+    GameStartGenerator *g = [GameStartGenerator generator];
+    
+    CCLabelBMFont *label = [CCLabelBMFont labelWithString:[g gameTitle] fntFile:@"fedora-titles-50.fnt"];
     label.alignment      = kCCTextAlignmentRight;
     label.position       =  ccp( size.width * 0.5 , size.height * 0.55f );
     

@@ -13,6 +13,5 @@
     
 }
 
-+ (GameWorld *)world;
 
 @end

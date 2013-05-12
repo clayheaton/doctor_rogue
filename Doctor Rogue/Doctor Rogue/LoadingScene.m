@@ -82,11 +82,13 @@
 
 }
 
+/* Not needed with ARC
 -(void) dealloc
 {
 	CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
     
     [super dealloc];
 }
+ */
 
 @end

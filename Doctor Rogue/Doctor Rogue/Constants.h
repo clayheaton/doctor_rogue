@@ -12,6 +12,8 @@
 #endif
 */
 
+#define NOTIFICATION_TOGGLE_GRID    @"toggle_grid"
+
 // kTag_Parent_Child
 typedef enum {
     kTagMIN = 0,
@@ -19,6 +21,8 @@ typedef enum {
     kTag_MainGameScene_MapLayer,
     kTag_MainGameScene_UILayer,
     kTag_MapLayer_currentMap,
+    kTag_UILayer_tempQuitButton,
+    kTag_UILayer_toggleGridButton,
     kTagMAX
 } ChildTags;
 

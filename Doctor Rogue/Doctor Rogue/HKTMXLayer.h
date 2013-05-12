@@ -38,7 +38,7 @@
 // E.g A value of 0.5f will allow the map to be zoomed out upto 2x
 // WARNING: Changing this value will impact performance.
 #ifndef HKTMX_LAYER_SCALE_LIMIT
-#define HKTMX_LAYER_SCALE_LIMIT 0.75f
+#define HKTMX_LAYER_SCALE_LIMIT 0.5f
 #endif
 
 

@@ -20,4 +20,5 @@
 @property (assign, readwrite) CGPoint screenCenter;
 @property (assign, readwrite) CGPoint mapDimensions;
 @property (retain, readwrite) CCPanZoomController *panZoomController;
+@property (assign, readwrite) BOOL showGrid;
 @end

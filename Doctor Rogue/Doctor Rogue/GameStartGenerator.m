@@ -52,7 +52,8 @@ static GameStartGenerator *generator;
 - (void) prepareGame
 {
     _placeName        = [self generatePlaceName];
-    _artifactFullName = [self generateTitleAndArtifact];
+    _artifactFullName = [self generateArtifact];
+    _gameTitle        = [self generateGameTitle];
 }
 
 - (NSString *)generatePlaceName
@@ -109,7 +110,7 @@ static GameStartGenerator *generator;
 
 }
 
-- (NSString *)generateTitleAndArtifact
+- (NSString *)generateArtifact
 {
     // Item Descriptors
     CSVParser *parser      = [CSVParser new];
@@ -135,21 +136,10 @@ static GameStartGenerator *generator;
     [parser closeFile];
     parser = nil;
     
-    // Cases
-    parser = [CSVParser new];
-    csvFilePath = [[NSBundle mainBundle] pathForResource:@"case_types" ofType:@"csv"];
-    [parser openFile:csvFilePath];
-    NSArray *case_types_content = [parser parseFile];
-    [parser closeFile];
-    parser = nil;
-    
     
     NSMutableArray *itemObjects     = [[NSMutableArray alloc] initWithCapacity:[item_objects_content count]];
     NSMutableArray *itemDescriptors = [[NSMutableArray alloc] initWithCapacity:[item_descriptors_content count]];
     NSMutableArray *itemTypes       = [[NSMutableArray alloc] initWithCapacity:[item_types_content count]];
-    
-    NSMutableArray *caseNames       = [[NSMutableArray alloc] initWithCapacity:[case_types_content count]];
-    NSMutableArray *caseTypes       = [[NSMutableArray alloc] initWithCapacity:[case_types_content count]];
     
     // Item Objects
     for (int i = 1; i < [item_objects_content count]; i++) {
@@ -181,6 +171,37 @@ static GameStartGenerator *generator;
         }
     }
     
+    // objects, descriptors, and types
+
+    int objectIndex     = rand() % [itemObjects count];
+    int descriptorIndex = rand() % [itemDescriptors count];
+    int typeIndex       = rand() % [itemTypes count];
+    
+    _artifactObject     = [itemObjects     objectAtIndex:objectIndex];
+    _artifactDescriptor = [itemDescriptors objectAtIndex:descriptorIndex];
+    _artifactType       = [itemTypes       objectAtIndex:typeIndex];
+    
+    itemObjects     = nil;
+    itemDescriptors = nil;
+    itemTypes       = nil;
+    
+    return [NSString stringWithFormat:@"%@ %@ of %@", _artifactDescriptor, _artifactObject, _artifactType];
+
+}
+
+- (NSString *) generateGameTitle
+{
+    // Cases
+    CSVParser *parser = [CSVParser new];
+    NSString *csvFilePath = [[NSBundle mainBundle] pathForResource:@"case_types" ofType:@"csv"];
+    [parser openFile:csvFilePath];
+    NSArray *case_types_content = [parser parseFile];
+    [parser closeFile];
+    parser = nil;
+    
+    NSMutableArray *caseNames       = [[NSMutableArray alloc] initWithCapacity:[case_types_content count]];
+    NSMutableArray *caseTypes       = [[NSMutableArray alloc] initWithCapacity:[case_types_content count]];
+    
     // Case Names & Types
     for (int i = 1; i < [case_types_content count]; i++) {
         NSArray *thisRow = [case_types_content objectAtIndex:i];
@@ -192,53 +213,34 @@ static GameStartGenerator *generator;
         }
     }
     
-    // objects, descriptors, and types
-
-    int objectIndex     = rand() % [itemObjects count];
-    int descriptorIndex = rand() % [itemDescriptors count];
-    int typeIndex       = rand() % [itemTypes count];
-    
-    _artifactObject     = [itemObjects     objectAtIndex:objectIndex];
-    _artifactDescriptor = [itemDescriptors objectAtIndex:descriptorIndex];
-    _artifactType       = [itemTypes       objectAtIndex:typeIndex];
-    
     // Handle the case and the game title
     int caseIndex       = rand() % [caseNames count];
-    
     NSString *caseName  = [caseNames objectAtIndex:caseIndex];
+    
+    NSString *answer;
     
     switch ([[caseTypes objectAtIndex:caseIndex] intValue]) {
         case CaseTypeDescriptorObject:
             // The Case of the Golden Sword
-            _gameTitle = [NSString stringWithFormat:@"%@ of the\n%@ %@", caseName, [_artifactDescriptor uppercaseString], [_artifactObject uppercaseString]];
+            answer = [NSString stringWithFormat:@"%@ of the\n%@ %@", caseName, [_artifactDescriptor uppercaseString], [_artifactObject uppercaseString]];
             break;
             
         case CaseTypeType:
             // The Society of Doom
-            _gameTitle = [NSString stringWithFormat:@"%@ of\n%@", caseName, [_artifactType uppercaseString]];
+            answer = [NSString stringWithFormat:@"%@ of\n%@", caseName, [_artifactType uppercaseString]];
             break;
             
         case CaseTypeObjectType:
             // The Missing Hammer of Invisibility
-            _gameTitle = [NSString stringWithFormat:@"%@ %@ of\n %@", caseName, [_artifactObject uppercaseString], [_artifactType uppercaseString]];
+            answer = [NSString stringWithFormat:@"%@ %@ of\n %@", caseName, [_artifactObject uppercaseString], [_artifactType uppercaseString]];
             break;
             
         default:
             // use CaseTypeDescriptorObject
-            _gameTitle = [NSString stringWithFormat:@"%@ of the\n%@ %@", caseName, [_artifactDescriptor uppercaseString], [_artifactObject uppercaseString]];
+            answer = [NSString stringWithFormat:@"%@ of the\n%@ %@", caseName, [_artifactDescriptor uppercaseString], [_artifactObject uppercaseString]];
             break;
     }
-    
-    // NSLog(@"_gameTitle: %@", _gameTitle);
-    
-    itemObjects     = nil;
-    itemDescriptors = nil;
-    itemTypes       = nil;
-    caseNames       = nil;
-    caseTypes       = nil;
-    
-    return [NSString stringWithFormat:@"%@ %@ of %@", _artifactDescriptor, _artifactObject, _artifactType];
-
+    return answer;
 }
 
 // TODO: Implement these

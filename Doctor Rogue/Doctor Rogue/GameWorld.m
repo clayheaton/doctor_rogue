@@ -11,22 +11,11 @@
 
 @implementation GameWorld
 
-static GameWorld *world;
-
-+ (GameWorld *)world
-{
-    if (!world) {
-        world = [[GameWorld alloc] init];
-    }
-    return world;
-}
-
 - (id) init
 {
     self = [super init];
-    if(self)
-    {
-        // do stuff
+    if (self) {
+        CCLOG(@"Init in GameWorld");
     }
     return self;
 }

@@ -36,7 +36,8 @@ typedef enum
 - (void) prepareGame;
 
 - (NSString *)generatePlaceName;
-- (NSString *)generateTitleAndArtifact;
+- (NSString *)generateArtifact;
+- (NSString *)generateGameTitle;
 
 // TODO: Implement these
 - (NSString *)generateCultureName;

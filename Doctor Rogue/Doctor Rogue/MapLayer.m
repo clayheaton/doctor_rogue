@@ -12,7 +12,10 @@
 #import "CCPanZoomController.h"
 
 @interface MapLayer (PrivateMethods)
-- (void) loadMap;
+- (void) registerForNotifications;
+- (void) setUpWithMap:(HKTMXTiledMap *)mapToUse;
+- (void) drawGrid;
+- (void) toggleGrid:(NSNotification *)notification;
 @end
 
 @implementation MapLayer
@@ -20,16 +23,20 @@
 @synthesize screenCenter        = _screenCenter;
 @synthesize mapDimensions       = _mapDimensions;
 @synthesize panZoomController   = _panZoomController;
+@synthesize showGrid            = _showGrid;
 
 - (id) init
 {
     self = [super init];
     if (self) {
         self.touchEnabled = YES;
+        self.showGrid     = YES;
         
+        [self registerForNotifications];
         
         HKTMXTiledMap *testMap = [CCTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"];
         [self setUpWithMap:testMap];
+        
     }
     return self;
 }
@@ -37,12 +44,21 @@
 #pragma mark onEnter and onExit
 - (void) onExit
 {
-    [_currentMap release];
-    
+    CCLOG(@"MapLayer onExit");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_panZoomController disable];
-    [_panZoomController release];
+    [self removeAllChildrenWithCleanup:YES];
     
     [super onExit];
+}
+
+#pragma mark Notification Handling
+- (void) registerForNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(toggleGrid:)
+                                                 name:NOTIFICATION_TOGGLE_GRID
+                                               object:nil];
 }
 
 #pragma mark Map Loading and Initialization
@@ -72,11 +88,10 @@
     CCLOG(@"boundingRect: %@", NSStringFromCGRect(boundingRect));
     
     // the pan/zoom controller
-    // TODO: Figure out why I can't use HKTMXTiledMap here.
-    _panZoomController = [CCPanZoomController controllerWithNode:self];// [self getChildByTag:kTag_MapLayer_currentMap]];
+    _panZoomController = [CCPanZoomController controllerWithNode:self];
     _panZoomController.boundingRect = boundingRect;
     _panZoomController.windowRect   = CGRectMake(0, 0, screenSize.width, screenSize.height);
-    _panZoomController.zoomOutLimit = 0.75f;
+    _panZoomController.zoomOutLimit = 0.5f;
     _panZoomController.zoomInLimit  = 1.0f;
     _panZoomController.zoomOnDoubleTap = NO;
     
@@ -89,12 +104,20 @@
     // [self establishMapGrid];
 }
 
-- (void)draw
+- (void) draw
 {
+    if (_showGrid) {
         [self drawGrid];
+    }
 }
 
-- (void)drawGrid
+#pragma mark Grid
+- (void) toggleGrid:(NSNotification *)notification
+{
+    _showGrid = !_showGrid;
+}
+
+- (void) drawGrid
 {
     glLineWidth(1);
     glEnable(GL_BLEND);

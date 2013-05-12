@@ -19,9 +19,7 @@
 
 @property (retain, readonly) GameWorld *gameWorld;
 
-
 + (CCScene *)scene;
-+ (MainGameScene *)gameScene;
 - (MapLayer *)mapLayer;
 - (UILayer  *)uiLayer;
 

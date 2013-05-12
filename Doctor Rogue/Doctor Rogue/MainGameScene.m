@@ -8,31 +8,16 @@
 #import "MainGameScene.h"
 #import "MapLayer.h"
 #import "UILayer.h"
+#import "GameWorld.h"
 
 @implementation MainGameScene
-@synthesize gameWorld = _gameWorld;
-
-
-static MainGameScene *gameScene;
+@synthesize gameWorld       = _gameWorld;
 
 +(CCScene *) scene
 {
-	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
-	
-	// add layer as a child to scene
-	[scene addChild: [MainGameScene gameScene]];
-	
-	// return the scene
+	[scene addChild: [MainGameScene node]];
 	return scene;
-}
-
-+ (MainGameScene *)gameScene
-{
-    if (!gameScene) {
-        gameScene = [MainGameScene node];
-    }
-    return gameScene;
 }
 
 - (id)init
@@ -40,8 +25,9 @@ static MainGameScene *gameScene;
     self = [super init];
 
     if (self) {
-        NSAssert(gameScene == nil, @"another MainGameScene is already in use!");
-        // stuff
+
+        _gameWorld     = [GameWorld node];
+        
         MapLayer *mapLayer = [MapLayer node];
         [self addChild:mapLayer z:1 tag:kTag_MainGameScene_MapLayer];
         
@@ -50,6 +36,14 @@ static MainGameScene *gameScene;
         
     }
     return self;
+}
+
+- (void) onExit
+{
+    [self removeAllChildrenWithCleanup:YES];
+    _gameWorld = nil;
+    
+    [super onExit];
 }
 
 - (MapLayer *)mapLayer
@@ -61,11 +55,13 @@ static MainGameScene *gameScene;
     return (UILayer  *)[self getChildByTag:kTag_MainGameScene_UILayer];
 }
 
+/* Not needed with ARC
 - (void) dealloc
 {
     _gameWorld = nil;
     [self removeAllChildrenWithCleanup:YES];
     [super dealloc];
 }
+ */
 
 @end
