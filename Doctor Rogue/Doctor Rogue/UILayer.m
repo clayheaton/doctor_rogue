@@ -3,7 +3,6 @@
 //  Doctor Rogue
 //
 //  Created by Clay Heaton on 5/10/13.
-//  Copyright 2013 The Perihelion Group. All rights reserved.
 //
 
 #import "UILayer.h"
@@ -17,7 +16,7 @@
 {
     self = [super init];
     if (self) {
-        self.touchEnabled = YES; // Disabled for testing map scrolling
+        self.touchEnabled = YES;
         [self setupTempQuitButton];
     }
     return self;
@@ -27,13 +26,16 @@
 {
     CGSize size = [[CCDirector sharedDirector] winSize];
     
-    CCLabelTTF *startButtonLabel = [CCLabelTTF labelWithString:@"Quit to Menu"
+    
+    // These are placeholders for testing
+    // TODO: Remove placeholders & replace with real UI
+    CCLabelTTF *quitButtonLabel = [CCLabelTTF labelWithString:@"Quit to Menu"
                                                       fontName:[[UIFont systemFontOfSize:12] familyName]
                                                       fontSize:20];
     
-    startButtonLabel.position = ccp(size.width - 10, 10);
-    startButtonLabel.anchorPoint = ccp(1,0);
-    [self addChild:startButtonLabel z:2 tag:kTag_UILayer_tempQuitButton];
+    quitButtonLabel.position = ccp(size.width - 10, 10);
+    quitButtonLabel.anchorPoint = ccp(1,0);
+    [self addChild:quitButtonLabel z:2 tag:kTag_UILayer_tempQuitButton];
     
     CCLabelTTF *toggleGridLabel  = [CCLabelTTF labelWithString:@"Toggle Grid"
                                                       fontName:[[UIFont systemFontOfSize:12] familyName]

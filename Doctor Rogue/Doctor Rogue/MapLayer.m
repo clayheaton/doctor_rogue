@@ -3,7 +3,6 @@
 //  Doctor Rogue
 //
 //  Created by Clay Heaton on 5/10/13.
-//  Copyright 2013 The Perihelion Group. All rights reserved.
 //
 
 #import "MapLayer.h"
@@ -24,18 +23,24 @@
 @synthesize mapDimensions       = _mapDimensions;
 @synthesize panZoomController   = _panZoomController;
 @synthesize showGrid            = _showGrid;
+@synthesize tapIsTargetingMapLayer = _tapIsTargetingMapLayer;
 
 - (id) init
+{
+    return [self initWithMap:[HKTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"]];
+}
+
+- (id) initWithMap:(HKTMXTiledMap *)map
 {
     self = [super init];
     if (self) {
         self.touchEnabled = YES;
         self.showGrid     = YES;
+        self.tapIsTargetingMapLayer = NO;
         
         [self registerForNotifications];
         
-        HKTMXTiledMap *testMap = [CCTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"];
-        [self setUpWithMap:testMap];
+        [self setUpWithMap:map];
         
     }
     return self;
@@ -123,7 +128,7 @@
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ccDrawColor4B(255, 255, 255, 40);
-    // ccDrawLine(ccp(0,0), mapDimensions);
+
     CGSize ts = [_currentMap tileSize];
     for (int i = 0; i < _currentMap.mapSize.width; i++) {
         ccDrawLine(ccp(i * ts.width,0), ccp(i * ts.width,_currentMap.mapSize.height * ts.height));
@@ -133,5 +138,58 @@
     }
 }
 
+#pragma mark Handling touch events
+
+/*
+-(void) registerWithTouchDispatcher
+{
+	[[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:-1 swallowsTouches:YES];
+}
+ */
+
+-(CGPoint) locationFromTouch:(UITouch*)touch
+{
+	CGPoint touchLocation = [touch locationInView: [touch view]];
+	return [[CCDirector sharedDirector] convertToGL:touchLocation];
+}
+
+/*
+-(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
+{
+    CCLOG(@"MapLayer received touch");
+    
+    
+	return NO;
+}
+ */
+
+- (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if ([touches count] == 1) {
+        
+        _tapIsTargetingMapLayer = YES;
+    }
+}
+
+- (void) ccTouchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
+{
+    if ([touches count] == 1) {
+        _tapIsTargetingMapLayer = NO;
+    }
+}
+
+-(void) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if ([touches count] == 1) {
+        if (_tapIsTargetingMapLayer) {
+            CCLOG(@"tap intended for map layer - not scrolling");
+        }
+    }
+}
+
+-(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
+{
+	//CCLOG(@"UserInterfaceLayer touch ended");
+}
 
 @end

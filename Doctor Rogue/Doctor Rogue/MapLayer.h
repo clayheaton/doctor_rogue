@@ -3,7 +3,6 @@
 //  Doctor Rogue
 //
 //  Created by Clay Heaton on 5/10/13.
-//  Copyright 2013 The Perihelion Group. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -21,4 +20,8 @@
 @property (assign, readwrite) CGPoint mapDimensions;
 @property (retain, readwrite) CCPanZoomController *panZoomController;
 @property (assign, readwrite) BOOL showGrid;
+@property (assign, readwrite) BOOL tapIsTargetingMapLayer;
+
+- (id) initWithMap:(HKTMXTiledMap *)map;
+
 @end
