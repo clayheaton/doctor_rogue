@@ -140,28 +140,11 @@
 
 #pragma mark Handling touch events
 
-/*
--(void) registerWithTouchDispatcher
-{
-	[[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:-1 swallowsTouches:YES];
-}
- */
-
 -(CGPoint) locationFromTouch:(UITouch*)touch
 {
 	CGPoint touchLocation = [touch locationInView: [touch view]];
 	return [[CCDirector sharedDirector] convertToGL:touchLocation];
 }
-
-/*
--(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
-{
-    CCLOG(@"MapLayer received touch");
-    
-    
-	return NO;
-}
- */
 
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -191,5 +174,20 @@
 {
 	//CCLOG(@"UserInterfaceLayer touch ended");
 }
+
+/*
+ -(void) registerWithTouchDispatcher
+ {
+ [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:-1 swallowsTouches:YES];
+ }
+ 
+ -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
+ {
+ CCLOG(@"MapLayer received touch");
+ 
+ 
+ return NO;
+ }
+ */
 
 @end

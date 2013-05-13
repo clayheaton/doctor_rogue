@@ -178,6 +178,9 @@
 		6F369405173D685F005BAC8B /* item_descriptors.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369402173D685F005BAC8B /* item_descriptors.csv */; };
 		6F369406173D685F005BAC8B /* item_objects.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369403173D685F005BAC8B /* item_objects.csv */; };
 		6F369408173D6901005BAC8B /* case_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369407173D6901005BAC8B /* case_types.csv */; };
+		6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
+		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -512,6 +515,11 @@
 		6F369402173D685F005BAC8B /* item_descriptors.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_descriptors.csv; sourceTree = "<group>"; };
 		6F369403173D685F005BAC8B /* item_objects.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_objects.csv; sourceTree = "<group>"; };
 		6F369407173D6901005BAC8B /* case_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = case_types.csv; sourceTree = "<group>"; };
+		6F8799A71741271600CA9E08 /* ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveSupportInflector.h; sourceTree = "<group>"; };
+		6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveSupportInflector.m; sourceTree = "<group>"; };
+		6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
+		6F8799AC1741271600CA9E08 /* NSString+ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ActiveSupportInflector.h"; sourceTree = "<group>"; };
+		6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ActiveSupportInflector.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1062,6 +1070,7 @@
 		6F3693DB173BE187005BAC8B /* Utility Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6F8799A61741270300CA9E08 /* Active Support Inflector (plurals) */,
 				6F3693DC173BE195005BAC8B /* parseCSV.h */,
 				6F3693DD173BE195005BAC8B /* parseCSV.m */,
 				6F3693DE173BE195005BAC8B /* NSMutableArray+Shuffling.h */,
@@ -1070,6 +1079,18 @@
 				6F3693E1173BE195005BAC8B /* NSString+UnicodeUtilities.m */,
 			);
 			name = "Utility Classes";
+			sourceTree = "<group>";
+		};
+		6F8799A61741270300CA9E08 /* Active Support Inflector (plurals) */ = {
+			isa = PBXGroup;
+			children = (
+				6F8799A71741271600CA9E08 /* ActiveSupportInflector.h */,
+				6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */,
+				6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */,
+				6F8799AC1741271600CA9E08 /* NSString+ActiveSupportInflector.h */,
+				6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */,
+			);
+			name = "Active Support Inflector (plurals)";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1160,6 +1181,7 @@
 				6F369408173D6901005BAC8B /* case_types.csv in Resources */,
 				6F35964B173DC74C00C9C717 /* all_terrain.png in Resources */,
 				6F35964C173DC74C00C9C717 /* test_map.tmx in Resources */,
+				6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1294,6 +1316,8 @@
 				6F35965A173DCCEB00C9C717 /* GameWorld.m in Sources */,
 				6F35965D173DD29000C9C717 /* LoadingScene.m in Sources */,
 				6F359660173DE7C400C9C717 /* CCPanZoomController.m in Sources */,
+				6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */,
+				6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
