@@ -68,13 +68,6 @@
                                              selector:@selector(toggleGrid:)
                                                  name:NOTIFICATION_TOGGLE_GRID
                                                object:nil];
-    
-    /*
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(endTouch:)
-                                                 name:NOTIFICATION_TOUCH_ENDED
-                                               object:nil];
-     */
      }
 
 #pragma mark Map Loading and Initialization
@@ -99,7 +92,6 @@
     CGPoint centerTile = CGPointMake((int)(ms.width * 0.5), (int)(ms.height * 0.5));
     CCLOG(@"  centerTile: %f, %f", centerTile.x, centerTile.y);
     
-    CGPoint mapCenterPoint = ccp((ms.width * ts.width) * 0.5, (ms.height * ts.height) * 0.5);
     CGRect boundingRect = CGRectMake(0, 0, (ms.width * ts.width), ms.height * ts.height);
     CCLOG(@"boundingRect: %@", NSStringFromCGRect(boundingRect));
     
@@ -111,9 +103,22 @@
     _panZoomController.zoomInLimit  = 1.0f;
     _panZoomController.zoomOnDoubleTap = NO;
     
+    // TODO: Balance these values.
+    // Higher scrollRate is slower; default is 9
+    // Default scrollDamping is 0.85f;
+    
+    _panZoomController.scrollRate    = 15;
+    _panZoomController.scrollDamping = 0.95f;
+    
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
     
-    [_panZoomController centerOnPoint:mapCenterPoint];
+    // TODO: Change this to center on the map entry point
+    
+    CGPoint testMapLoadPoint = ccp((ms.width * ts.width) * 0.1, (ms.height * ts.height) * 0.9);
+    [_panZoomController centerOnPoint:testMapLoadPoint];
+    
+    // CGPoint mapCenterPoint = ccp((ms.width * ts.width) * 0.5, (ms.height * ts.height) * 0.5);
+    //[_panZoomController centerOnPoint:mapCenterPoint];
 
     
     // Set up the grid that we will use to refer to the tiles.
@@ -150,12 +155,6 @@
 }
 
 #pragma mark Handling touch events
-/*
--(void) registerWithTouchDispatcher
-{
-    [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:-1 swallowsTouches:YES];
-}
- */
 
 -(CGPoint) locationFromTouch:(UITouch*)touch
 {
@@ -163,57 +162,10 @@
 	return [[CCDirector sharedDirector] convertToGL:touchLocation];
 }
 
-
-/*
-- (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event
-{
-
-    _touchCount += 1;
-	
-    CCLOG(@"MapLayer ccTouchBegan # touches: %i", _touchCount);
-
-	
-	if (_touchCount > 1)
-	{
-        CCLOG(@"MapLayer detects multitouch; handing to CCPanZoomController.");
-        [_panZoomController ccTouchBegan:touch withEvent:event];
-        _tapIsTargetingMapLayer = NO;
-	}
-	else
-    {
-        _tapIsTargetingMapLayer = YES;
-        CCLOG(@"MapLayer keeping the touch");
-    }
-	
-	return YES;
-}
-
-- (void) ccTouchMoved:(UITouch *)touch withEvent:(UIEvent *)event
-{
-    if (_touchCount > 1) {
-        [_panZoomController ccTouchMoved:touch withEvent:event];
-    }
-    // CCLOG(@"MapLayer ccTouchMoved: # touches: %i", _touchCount);
-}
-
--(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
-{
-	//CCLOG(@"UserInterfaceLayer touch ended");
-    
-    
-    
-    _touchCount -= 1;
-    if (_touchCount < 0) {
-        _touchCount = 0;
-    }
-    CCLOG(@"MapLayer ccTouchEnded: # touches remaining: %i", _touchCount);
-}
-*/
-
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
-        CCLOG(@"MapLayer ccTouchesBegan: MapLayer targeted");
+        CCLOG(@"MapLayer tapped");
         _tapIsTargetingMapLayer = YES;
     } else {
         _tapIsTargetingMapLayer = NO;
@@ -225,7 +177,6 @@
 {
     if ([touches count] == 1) {
         _tapIsTargetingMapLayer = YES;
-        //CCLOG(@"MapLayer touch moved");
     } else {
         _tapIsTargetingMapLayer = NO;
 
@@ -240,17 +191,5 @@
 
     }
 }
-
-
-/*
- 
- -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
- {
- CCLOG(@"MapLayer received touch");
- 
- 
- return NO;
- }
- */
 
 @end

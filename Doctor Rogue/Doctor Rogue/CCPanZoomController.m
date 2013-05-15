@@ -63,6 +63,7 @@ UITouch *touch2 = [touches objectAtIndex:1];\
 CGPoint pt1 = [touch1 locationInView:[touch view]];\
 CGPoint pt2 = [touch2 locationInView:[touch view]]
 
+// Clay defined these additional GET_PINCH_PTS_x macros to support zooming with more fingers
 #define GET_PINCH_PTS_3(touches, pt1, pt2, pt3)\
 UITouch *touch1 = [touches objectAtIndex:0];\
 UITouch *touch2 = [touches objectAtIndex:1];\
@@ -321,6 +322,7 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     }
 }
 
+// Clay implemented this method to allow for better zooming when there are more than 2 fingers involved in the zoom
 - (void) gatherTouchesPoints:(UITouch *)touch
 {
     [_touchesPoints removeAllObjects];
@@ -370,8 +372,6 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
 {
 	[_touches addObject:touch];
-    
-    //CCLOG(@"CCPanZoom ccTouchBegan: with count: %i", [_touches count]);
 	
 	if ([_touches count] >= 3)
 	{
@@ -383,19 +383,24 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 		[self endScroll:_firstTouch];
         
         //get the points
-        // GET_PINCH_PTS(_touches, pt1, pt2);
-        
         [self gatherTouchesPoints:touch];
         
         //setup to zoom
-		// [self beginZoom:pt1 otherPt:pt2];
         [self beginZoom];
 	}
 	else if ([_touches count] == 2)
     {
         CCLOG(@"CCPanZoom Scrolling in ccTouchBegan:");
         //Start scrolling
-        [self beginScroll:[_node convertTouchToNodeSpace:touch]];
+        
+        CGPoint p1    = [_node convertTouchToNodeSpace:[_touches objectAtIndex:0]];
+        CGPoint p2    = [_node convertTouchToNodeSpace:[_touches objectAtIndex:1]];
+        CGPoint midPt = ccpMidpoint(p1, p2);
+
+        [self beginScroll:midPt];
+        
+        
+        
     } else {
         // only 1 finger, do nothing
     }
@@ -405,26 +410,24 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 
 -(void) ccTouchMoved:(UITouch*)touch withEvent:(UIEvent *)event
 {
-    //CCLOG(@"CCPanZoom ccTouchMoved: with count: %i", [_touches count]);
-    
     //pinching case (zooming)
 	if ([_touches count] >= 3)
 	{
-        CCLOG(@"CCPanZoom Zooming in ccTouchMoved:");
         //get the points
-        // GET_PINCH_PTS(_touches, pt1, pt2);
         [self gatherTouchesPoints:touch];
 		
         //zoom it!
-		// [self moveZoom:pt1 otherPt:pt2];
         [self moveZoom];
         
 	}
 	else if ([_touches count] == 2)
 	{
-        CCLOG(@"CCPanZoom Scrolling in ccTouchMoved:");
-        //pan around
-		[self moveScroll:[_node convertTouchToNodeSpace:touch]];
+        CGPoint p1    = [_node convertTouchToNodeSpace:[_touches objectAtIndex:0]];
+        CGPoint p2    = [_node convertTouchToNodeSpace:[_touches objectAtIndex:1]];
+        CGPoint midPt = ccpMidpoint(p1, p2);
+
+        [self moveScroll:midPt];
+
 	} else {
         // 1 finger, do nothing
     }
@@ -435,14 +438,14 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     //pinching case (zooming)
 	if ([_touches count] >= 3)
 	{
-        //get the 2 points, UITouch* touch1 and touch2 are declared here too
-        // GET_PINCH_PTS(_touches, pt1, pt2);
+        //get the points, UITouch* touch1 and touch2, etc. are declared here too
 		[self gatherTouchesPoints:touch];
         
         //doesn't really do anything right now
-		// [self endZoom:pt1 otherPt:pt2];
         [self endZoom];
 		
+        // TODO: Consider reimplementing this to fix jitter on zoom
+        
 		//which touch remains?
 		//if (touch == touch2)
 		//	[self beginScroll:[_node convertTouchToNodeSpace:touch1]];
@@ -454,21 +457,23 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     //two finger case (panning)
 	else if ([_touches count] == 2)
 	{
+        CGPoint p1    = [_node convertTouchToNodeSpace:[_touches objectAtIndex:0]];
+        CGPoint p2    = [_node convertTouchToNodeSpace:[_touches objectAtIndex:1]];
+        CGPoint midPt = ccpMidpoint(p1, p2);
+        // might need to convert touches to the node space?        
+        
         //end scroll
-        CGPoint pt = [_node convertTouchToNodeSpace:touch];
-		[self endScroll:pt];
+        [self endScroll:midPt];
         
         //handle double-tap zooming
         if (_zoomOnDoubleTap && [touch tapCount] == 2)
-            [self handleDoubleTapAt:pt];
+            [self handleDoubleTapAt:midPt];
 	} else {
         // 1 finger, do nothing
     }
 	
 	[_touches removeObject:touch];
     
-    // Send a notification so that the MapLayer can remove one from its count
-    // [[NSNotificationCenter defaultCenter] postNotificationName:@"CCPanZoom Touch Ended" object:nil];
 }
 
 - (void)ccTouchCancelled:(UITouch*)touch withEvent:(UIEvent *)event
