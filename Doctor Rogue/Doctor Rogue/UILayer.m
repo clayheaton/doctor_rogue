@@ -66,6 +66,7 @@
 
     if (CGRectContainsPoint([self getChildByTag:kTag_UILayer_tempQuitButton].boundingBox, location)) {
         CCLOG(@"UI Layer Quit Button tapped.");
+        [TestFlight passCheckpoint:@"Quit back to MainMenu from UILayer"];
         CCScene *mainMenu = [LoadingScene sceneWithTargetScene:LoadingTargetScene_MainMenuScene];
         
         // Pause might allow to fade out music, etc.
@@ -77,6 +78,7 @@
     
     if (CGRectContainsPoint([self getChildByTag:kTag_UILayer_toggleGridButton].boundingBox, location)) {
         CCLOG(@"UI Layer Toggle Grid Button tapped.");
+        [TestFlight passCheckpoint:@"Toggled Grid on Map via UILayer"];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_TOGGLE_GRID object:nil];
         return YES;
     }

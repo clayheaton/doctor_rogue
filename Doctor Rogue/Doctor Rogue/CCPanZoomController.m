@@ -375,7 +375,6 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 	
 	if ([_touches count] >= 3)
 	{
-        CCLOG(@"CCPanZoom Zooming in ccTouchBegan:");
         //reset history so auto scroll doesn't happen
         _momentum = CGPointZero;
         
@@ -390,7 +389,6 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 	}
 	else if ([_touches count] == 2)
     {
-        CCLOG(@"CCPanZoom Scrolling in ccTouchBegan:");
         //Start scrolling
         
         CGPoint p1    = [_node convertTouchToNodeSpace:[_touches objectAtIndex:0]];

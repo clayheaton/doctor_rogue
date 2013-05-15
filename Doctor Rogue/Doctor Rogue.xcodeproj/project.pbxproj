@@ -181,6 +181,10 @@
 		6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
+		6FD7EDB51743E0F9001022EB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FD7EDB11743E0F9001022EB /* libTestFlight.a */; };
+		6FD7EDB61743E0F9001022EB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB21743E0F9001022EB /* README.md */; };
+		6FD7EDB71743E0F9001022EB /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB31743E0F9001022EB /* release_notes.md */; };
+		6FD7EDBA1743E344001022EB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FD7EDB81743E134001022EB /* libz.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -520,6 +524,11 @@
 		6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
 		6F8799AC1741271600CA9E08 /* NSString+ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ActiveSupportInflector.h"; sourceTree = "<group>"; };
 		6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ActiveSupportInflector.m"; sourceTree = "<group>"; };
+		6FD7EDB11743E0F9001022EB /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		6FD7EDB21743E0F9001022EB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		6FD7EDB31743E0F9001022EB /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		6FD7EDB41743E0F9001022EB /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		6FD7EDB81743E134001022EB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -537,6 +546,8 @@
 				6F369213173B4107005BAC8B /* CoreGraphics.framework in Frameworks */,
 				6F369215173B4107005BAC8B /* CoreText.framework in Frameworks */,
 				6F369217173B4107005BAC8B /* GameKit.framework in Frameworks */,
+				6FD7EDB51743E0F9001022EB /* libTestFlight.a in Frameworks */,
+				6FD7EDBA1743E344001022EB /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,8 +561,6 @@
 				6F35965F173DE7C400C9C717 /* CCPanZoomController.m */,
 				6F359651173DC9E500C9C717 /* MapLayer.h */,
 				6F359652173DC9E500C9C717 /* MapLayer.m */,
-				6F359654173DCA1400C9C717 /* UILayer.h */,
-				6F359655173DCA1400C9C717 /* UILayer.m */,
 				6F359650173DC9AF00C9C717 /* HKTMX Files */,
 			);
 			name = "Map Management";
@@ -631,6 +640,7 @@
 				6F359659173DCCEB00C9C717 /* GameWorld.m */,
 				6F35964D173DC84C00C9C717 /* MainGameScene.h */,
 				6F35964E173DC84C00C9C717 /* MainGameScene.m */,
+				6FD7EDBB1743F498001022EB /* UI Management */,
 				6F35963E173DC48B00C9C717 /* Map Management */,
 				6F3693DB173BE187005BAC8B /* Utility Classes */,
 				6F369219173B4107005BAC8B /* Resources */,
@@ -656,6 +666,8 @@
 		6F369231173B4107005BAC8B /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				6FD7EDB81743E134001022EB /* libz.dylib */,
+				6FD7EDB01743E0F8001022EB /* TestFlightSDK1 */,
 				6F369359173B4109005BAC8B /* LICENSE_cocos2d.txt */,
 				6F36936F173B4109005BAC8B /* LICENSE_CocosDenshion.txt */,
 				6F3693A1173B4109005BAC8B /* LICENSE_Kazmath.txt */,
@@ -1093,6 +1105,26 @@
 			name = "Active Support Inflector (plurals)";
 			sourceTree = "<group>";
 		};
+		6FD7EDB01743E0F8001022EB /* TestFlightSDK1 */ = {
+			isa = PBXGroup;
+			children = (
+				6FD7EDB11743E0F9001022EB /* libTestFlight.a */,
+				6FD7EDB21743E0F9001022EB /* README.md */,
+				6FD7EDB31743E0F9001022EB /* release_notes.md */,
+				6FD7EDB41743E0F9001022EB /* TestFlight.h */,
+			);
+			path = TestFlightSDK1;
+			sourceTree = "<group>";
+		};
+		6FD7EDBB1743F498001022EB /* UI Management */ = {
+			isa = PBXGroup;
+			children = (
+				6F359654173DCA1400C9C717 /* UILayer.h */,
+				6F359655173DCA1400C9C717 /* UILayer.m */,
+			);
+			name = "UI Management";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1182,6 +1214,8 @@
 				6F35964B173DC74C00C9C717 /* all_terrain.png in Resources */,
 				6F35964C173DC74C00C9C717 /* test_map.tmx in Resources */,
 				6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */,
+				6FD7EDB61743E0F9001022EB /* README.md in Resources */,
+				6FD7EDB71743E0F9001022EB /* release_notes.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1389,6 +1423,10 @@
 				);
 				INFOPLIST_FILE = "Doctor Rogue/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Doctor Rogue/TestFlightSDK1\"",
+				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1415,6 +1453,10 @@
 				);
 				INFOPLIST_FILE = "Doctor Rogue/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Doctor Rogue/TestFlightSDK1\"",
+				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-lz",

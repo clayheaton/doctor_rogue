@@ -67,6 +67,16 @@
         startButtonLabel.position = ccp(size.width - 10, 10);
         startButtonLabel.anchorPoint = ccp(1,0);
         [self addChild:startButtonLabel z:1 tag:17];
+        
+        CCLabelTTF *feedbackLabel = [CCLabelTTF labelWithString:@"Provide Feedback"
+                                                          fontName:[[UIFont systemFontOfSize:12] familyName]
+                                                          fontSize:18];
+        
+        feedbackLabel.position = ccp(size.width * 0.5, 10);
+        feedbackLabel.anchorPoint = ccp(0.5,0);
+        [self addChild:feedbackLabel z:1 tag:18];
+        
+        
 		
 		
 		/*
@@ -205,6 +215,9 @@
             return;
         }
         [[GameStartGenerator generator] makeNewAdventureWithSeed:[value intValue]];
+        [TestFlight passCheckpoint:@"Entered a non-blank seed"];
+        // TODO: Validate that seeds are only numeric
+        
         [self addMainTitle];
     }
 }
@@ -231,18 +244,20 @@
     if (CGRectContainsPoint([self getChildByTag:11].boundingBox, touchLocGL)) {
         
         [self getNewAdventure];
+        [TestFlight passCheckpoint:@"Clicked Random Adventure Generation Button on MainMenu"];
         return;
     }
     
     // Set seed
     if (CGRectContainsPoint([self getChildByTag:15].boundingBox, touchLocGL)) {
-        
+        [TestFlight passCheckpoint:@"Clicked to set a seed from MainMenu"];
         [self editSeedWithSeed:[[GameStartGenerator generator] seed]];
         return;
     }
 
     // Test Start
     if (CGRectContainsPoint([self getChildByTag:17].boundingBox, touchLocGL)) {
+        [TestFlight passCheckpoint:@"Clicked Start from MainMenu"];
         CCScene *gameScene = [LoadingScene sceneWithTargetScene:LoadingTargetScene_MainGameScene];
         
         // Pause might allow to fade out music, etc.
@@ -251,6 +266,12 @@
                                           afterDelay:1.0f];
         
         [self getChildByTag:17].visible = NO;
+        return;
+    }
+    
+    // TestFlight Feedback
+    if (CGRectContainsPoint([self getChildByTag:18].boundingBox, touchLocGL)) {
+        [TestFlight openFeedbackView];
         return;
     }
 

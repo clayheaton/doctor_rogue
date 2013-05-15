@@ -36,8 +36,82 @@ All is not a cakewalk, however, as Doctor Chick's rivals also seek the same trea
 ### Art and Visual
 
 ##### Visual Style
+The visual style is an open-ended question at this point in time. The existing tileset graphics were created by me. Absent a better artist taking a significant interest in this project, I probably will continue to make placeholder graphics, as needed.
 
 ##### Locations: Maps and Tilesets
+The initial *locations* in the game will be:
+
+* Grasslands
+* Tundra / Ice
+* Desert
+
+Each location will require a variety of terrain types. 
+
+* Grasslands
+    * Deep Grass
+	* Grass
+	* Light Grass
+	* Dirt
+	* Water
+	* Deep water
+	* Brick
+	* Dirty brick
+* Tundra / Ice
+    * TBD
+* Desert
+    * TBD
+	
+Creating tileset requires understanding the transitions that need to occur between the tiles. It is far easier to have a particular type of tile contained within - and only within - another type of tile. For example, to have brick contained entirely within dirty brick. For example:
+
+![Brick within Dirty Brick](img/img_01.png)
+
+Nested transitions remove the need to create special corner tiles where multiple different types of terrain come together and they are supported better in [Tiled](http://www.mapeditor.org). 
+
+As an example of problems that emerge with a wide variety of tiles, consider this problem, where there clearly is an out-of-place dirty brick tile:
+
+![Misplaced dirty brick tile](img/img_03.png)
+
+The problem is that this tileset uses the nested approach to creating terrain types, but allows for brick to be nested within dirt and dirty brick to be nested within dirt. Since brick also can be nested within dirty brick, and vice versa, there's a missing set of tiles (by the baseline design) where dirt, brick, and dirty brick all need to come together. The multi-nested approach provides more variety, but at the expense of simplicity.
+
+Existing tiles are in the Grasslands tileset and have the following transitions are:
+
+![Deep Grass surrounding Grass](img/img_04.png)
+
+![Grass surrounding Deep Grass](img/img_05.png)
+
+![Grass surrounding Light Grass](img/img_06.png)
+
+![Light Grass surrounding Grass](img/img_07.png)
+
+![Grass surrounding Water](img/img_08.png)
+
+![Water surrounding Grass](img/img_09.png)
+
+![Water surrounding Deep Water](img/img_10.png)
+
+![Deep Water surrounding Water](img/img_11.png)
+
+![Dirt surrounding Light Grass](img/img_12.png)
+
+![Light Grass surrounding Dirt](img/img_13.png)
+
+![Dirt surrounding Brick](img/img_14.png)
+
+![Brick surrounding Dirt](img/img_15.png)
+
+![Brick surrounding Dirty Brick](img/img_16.png)
+
+![Dirty Brick surrounding Brick](img/img_17.png)
+
+![Dirty Brick surrounding Dirt](img/img_18.png)
+
+![Dirt surrounding Dirty Brick](img/img_19.png)
+
+There is overlap in the way these tiles are designed. For example, the upper-left tile in "Brick surrounding Dirty Brick" also could function, if rotated, as the lower-left, lower-right, and upper-right tiles. Furthermore, the upper-center tile in "Brick surrounding Dirty Brick" could function, rotated, as the lower-center tile in the same tileset, or even as a number of tiles in the "Dirty Brick surrounding Brick" set.
+
+I experimented with these approaches when drawing the tilesets and determined that the resulting maps look better if there are multiple tiles that can fit any given spot -- prevents repetition -- and also that they are easier to create where duplicated are made. The tradeoff is that duplicate tiles consume graphics memory. 
+
+I suggest that we continue with this approach until we determine whether we need to reduce the number of tiles to improve graphics performance, in which case we can make the change. I suspect that it will not present a problem because we can clear from memory textures that we aren't using and we will load map templates that only contain specific tilesets to optimize and improve map randomization. For example, we will have a grasslands.tmx file that only contains the tiles specific to the grasslands set (along with other assests required).
 
 ##### Environment & Art 
 
