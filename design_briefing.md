@@ -75,36 +75,52 @@ The problem is that this tileset uses the nested approach to creating terrain ty
 
 Existing tiles are in the Grasslands tileset and have the following transitions are:
 
+Deep grass surrounding Grass:
 ![Deep Grass surrounding Grass](img/img_04.png)
 
+Grass surrounding Deep Grass:
 ![Grass surrounding Deep Grass](img/img_05.png)
 
+Grass surrounding Light Grass:
 ![Grass surrounding Light Grass](img/img_06.png)
 
+Light Grass surrounding Grass:
 ![Light Grass surrounding Grass](img/img_07.png)
 
+Grass surrounding Water:
 ![Grass surrounding Water](img/img_08.png)
 
+Water surrounding Grass:
 ![Water surrounding Grass](img/img_09.png)
 
+Water surrounding Deep Water:
 ![Water surrounding Deep Water](img/img_10.png)
 
+Deep Water surrounding Water:
 ![Deep Water surrounding Water](img/img_11.png)
 
+Dirt surrounding Light Grass:
 ![Dirt surrounding Light Grass](img/img_12.png)
 
+Light Grass surrounding Dirt:
 ![Light Grass surrounding Dirt](img/img_13.png)
 
+Dirt surrounding Brick:
 ![Dirt surrounding Brick](img/img_14.png)
 
+Brick surrounding Dirt:
 ![Brick surrounding Dirt](img/img_15.png)
 
+Brick surrounding Dirty Brick:
 ![Brick surrounding Dirty Brick](img/img_16.png)
 
+Dirty Brick surrounding Brick:
 ![Dirty Brick surrounding Brick](img/img_17.png)
 
+Dirty Brick surrounding Dirt:
 ![Dirty Brick surrounding Dirt](img/img_18.png)
 
+Dirt surrounding Dirty Brick:
 ![Dirt surrounding Dirty Brick](img/img_19.png)
 
 There is overlap in the way these tiles are designed. For example, the upper-left tile in "Brick surrounding Dirty Brick" also could function, if rotated, as the lower-left, lower-right, and upper-right tiles. Furthermore, the upper-center tile in "Brick surrounding Dirty Brick" could function, rotated, as the lower-center tile in the same tileset, or even as a number of tiles in the "Dirty Brick surrounding Brick" set.
