@@ -113,6 +113,18 @@ I experimented with these approaches when drawing the tilesets and determined th
 
 I suggest that we continue with this approach until we determine whether we need to reduce the number of tiles to improve graphics performance, in which case we can make the change. I suspect that it will not present a problem because we can clear from memory textures that we aren't using and we will load map templates that only contain specific tilesets to optimize and improve map randomization. For example, we will have a grasslands.tmx file that only contains the tiles specific to the grasslands set (along with other assests required).
 
+Note that each map template will require two versions: one for standard displays and one for retina displays. This is done by doubling the size of the tiles in the .tmx file and including double-sized graphics. For each:
+
+* map.tmx
+* tiles.png
+
+There needs to be:
+
+* map-hd.tmx
+* tiles-hd.png
+
+Cocos2d will handle the importing and display of the proper files.
+
 ##### Environment & Art 
 
 -----
