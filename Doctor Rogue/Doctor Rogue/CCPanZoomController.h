@@ -22,6 +22,7 @@
 //V8.0
 
 // Find it here: https://github.com/robertblackwood/CCPanZoomController
+// Modified to use 2 touches for panning and 3+ touches for zooming
 
 #import "cocos2d.h"
 
@@ -58,6 +59,7 @@
 	
     //keep track of touches in order
 	NSMutableArray *_touches;
+    NSMutableArray *_touchesPoints;
     
     //momentum
     CGPoint _momentum;
@@ -75,7 +77,7 @@
 @property (readwrite, assign) float     zoomCenteringDamping;   /*!< Dampen the centering motion of the zoom */
 @property (readwrite, assign) float     pinchDamping;   /*!< When zooming, this will dampen the zoom */
 @property (readwrite, assign) float     pinchDistanceThreshold; /*!< The distance moved before a pinch is recognized */
-@property (readonly) float              optimalZoomOutLimit; /*!< Get the optimal zoomOutLimit for the current state */
+@property (readonly)          float     optimalZoomOutLimit; /*!< Get the optimal zoomOutLimit for the current state */
 @property (readwrite, assign) float     doubleTapZoomDuration;  /*!< Duration of zoom after double-tap */
 
 /*! Create a new control with the node you want to scroll/zoom */

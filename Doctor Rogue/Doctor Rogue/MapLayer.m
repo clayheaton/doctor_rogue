@@ -15,6 +15,7 @@
 - (void) setUpWithMap:(HKTMXTiledMap *)mapToUse;
 - (void) drawGrid;
 - (void) toggleGrid:(NSNotification *)notification;
+- (void) endTouch:(NSNotification *)notification;
 @end
 
 @implementation MapLayer
@@ -34,6 +35,9 @@
 {
     self = [super init];
     if (self) {
+        
+        _touchCount = 0;
+        
         self.touchEnabled = YES;
         self.showGrid     = YES;
         self.tapIsTargetingMapLayer = NO;
@@ -64,7 +68,14 @@
                                              selector:@selector(toggleGrid:)
                                                  name:NOTIFICATION_TOGGLE_GRID
                                                object:nil];
-}
+    
+    /*
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(endTouch:)
+                                                 name:NOTIFICATION_TOUCH_ENDED
+                                               object:nil];
+     */
+     }
 
 #pragma mark Map Loading and Initialization
 -(void) setUpWithMap:(HKTMXTiledMap *)mapToUse
@@ -139,6 +150,12 @@
 }
 
 #pragma mark Handling touch events
+/*
+-(void) registerWithTouchDispatcher
+{
+    [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:-1 swallowsTouches:YES];
+}
+ */
 
 -(CGPoint) locationFromTouch:(UITouch*)touch
 {
@@ -146,40 +163,86 @@
 	return [[CCDirector sharedDirector] convertToGL:touchLocation];
 }
 
+
+/*
+- (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event
+{
+
+    _touchCount += 1;
+	
+    CCLOG(@"MapLayer ccTouchBegan # touches: %i", _touchCount);
+
+	
+	if (_touchCount > 1)
+	{
+        CCLOG(@"MapLayer detects multitouch; handing to CCPanZoomController.");
+        [_panZoomController ccTouchBegan:touch withEvent:event];
+        _tapIsTargetingMapLayer = NO;
+	}
+	else
+    {
+        _tapIsTargetingMapLayer = YES;
+        CCLOG(@"MapLayer keeping the touch");
+    }
+	
+	return YES;
+}
+
+- (void) ccTouchMoved:(UITouch *)touch withEvent:(UIEvent *)event
+{
+    if (_touchCount > 1) {
+        [_panZoomController ccTouchMoved:touch withEvent:event];
+    }
+    // CCLOG(@"MapLayer ccTouchMoved: # touches: %i", _touchCount);
+}
+
+-(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
+{
+	//CCLOG(@"UserInterfaceLayer touch ended");
+    
+    
+    
+    _touchCount -= 1;
+    if (_touchCount < 0) {
+        _touchCount = 0;
+    }
+    CCLOG(@"MapLayer ccTouchEnded: # touches remaining: %i", _touchCount);
+}
+*/
+
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
-        
+        CCLOG(@"MapLayer ccTouchesBegan: MapLayer targeted");
         _tapIsTargetingMapLayer = YES;
+    } else {
+        _tapIsTargetingMapLayer = NO;
+
     }
 }
 
 - (void) ccTouchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
+        _tapIsTargetingMapLayer = YES;
+        //CCLOG(@"MapLayer touch moved");
+    } else {
         _tapIsTargetingMapLayer = NO;
+
     }
 }
 
 -(void) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
-        if (_tapIsTargetingMapLayer) {
-            CCLOG(@"tap intended for map layer - not scrolling");
-        }
+        // MapLayer end touch
+    } else {
+
     }
 }
 
--(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
-{
-	//CCLOG(@"UserInterfaceLayer touch ended");
-}
 
 /*
- -(void) registerWithTouchDispatcher
- {
- [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:-1 swallowsTouches:YES];
- }
  
  -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
  {

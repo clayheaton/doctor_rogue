@@ -22,6 +22,8 @@
 @property (assign, readwrite) BOOL showGrid;
 @property (assign, readwrite) BOOL tapIsTargetingMapLayer;
 
+@property (assign, readwrite) unsigned short touchCount;
+
 - (id) initWithMap:(HKTMXTiledMap *)map;
 
 @end

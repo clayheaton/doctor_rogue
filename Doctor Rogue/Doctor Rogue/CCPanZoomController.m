@@ -45,6 +45,10 @@
 - (void) beginZoom:(CGPoint)pt otherPt:(CGPoint)pt2;
 - (void) moveZoom:(CGPoint)pt otherPt:(CGPoint)pt2;
 - (void) endZoom:(CGPoint)pt otherPt:(CGPoint)pt2;
+
+- (void) beginZoom;
+- (void) moveZoom;
+- (void) endZoom;
 @end
 
 //Will return value between 0 and 1, think of it as a percentage of rotation
@@ -58,6 +62,36 @@ UITouch *touch1 = [touches objectAtIndex:0];\
 UITouch *touch2 = [touches objectAtIndex:1];\
 CGPoint pt1 = [touch1 locationInView:[touch view]];\
 CGPoint pt2 = [touch2 locationInView:[touch view]]
+
+#define GET_PINCH_PTS_3(touches, pt1, pt2, pt3)\
+UITouch *touch1 = [touches objectAtIndex:0];\
+UITouch *touch2 = [touches objectAtIndex:1];\
+UITouch *touch3 = [touches objectAtIndex:2];\
+CGPoint pt1 = [touch1 locationInView:[touch view]];\
+CGPoint pt2 = [touch2 locationInView:[touch view]];\
+CGPoint pt3 = [touch3 locationInView:[touch view]]
+
+#define GET_PINCH_PTS_4(touches, pt1, pt2, pt3, pt4)\
+UITouch *touch1 = [touches objectAtIndex:0];\
+UITouch *touch2 = [touches objectAtIndex:1];\
+UITouch *touch3 = [touches objectAtIndex:2];\
+UITouch *touch4 = [touches objectAtIndex:3];\
+CGPoint pt1 = [touch1 locationInView:[touch view]];\
+CGPoint pt2 = [touch2 locationInView:[touch view]];\
+CGPoint pt3 = [touch3 locationInView:[touch view]];\
+CGPoint pt4 = [touch4 locationInView:[touch view]]
+
+#define GET_PINCH_PTS_5(touches, pt1, pt2, pt3, pt4, pt5)\
+UITouch *touch1 = [touches objectAtIndex:0];\
+UITouch *touch2 = [touches objectAtIndex:1];\
+UITouch *touch3 = [touches objectAtIndex:2];\
+UITouch *touch4 = [touches objectAtIndex:3];\
+UITouch *touch5 = [touches objectAtIndex:4];\
+CGPoint pt1 = [touch1 locationInView:[touch view]];\
+CGPoint pt2 = [touch2 locationInView:[touch view]];\
+CGPoint pt3 = [touch3 locationInView:[touch view]];\
+CGPoint pt4 = [touch4 locationInView:[touch view]];\
+CGPoint pt5 = [touch5 locationInView:[touch view]]
 
 @implementation CCPanZoomControllerScale
 
@@ -122,7 +156,8 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
 {
 	[super init];
 	
-	_touches = [[NSMutableArray alloc] init];
+	_touches       = [[NSMutableArray alloc] init];
+    _touchesPoints = [[NSMutableArray alloc] init];
 	
     //use the content size to determine the default scrollable area
 	_node = node;
@@ -154,7 +189,8 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
 
 - (void) dealloc
 {
-	[_touches release];
+	[_touches       release];
+    [_touchesPoints release];
 	[super dealloc];
 }
 
@@ -285,30 +321,83 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
     }
 }
 
+- (void) gatherTouchesPoints:(UITouch *)touch
+{
+    [_touchesPoints removeAllObjects];
+    
+    switch ([_touches count]) {
+        case 3:
+        {
+            GET_PINCH_PTS_3(_touches, pt1, pt2, pt3);
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt1]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt2]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt3]];
+            break;
+        }
+            
+        case 4:
+        {
+            GET_PINCH_PTS_4(_touches, pt1, pt2, pt3, pt4);
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt1]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt2]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt3]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt4]];
+            break;
+        }
+            
+        case 5:
+        {
+            GET_PINCH_PTS_5(_touches, pt1, pt2, pt3, pt4, pt5);
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt1]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt2]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt3]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt4]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt5]];
+            break;
+        }
+            
+        default:
+        {
+            GET_PINCH_PTS(_touches, pt1, pt2);
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt1]];
+            [_touchesPoints addObject:[NSValue valueWithCGPoint:pt2]];
+            break;
+        }
+    }
+}
+
+// Converted this to use 2 fingers to scroll and 3 to zoom
 -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
 {
 	[_touches addObject:touch];
+    
+    //CCLOG(@"CCPanZoom ccTouchBegan: with count: %i", [_touches count]);
 	
-	BOOL multitouch = [_touches count] > 1;
-	
-	if (multitouch)
+	if ([_touches count] >= 3)
 	{
+        CCLOG(@"CCPanZoom Zooming in ccTouchBegan:");
         //reset history so auto scroll doesn't happen
         _momentum = CGPointZero;
         
-        //end the first touche's panning
+        //end the first touches panning
 		[self endScroll:_firstTouch];
         
-        //get the 2 points
-        GET_PINCH_PTS(_touches, pt1, pt2);
+        //get the points
+        // GET_PINCH_PTS(_touches, pt1, pt2);
+        
+        [self gatherTouchesPoints:touch];
         
         //setup to zoom
-		[self beginZoom:pt1 otherPt:pt2];
+		// [self beginZoom:pt1 otherPt:pt2];
+        [self beginZoom];
 	}
-	else
+	else if ([_touches count] == 2)
     {
+        CCLOG(@"CCPanZoom Scrolling in ccTouchBegan:");
         //Start scrolling
         [self beginScroll:[_node convertTouchToNodeSpace:touch]];
+    } else {
+        // only 1 finger, do nothing
     }
 	
 	return YES;
@@ -316,44 +405,54 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
 
 -(void) ccTouchMoved:(UITouch*)touch withEvent:(UIEvent *)event
 {
+    //CCLOG(@"CCPanZoom ccTouchMoved: with count: %i", [_touches count]);
+    
     //pinching case (zooming)
-	BOOL multitouch = [_touches count] > 1;
-	if (multitouch)
+	if ([_touches count] >= 3)
 	{
-        //get the 2 points
-        GET_PINCH_PTS(_touches, pt1, pt2);
+        CCLOG(@"CCPanZoom Zooming in ccTouchMoved:");
+        //get the points
+        // GET_PINCH_PTS(_touches, pt1, pt2);
+        [self gatherTouchesPoints:touch];
 		
         //zoom it!
-		[self moveZoom:pt1 otherPt:pt2];
+		// [self moveZoom:pt1 otherPt:pt2];
+        [self moveZoom];
+        
 	}
-	else
+	else if ([_touches count] == 2)
 	{
+        CCLOG(@"CCPanZoom Scrolling in ccTouchMoved:");
         //pan around
 		[self moveScroll:[_node convertTouchToNodeSpace:touch]];
-	}
+	} else {
+        // 1 finger, do nothing
+    }
 }
 
 - (void)ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
 {
     //pinching case (zooming)
-	BOOL multitouch = [_touches count] > 1;
-	if (multitouch)
+	if ([_touches count] >= 3)
 	{
         //get the 2 points, UITouch* touch1 and touch2 are declared here too
-        GET_PINCH_PTS(_touches, pt1, pt2);
-		
+        // GET_PINCH_PTS(_touches, pt1, pt2);
+		[self gatherTouchesPoints:touch];
+        
         //doesn't really do anything right now
-		[self endZoom:pt1 otherPt:pt2];
+		// [self endZoom:pt1 otherPt:pt2];
+        [self endZoom];
 		
 		//which touch remains?
-		if (touch == touch2)
-			[self beginScroll:[_node convertTouchToNodeSpace:touch1]];
-		else
-			[self beginScroll:[_node convertTouchToNodeSpace:touch2]];
+		//if (touch == touch2)
+		//	[self beginScroll:[_node convertTouchToNodeSpace:touch1]];
+		//else
+		//	[self beginScroll:[_node convertTouchToNodeSpace:touch2]];
+        //[self beginScroll:[_node convertTouchToNodeSpace:touch]];
 	}
     
-    //one finger case (panning)
-	else
+    //two finger case (panning)
+	else if ([_touches count] == 2)
 	{
         //end scroll
         CGPoint pt = [_node convertTouchToNodeSpace:touch];
@@ -362,9 +461,14 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
         //handle double-tap zooming
         if (_zoomOnDoubleTap && [touch tapCount] == 2)
             [self handleDoubleTapAt:pt];
-	}
+	} else {
+        // 1 finger, do nothing
+    }
 	
 	[_touches removeObject:touch];
+    
+    // Send a notification so that the MapLayer can remove one from its count
+    // [[NSNotificationCenter defaultCenter] postNotificationName:@"CCPanZoom Touch Ended" object:nil];
 }
 
 - (void)ccTouchCancelled:(UITouch*)touch withEvent:(UIEvent *)event
@@ -428,6 +532,32 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
 {
 }
 
+// New method for returning the length with a variety of points
+- (float) lengthForPoints:(NSArray *)points
+{
+    float total = 0;
+    for (int i = 0; i < [points count] - 1; i++) {
+        total += ccpDistance([[points objectAtIndex:i] CGPointValue], [[points objectAtIndex:i+1] CGPointValue]);
+    }
+    return total;
+}
+
+- (CGPoint) midPointForMultiPoints:(NSArray *)points
+{
+    int n = [points count];
+    float x = 0;
+    float y = 0;
+    for (NSValue *pt in points) {
+        x += [pt CGPointValue].x;
+        y += [pt CGPointValue].y;
+    }
+    
+    x = x/n;
+    y = y/n;
+    
+    return CGPointMake(x, y);
+}
+
 - (void) beginZoom:(CGPoint)pt otherPt:(CGPoint)pt2
 {
     //initialize our zoom vars
@@ -436,6 +566,63 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
     
     //get the mid point of pinch
     _firstTouch = [_node convertToNodeSpace:[[CCDirector sharedDirector] convertToGL:ccpMidpoint(pt, pt2)]];
+}
+
+- (void) beginZoom
+{
+    // use _touchesPoints here
+    _firstLength = [self lengthForPoints:_touchesPoints];
+    _oldScale = _node.scale;
+    
+    // get the mid point of pinch
+    _firstTouch = [_node convertToNodeSpace:[[CCDirector sharedDirector] convertToGL:[self midPointForMultiPoints:_touchesPoints]]];
+}
+
+- (void) moveZoom
+{
+    // use _touchesPoints here
+    //what's the difference in length since we began
+	float length = [self lengthForPoints:_touchesPoints];
+	float diff = (length-_firstLength);
+    
+    //ignore small movements
+    if (fabs(diff) < _pinchDistanceThreshold)
+        return;
+    
+	//calculate new scale
+	float factor = diff * _zoomRate;
+	float scaleTo = (_oldScale + factor);
+    float absScaleTo = fabs(scaleTo);
+    float mult = absScaleTo/scaleTo;
+    
+    //paranoia
+    if (!_oldScale)
+        _oldScale = 0.001;
+    
+    //dampen
+    float newScale = _oldScale*mult*pow(absScaleTo/_oldScale, _pinchDamping);
+	
+    if (isnormal(newScale))
+    {
+        //bound scale
+        if (newScale > _zoomInLimit)
+            newScale = _zoomInLimit;
+        else if (newScale < _zoomOutLimit)
+            newScale = _zoomOutLimit;
+        
+        //set the new scale
+        _node.scale = newScale;
+        
+        //NSLog(@"Scale:%.2f", newScale);
+        
+        //center on midpoint of pinch
+        if (_centerOnPinch)
+            [self centerOnPoint:_firstTouch damping:_zoomCenteringDamping];
+        else
+            [self updatePosition:_node.position];
+    }
+    else
+        NSLog(@"CCPanZoomController - Bad scale!");
 }
 
 - (void) moveZoom:(CGPoint)pt otherPt:(CGPoint)pt2
@@ -522,5 +709,11 @@ CGPoint pt2 = [touch2 locationInView:[touch view]]
 {
 	//[self moveZoom:pt otherPt:pt2];
 }
+
+- (void) endZoom
+{
+    // currently does nothing
+}
+
 
 @end

@@ -13,6 +13,7 @@
 */
 
 #define NOTIFICATION_TOGGLE_GRID    @"toggle_grid"
+#define NOTIFICATION_TOUCH_ENDED    @"CCPanZoom Touch Ended"
 
 // kTag_Parent_Child
 typedef enum {
