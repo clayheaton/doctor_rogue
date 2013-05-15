@@ -9,7 +9,7 @@ For now, there's more info [here]
 A few things to know:
 
 ##### NOTE ABOUT THE MAPLAYER
-* Due to interface considerations, all single touches are reserved for the MapLayer and all multitouches pass through to the CCPanZoomController, which I refactored to only do something if there are 2 more more simultaneous touches. I haven't finished fixing the geometry for zooming and scrolling. As a result, it's a bit jittery. However, when viewing the map, use two fingers to scroll around the 3+ fingers to zoom in and out. I'll try to fix it as soon as possible. -Clay
+* Due to interface considerations, all single touches are reserved for the MapLayer and all multitouches pass through to the CCPanZoomController, which I refactored to only do something if there are 2 more more simultaneous touches. I haven't finished fixing the geometry for zooming and scrolling. As a result, it's a bit jittery. However, when viewing the map, use two fingers to scroll around and 3+ fingers to zoom in and out. I'll try to fix it as soon as possible. -Clay
 
 * The Xcode project is in the `Doctor Rogue` directory.
 * Resources and files that I used to create resources, fonts, etc. in the Xcode project are in the `_external_resources` directory.
