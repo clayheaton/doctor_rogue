@@ -136,17 +136,17 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 
 @implementation CCPanZoomController
 
-@synthesize centerOnPinch = _centerOnPinch;
-@synthesize zoomOnDoubleTap = _zoomOnDoubleTap;
-@synthesize zoomRate = _zoomRate;
-@synthesize zoomInLimit = _zoomInLimit;
-@synthesize zoomOutLimit = _zoomOutLimit;
-@synthesize scrollRate = _scrollRate;
-@synthesize scrollDamping = _scrollDamping;
-@synthesize zoomCenteringDamping = _zoomCenteringDamping;
-@synthesize pinchDamping = _pinchDamping;
-@synthesize pinchDistanceThreshold = _pinchDistanceThreshold;
-@synthesize doubleTapZoomDuration = _doubleTapZoomDuration;
+@synthesize centerOnPinch           = _centerOnPinch;
+@synthesize zoomOnDoubleTap         = _zoomOnDoubleTap;
+@synthesize zoomRate                = _zoomRate;
+@synthesize zoomInLimit             = _zoomInLimit;
+@synthesize zoomOutLimit            = _zoomOutLimit;
+@synthesize scrollRate              = _scrollRate;
+@synthesize scrollDamping           = _scrollDamping;
+@synthesize zoomCenteringDamping    = _zoomCenteringDamping;
+@synthesize pinchDamping            = _pinchDamping;
+@synthesize pinchDistanceThreshold  = _pinchDistanceThreshold;
+@synthesize doubleTapZoomDuration   = _doubleTapZoomDuration;
 
 + (id) controllerWithNode:(CCNode*)node
 {
@@ -565,7 +565,7 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 {
     //initialize our zoom vars
 	_firstLength = ccpDistance(pt, pt2);
-	_oldScale = _node.scale;
+	_oldScale    = _node.scale;
     
     //get the mid point of pinch
     _firstTouch = [_node convertToNodeSpace:[[CCDirector sharedDirector] convertToGL:ccpMidpoint(pt, pt2)]];
@@ -575,7 +575,7 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 {
     // use _touchesPoints here
     _firstLength = [self lengthForPoints:_touchesPoints];
-    _oldScale = _node.scale;
+    _oldScale    = _node.scale;
     
     // get the mid point of pinch
     _firstTouch = [_node convertToNodeSpace:[[CCDirector sharedDirector] convertToGL:[self midPointForMultiPoints:_touchesPoints]]];
@@ -586,17 +586,17 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     // use _touchesPoints here
     //what's the difference in length since we began
 	float length = [self lengthForPoints:_touchesPoints];
-	float diff = (length-_firstLength);
+	float diff   = (length-_firstLength);
     
     //ignore small movements
     if (fabs(diff) < _pinchDistanceThreshold)
         return;
     
 	//calculate new scale
-	float factor = diff * _zoomRate;
-	float scaleTo = (_oldScale + factor);
+	float factor     = diff * _zoomRate;
+	float scaleTo    = (_oldScale + factor);
     float absScaleTo = fabs(scaleTo);
-    float mult = absScaleTo/scaleTo;
+    float mult       = absScaleTo/scaleTo;
     
     //paranoia
     if (!_oldScale)
@@ -682,8 +682,8 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 - (void) centerOnPoint:(CGPoint)pt damping:(float)damping
 {
     //calc the difference between the window middle and the pt, apply the damping
-    CGPoint mid = [_node convertToNodeSpace:ccpMidpoint(_winTr, _winBl)];
-    CGPoint diff = ccpMult(ccpSub(mid, pt), damping);
+    CGPoint mid    = [_node convertToNodeSpace:ccpMidpoint(_winTr, _winBl)];
+    CGPoint diff   = ccpMult(ccpSub(mid, pt), damping);
     CGPoint oldPos = _node.position;
     CGPoint newPos = ccpAdd(oldPos, diff);
     

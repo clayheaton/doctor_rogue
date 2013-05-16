@@ -54,6 +54,7 @@
     
 	//touches
 	CGPoint _firstTouch;
+    CGPoint _zoomCenter;
 	float   _firstLength;
 	float   _oldScale;
 	

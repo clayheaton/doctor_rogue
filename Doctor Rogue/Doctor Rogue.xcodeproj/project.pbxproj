@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F1CEE81174522F800040A05 /* temp_dc-hd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */; };
+		6F1CEE82174522F800040A05 /* temp_dc-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE80174522F800040A05 /* temp_dc-hd.png */; };
+		6F1CEE851745231200040A05 /* temp_dc.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE831745231200040A05 /* temp_dc.plist */; };
+		6F1CEE861745231200040A05 /* temp_dc.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE841745231200040A05 /* temp_dc.png */; };
+		6F1CEE8B174524F700040A05 /* GameObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1CEE8A174524F700040A05 /* GameObject.m */; };
+		6F1CEE8E1745251000040A05 /* GameObjectSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1CEE8D1745251000040A05 /* GameObjectSprite.m */; };
 		6F359645173DC49E00C9C717 /* HKTMXLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359640173DC49E00C9C717 /* HKTMXLayer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F359646173DC49E00C9C717 /* HKTMXLayer+Experimental.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359642173DC49E00C9C717 /* HKTMXLayer+Experimental.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F359647173DC49E00C9C717 /* HKTMXTiledMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359644173DC49E00C9C717 /* HKTMXTiledMap.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -188,6 +194,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "temp_dc-hd.plist"; sourceTree = "<group>"; };
+		6F1CEE80174522F800040A05 /* temp_dc-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "temp_dc-hd.png"; sourceTree = "<group>"; };
+		6F1CEE831745231200040A05 /* temp_dc.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = temp_dc.plist; sourceTree = "<group>"; };
+		6F1CEE841745231200040A05 /* temp_dc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = temp_dc.png; sourceTree = "<group>"; };
+		6F1CEE89174524F700040A05 /* GameObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameObject.h; sourceTree = "<group>"; };
+		6F1CEE8A174524F700040A05 /* GameObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameObject.m; sourceTree = "<group>"; };
+		6F1CEE8C1745251000040A05 /* GameObjectSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameObjectSprite.h; sourceTree = "<group>"; };
+		6F1CEE8D1745251000040A05 /* GameObjectSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameObjectSprite.m; sourceTree = "<group>"; };
 		6F35963F173DC49E00C9C717 /* HKTMXLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKTMXLayer.h; sourceTree = "<group>"; };
 		6F359640173DC49E00C9C717 /* HKTMXLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKTMXLayer.m; sourceTree = "<group>"; };
 		6F359641173DC49E00C9C717 /* HKTMXLayer+Experimental.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HKTMXLayer+Experimental.h"; sourceTree = "<group>"; };
@@ -554,6 +568,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F1CEE7D1744804600040A05 /* Art */ = {
+			isa = PBXGroup;
+			children = (
+				6F1CEE7E174480BB00040A05 /* Placeholder */,
+			);
+			name = Art;
+			path = Resources/art;
+			sourceTree = "<group>";
+		};
+		6F1CEE7E174480BB00040A05 /* Placeholder */ = {
+			isa = PBXGroup;
+			children = (
+				6F1CEE831745231200040A05 /* temp_dc.plist */,
+				6F1CEE841745231200040A05 /* temp_dc.png */,
+				6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */,
+				6F1CEE80174522F800040A05 /* temp_dc-hd.png */,
+			);
+			name = Placeholder;
+			path = placeholder;
+			sourceTree = "<group>";
+		};
+		6F1CEE871745249800040A05 /* Game Objects */ = {
+			isa = PBXGroup;
+			children = (
+				6F1CEE89174524F700040A05 /* GameObject.h */,
+				6F1CEE8A174524F700040A05 /* GameObject.m */,
+				6F1CEE8C1745251000040A05 /* GameObjectSprite.h */,
+				6F1CEE8D1745251000040A05 /* GameObjectSprite.m */,
+				6F1CEE88174524B600040A05 /* Player People and Monsters */,
+			);
+			name = "Game Objects";
+			sourceTree = "<group>";
+		};
+		6F1CEE88174524B600040A05 /* Player People and Monsters */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Player People and Monsters";
+			sourceTree = "<group>";
+		};
 		6F35963E173DC48B00C9C717 /* Map Management */ = {
 			isa = PBXGroup;
 			children = (
@@ -640,6 +694,7 @@
 				6F359659173DCCEB00C9C717 /* GameWorld.m */,
 				6F35964D173DC84C00C9C717 /* MainGameScene.h */,
 				6F35964E173DC84C00C9C717 /* MainGameScene.m */,
+				6F1CEE871745249800040A05 /* Game Objects */,
 				6FD7EDBB1743F498001022EB /* UI Management */,
 				6F35963E173DC48B00C9C717 /* Map Management */,
 				6F3693DB173BE187005BAC8B /* Utility Classes */,
@@ -653,6 +708,7 @@
 		6F369219173B4107005BAC8B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6F1CEE7D1744804600040A05 /* Art */,
 				6F359648173DC6FD00C9C717 /* Map Resources */,
 				6F3693BB173B4929005BAC8B /* Fonts */,
 				6F3693D5173B4AB1005BAC8B /* icons and splash screens */,
@@ -1216,6 +1272,10 @@
 				6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */,
 				6FD7EDB61743E0F9001022EB /* README.md in Resources */,
 				6FD7EDB71743E0F9001022EB /* release_notes.md in Resources */,
+				6F1CEE81174522F800040A05 /* temp_dc-hd.plist in Resources */,
+				6F1CEE82174522F800040A05 /* temp_dc-hd.png in Resources */,
+				6F1CEE851745231200040A05 /* temp_dc.plist in Resources */,
+				6F1CEE861745231200040A05 /* temp_dc.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1352,6 +1412,8 @@
 				6F359660173DE7C400C9C717 /* CCPanZoomController.m in Sources */,
 				6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */,
 				6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */,
+				6F1CEE8B174524F700040A05 /* GameObject.m in Sources */,
+				6F1CEE8E1745251000040A05 /* GameObjectSprite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -96,12 +96,14 @@
     CCLOG(@"boundingRect: %@", NSStringFromCGRect(boundingRect));
     
     // the pan/zoom controller
-    _panZoomController = [CCPanZoomController controllerWithNode:self];
-    _panZoomController.boundingRect = boundingRect;
-    _panZoomController.windowRect   = CGRectMake(0, 0, screenSize.width, screenSize.height);
-    _panZoomController.zoomOutLimit = 0.5f;
-    _panZoomController.zoomInLimit  = 1.0f;
-    _panZoomController.zoomOnDoubleTap = NO;
+    _panZoomController                      = [CCPanZoomController controllerWithNode:self];
+    _panZoomController.boundingRect         = boundingRect;
+    _panZoomController.windowRect           = CGRectMake(0, 0, screenSize.width, screenSize.height);
+    _panZoomController.zoomOutLimit         = 0.5f;
+    _panZoomController.zoomInLimit          = 1.0f;
+    _panZoomController.zoomOnDoubleTap      = NO;
+    _panZoomController.centerOnPinch        = YES;
+    _panZoomController.zoomCenteringDamping = 0.8f;
     
     // TODO: Balance these values.
     // Higher scrollRate is slower; default is 9
