@@ -191,6 +191,10 @@ If the player is in the middle of an adventure and wants to play a seed challeng
 There are several actions that the player can take with the main character. The most primary of those is movement. 
 
 ##### Movement
+
+###### Facing
+The player can rotate Doctor Chick and his assistant at will, but only one time each turn. Doctor Chick can move while facing any direction (imaging turn-based backing up or strafing) but can only "run" in the forward direction. The player does not have to change Doctor Chick's facing each turn. If the player double-taps on a tile, Doctor Chick will move to that tile and automatically face the direction of movement. If the player taps and holds on a tile, a radial UI element will appear that will allow Doctor Chick to move and turn at the same time.
+
 ###### Stealth Mode?
 ##### Searching
 ##### Activating
@@ -277,7 +281,7 @@ Artifacts that haven't been used as weapons, etc... make the benefactors happier
 -----
 
 ### Combat Mechanics
-Facing is important to combat in Doctor Chick. If he is facing the enemy he is attacking, he will attack at 100% strength. If he has to first turn to face the opponent, his attack will lose strength, though it will be execute in the same turn. Doctor Chick's facing is determined by the last direction of movement. Each move consists of the ability to move on the map, to a different tile, and the ability to turn. The player does not have to execute the turn to complete the move.
+Facing is important to combat in Doctor Chick. If he is facing the enemy he is attacking, he will attack at 100% strength. If he has to first turn to face the opponent, his attack will lose strength, though it will execute in the same turn. 
 
 -----
 
