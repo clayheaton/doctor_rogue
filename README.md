@@ -17,7 +17,7 @@ For information on some of the tools being used in development, please see the [
 For useful programming tidbits, see [this page](https://github.com/ccheaton/doctor_rogue/wiki/Useful-programming-tidbits).
 
 Further information can be found on the quartertothree forum [here]
-(http://www.quartertothree.com/game-talk/showthread.php?72745-Help-me-design-and-make-a-roguelike!&p=3379264&viewfull=1#post3379264) and [here]
+(http://www.quartertothree.com/game-talk/showthread.php?72745-Help-me-design-and-make-a-roguelike!&p=3379264&viewfull=1#post3379264) and the github wiki [here]
 (https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
 
 Additional things to know:
