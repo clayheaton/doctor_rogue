@@ -28,6 +28,8 @@
 
         _gameWorld     = [GameWorld node];
         
+        // TODO: Change this initialization to allow for passing in a specified map
+        
         MapLayer *mapLayer = [MapLayer node];
         [self addChild:mapLayer z:1 tag:kTag_MainGameScene_MapLayer];
         

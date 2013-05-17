@@ -28,7 +28,7 @@
 
 - (id) init
 {
-    return [self initWithMap:[HKTMXTiledMap tiledMapWithTMXFile:@"test_map.tmx"]];
+    return [self initWithMap:[HKTMXTiledMap tiledMapWithTMXFile:@"test_grasslands.tmx"]];
 }
 
 - (id) initWithMap:(HKTMXTiledMap *)map
@@ -78,10 +78,22 @@
     CGSize screenSize = [[CCDirector sharedDirector] winSize];
     [self setScreenCenter:CGPointMake(screenSize.width / 2, screenSize.height / 2)];
     
+    // TODO: Fix so that this doesn't double-retain the map and prevent it from being unloaded
+    // Need to add currentMap as unsafe_unretained or something because it is automatically retained
+    // when it is added as a child.
+    
     [self setCurrentMap:mapToUse];
     [self addChild:_currentMap z:-1 tag:kTag_MapLayer_currentMap];
     
+    // Hide layers that shouldn't be visible
+    HKTMXLayer *collisions  = [_currentMap layerNamed:MAP_LAYER_COLLISIONS];
+    collisions.visible      = NO;
+    
+    HKTMXLayer *objects     = [_currentMap layerNamed:MAP_LAYER_OBJECTS];
+    objects.visible         = NO;
+    
     [_currentMap setAnchorPoint:ccp(0,0)];
+    
     
     // Get the number of tiles W x H
     CGSize ms = [_currentMap mapSize];
@@ -99,25 +111,41 @@
     _panZoomController                      = [CCPanZoomController controllerWithNode:self];
     _panZoomController.boundingRect         = boundingRect;
     _panZoomController.windowRect           = CGRectMake(0, 0, screenSize.width, screenSize.height);
-    _panZoomController.zoomOutLimit         = 0.5f;
-    _panZoomController.zoomInLimit          = 1.0f;
+
+
     _panZoomController.zoomOnDoubleTap      = NO;
     _panZoomController.centerOnPinch        = YES;
-    _panZoomController.zoomCenteringDamping = 0.8f;
+    
     
     // TODO: Balance these values.
     // Higher scrollRate is slower; default is 9
     // Default scrollDamping is 0.85f;
     
-    _panZoomController.scrollRate    = 15;
-    _panZoomController.scrollDamping = 0.95f;
-    
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
     
-    // TODO: Change this to center on the map entry point
+
     
+    // TODO: Change this to center on the map entry point
     CGPoint testMapLoadPoint = ccp((ms.width * ts.width) * 0.1, (ms.height * ts.height) * 0.9);
-    [_panZoomController centerOnPoint:testMapLoadPoint];
+    
+    if ([[CCDirector sharedDirector] enableRetinaDisplay:YES]) {
+        _panZoomController.zoomOutLimit         = MAP_ZOOM_OUT_LIMIT_RETINA;
+        _panZoomController.zoomInLimit          = MAP_ZOOM_IN_LIMIT_RETINA;
+        _panZoomController.zoomCenteringDamping = MAP_ZOOM_CENTERING_DAMPING_RETINA;
+        _panZoomController.scrollRate           = MAP_SCROLL_RATE_RETINA;
+        _panZoomController.scrollDamping        = MAP_SCROLL_DAMPING_RETINA;
+        
+        [_panZoomController zoomOnPoint:testMapLoadPoint duration:0 scale:0.5f];
+    } else {
+        
+        _panZoomController.zoomOutLimit         = MAP_ZOOM_OUT_LIMIT;
+        _panZoomController.zoomInLimit          = MAP_ZOOM_IN_LIMIT;
+        _panZoomController.zoomCenteringDamping = MAP_ZOOM_CENTERING_DAMPING;
+        _panZoomController.scrollRate           = MAP_SCROLL_RATE;
+        _panZoomController.scrollDamping        = MAP_SCROLL_DAMPING;
+        
+        [_panZoomController centerOnPoint:testMapLoadPoint];
+    }
     
     // CGPoint mapCenterPoint = ccp((ms.width * ts.width) * 0.5, (ms.height * ts.height) * 0.5);
     //[_panZoomController centerOnPoint:mapCenterPoint];
@@ -167,7 +195,7 @@
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
-        CCLOG(@"MapLayer tapped");
+        //CCLOG(@"MapLayer tapped");
         _tapIsTargetingMapLayer = YES;
     } else {
         _tapIsTargetingMapLayer = NO;
