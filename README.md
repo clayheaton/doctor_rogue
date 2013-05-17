@@ -19,7 +19,7 @@ For useful programming tidbits, see [this page](https://github.com/ccheaton/doct
 
 Further information can be found on the quartertothree forum [here]
 (http://www.quartertothree.com/game-talk/showthread.php?72745-Help-me-design-and-make-a-roguelike!&p=3379264&viewfull=1#post3379264) and the github wiki [here]
-(https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
+(https://github.com/ccheaton/doctor_rogue/wiki).
 
 If you are interested in contributing to this project, or would like to know more, please feel free to contact the project owner.  We would love your support!
 
