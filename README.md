@@ -20,6 +20,9 @@ Further information can be found on the quartertothree forum [here]
 (http://www.quartertothree.com/game-talk/showthread.php?72745-Help-me-design-and-make-a-roguelike!&p=3379264&viewfull=1#post3379264) and the github wiki [here]
 (https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
 
+If you are interested in contributing to this project, or would like to know more, please feel free to contact the project owner.  We would love your support!
+
+
 Additional things to know:
 
 * The Xcode project is in the `Doctor Rogue` directory.
@@ -34,9 +37,6 @@ Useful tools for working with the project and resources:
 * [Zwoptex](http://www.zwopple.com/zwoptex/) (pack textures)
 * [cocos2d](http://www.cocos2d-iphone.org) (game engine - download and look for tests for sample code)
 * [HKTMXTiledMap](http://www.cocos2d-iphone.org/forum/topic/17945/page/10#post-456910) (faster implementation of CCTMXTiledMap, but with only orthagonal view)
-
-If you are interested in contributing to this project, or would like to know more, please feel free to contact the project owner.
-
 
 -------
 
