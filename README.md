@@ -1,14 +1,26 @@
-### DOCTOR CHICK aka DOCTOR ROGUE
+### WELCOME TO DOCTOR CHICK - THE ROGUE-LIKE
 
-This is a community project from quartertothree.com. It is in its very early stages. More info coming soon. 
+This is a community project from quartertothree.com. 
 
-For now, there's more info [here]
+
+Doctor Chick is a rogue-like game inspired by the pulp style adventures of characters such as Indiana Jones and Allan Quatermain.  
+
+Adventurers will embark on a journey of discovery through randomly generated environments on a quests to recover a variety of ancient lost artifacts with mysterious powers!  Traditional rogue-like elements will be combined with puzzles, traps, monsters, combat, treasure-seeking and the ever present threat of an evil arch-enemy standing in the way of ultimate success!  
+
+This project is in the early stages of development.  More information on the goals, structure and features of Doctor Chick can be found in the [Doctor Chick Design Briefing](https://github.com/ccheaton/doctor_rogue/blob/master/design_briefing.md).
+
+If you have any questions regarding the design document, you can add them here: [Design Questions](https://github.com/ccheaton/doctor_rogue/wiki/Design-questions).  
+This is also the location for bug tracking and to-do tracking.
+
+For information on some of the tools being used in development, please see the [editing page](https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
+
+For useful programming tidbits, see [this page](https://github.com/ccheaton/doctor_rogue/wiki/Useful-programming-tidbits).
+
+Further information can be found on the quartertothree forum [here]
 (http://www.quartertothree.com/game-talk/showthread.php?72745-Help-me-design-and-make-a-roguelike!&p=3379264&viewfull=1#post3379264) and [here]
 (https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
 
-test
-
-A few things to know:
+Additional things to know:
 
 * The Xcode project is in the `Doctor Rogue` directory.
 * Resources and files that I used to create resources, fonts, etc. in the Xcode project are in the `_external_resources` directory.
@@ -22,6 +34,9 @@ Useful tools for working with the project and resources:
 * [Zwoptex](http://www.zwopple.com/zwoptex/) (pack textures)
 * [cocos2d](http://www.cocos2d-iphone.org) (game engine - download and look for tests for sample code)
 * [HKTMXTiledMap](http://www.cocos2d-iphone.org/forum/topic/17945/page/10#post-456910) (faster implementation of CCTMXTiledMap, but with only orthagonal view)
+
+If you are interested in contributing to this project, or would like to know more, please feel free to contact the project owner.
+
 
 -------
 
