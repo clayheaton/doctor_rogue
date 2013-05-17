@@ -10,9 +10,10 @@ Adventurers will embark on a journey of discovery through randomly generated env
 This project is in the early stages of development.  More information on the goals, structure and features of Doctor Chick can be found in the [Doctor Chick Design Briefing](https://github.com/ccheaton/doctor_rogue/blob/master/design_briefing.md).
 
 If you have any questions regarding the design document, you can add them here: [Design Questions](https://github.com/ccheaton/doctor_rogue/wiki/Design-questions).  
-This is also the location for bug tracking and to-do tracking.
 
-For information on some of the tools being used in development, please see the [editing page](https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
+If you would like to report any bugs, issues or to-do items, please do so on the [Issues Page](https://github.com/ccheaton/doctor_rogue/issues?state=open)
+
+For information on some of the tools being used in development, please see the [Editing Page](https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
 
 For useful programming tidbits, see [this page](https://github.com/ccheaton/doctor_rogue/wiki/Useful-programming-tidbits).
 
