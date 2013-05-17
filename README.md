@@ -5,7 +5,7 @@ This is a community project from quartertothree.com.
 
 Doctor Chick is a rogue-like game inspired by the pulp style adventures of characters such as Indiana Jones and Allan Quatermain.  
 
-Adventurers will embark on a journey of discovery through randomly generated environments on a quests to recover a variety of ancient lost artifacts with mysterious powers!  Traditional rogue-like elements will be combined with puzzles, traps, monsters, combat, treasure-seeking and the ever present threat of an evil arch-enemy standing in the way of ultimate success!  
+Adventurers will embark on a journey of discovery through randomly generated environments on quests to recover a variety of ancient lost artifacts with mysterious powers!  Traditional rogue-like elements will be combined with puzzles, traps, monsters, combat, treasure-seeking and the ever present threat of an evil arch-enemy standing in the way of ultimate success!  
 
 This project is in the early stages of development.  More information on the goals, structure and features of Doctor Chick can be found in the [Doctor Chick Design Briefing](https://github.com/ccheaton/doctor_rogue/blob/master/design_briefing.md).
 
