@@ -1208,6 +1208,7 @@
 				6F3691FD173B4106005BAC8B /* Sources */,
 				6F3691FE173B4106005BAC8B /* Frameworks */,
 				6F3691FF173B4106005BAC8B /* Resources */,
+				6FD387AC1745CDF600AC6F76 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1301,6 +1302,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6FD387AC1745CDF600AC6F76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "KEYWORDS=\"TODO:|FIXME:|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($KEYWORDS).*\\$\" | perl -p -e \"s/($KEYWORDS)/ warning: \\$1/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6F3691FD173B4106005BAC8B /* Sources */ = {

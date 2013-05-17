@@ -37,7 +37,6 @@ NSString *const AVAudioSessionCategoryPlayAndRecord = @"AVAudioSessionCategoryPl
 NSString *const AVAudioSessionCategoryAudioProcessing = @"AVAudioSessionCategoryAudioProcessing";
 
 OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *outData) {
-	//TODO: set outData appropriately
 	return 0;
 }    
 
