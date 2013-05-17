@@ -6,6 +6,8 @@ For now, there's more info [here]
 (http://www.quartertothree.com/game-talk/showthread.php?72745-Help-me-design-and-make-a-roguelike!&p=3379264&viewfull=1#post3379264) and [here]
 (https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
 
+test
+
 A few things to know:
 
 * The Xcode project is in the `Doctor Rogue` directory.
