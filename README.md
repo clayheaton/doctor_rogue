@@ -5,17 +5,17 @@ This is a community project from quartertothree.com.
 
 Doctor Chick is a rogue-like game inspired by the pulp style adventures of characters such as Indiana Jones and Allan Quatermain.  
 
-Adventurers will embark on a journey of discovery through randomly generated environments on a quests to recover a variety of ancient lost artifacts with mysterious powers!  Traditional rogue-like elements will be combined with puzzles, traps, monsters, combat, treasure-seeking and the ever present threat of an evil arch-enemy standing in the way of ultimate success!  
+Adventurers will embark on a journey of discovery through randomly generated environments on quests to recover a variety of ancient lost artifacts with mysterious powers!  Traditional rogue-like elements will be combined with puzzles, traps, monsters, combat, treasure-seeking and the ever present threat of an evil arch-enemy standing in the way of ultimate success!  
 
 This project is in the early stages of development.  More information on the goals, structure and features of Doctor Chick can be found in the [Doctor Chick Design Briefing](https://github.com/ccheaton/doctor_rogue/blob/master/design_briefing.md).
 
-If you have any questions regarding the design document, you can add them here: [Design Questions](https://github.com/ccheaton/doctor_rogue/wiki/Design-questions).  
+If you have any questions regarding the design document, you can add them here: [Design Questions](https://github.com/ccheaton/doctor_rogue/wiki/2.---Design-questions).  
 
 If you would like to report any bugs, issues or to-do items, please do so on the [Issues Page](https://github.com/ccheaton/doctor_rogue/issues?state=open)
 
-For information on some of the tools being used in development, please see the [Editing Page](https://github.com/ccheaton/doctor_rogue/wiki/Editing-resources).
+For information on some of the tools being used in development, please see the [Editing Page](https://github.com/ccheaton/doctor_rogue/wiki/3.-Editing-resources).
 
-For useful programming tidbits, see [this page](https://github.com/ccheaton/doctor_rogue/wiki/Useful-programming-tidbits).
+For useful programming tidbits, see [this page](https://github.com/ccheaton/doctor_rogue/wiki/5.-Useful-programming-tidbits).
 
 Further information can be found on the quartertothree forum [here]
 (http://www.quartertothree.com/game-talk/showthread.php?72745-Help-me-design-and-make-a-roguelike!&p=3379264&viewfull=1#post3379264) and the github wiki [here]
