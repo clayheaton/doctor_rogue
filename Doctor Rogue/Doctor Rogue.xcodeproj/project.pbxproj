@@ -166,7 +166,6 @@
 		6F3693CB173B4A5C005BAC8B /* fedora-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693C7173B4A5C005BAC8B /* fedora-70.png */; };
 		6F3693CE173B4A98005BAC8B /* GameStartGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3693CD173B4A98005BAC8B /* GameStartGenerator.m */; };
 		6F3693D4173B4AA9005BAC8B /* Countries.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693D1173B4AA9005BAC8B /* Countries.plist */; };
-		6F3693D9173BE11C005BAC8B /* place_names.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693D8173BE11C005BAC8B /* place_names.csv */; };
 		6F3693E2173BE195005BAC8B /* parseCSV.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3693DD173BE195005BAC8B /* parseCSV.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F3693E3173BE195005BAC8B /* NSMutableArray+Shuffling.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3693DF173BE195005BAC8B /* NSMutableArray+Shuffling.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F3693E4173BE195005BAC8B /* NSString+UnicodeUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3693E1173BE195005BAC8B /* NSString+UnicodeUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -182,15 +181,16 @@
 		6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */; };
 		6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */; };
 		6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */; };
-		6F369404173D685F005BAC8B /* item_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369401173D685F005BAC8B /* item_types.csv */; };
-		6F369405173D685F005BAC8B /* item_descriptors.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369402173D685F005BAC8B /* item_descriptors.csv */; };
-		6F369406173D685F005BAC8B /* item_objects.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369403173D685F005BAC8B /* item_objects.csv */; };
-		6F369408173D6901005BAC8B /* case_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6F369407173D6901005BAC8B /* case_types.csv */; };
 		6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
 		6FCAC05F1747F717002ECBE7 /* newfog-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05D1747F717002ECBE7 /* newfog-hd.png */; };
 		6FCAC0601747F717002ECBE7 /* newfog.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05E1747F717002ECBE7 /* newfog.png */; };
+		6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0611747FCCE002ECBE7 /* place_names.csv */; };
+		6FCAC0671747FCCE002ECBE7 /* item_objects.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0621747FCCE002ECBE7 /* item_objects.csv */; };
+		6FCAC0681747FCCE002ECBE7 /* item_descriptors.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0631747FCCE002ECBE7 /* item_descriptors.csv */; };
+		6FCAC0691747FCCE002ECBE7 /* item_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0641747FCCE002ECBE7 /* item_types.csv */; };
+		6FCAC06A1747FCCE002ECBE7 /* case_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0651747FCCE002ECBE7 /* case_types.csv */; };
 		6FD387A31745B51000AC6F76 /* RandomMapGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */; };
 		6FD387A81745B5B600AC6F76 /* grasslands-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A41745B5B600AC6F76 /* grasslands-hd.png */; };
 		6FD387A91745B5B600AC6F76 /* grasslands.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A51745B5B600AC6F76 /* grasslands.png */; };
@@ -521,7 +521,6 @@
 		6F3693CC173B4A98005BAC8B /* GameStartGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameStartGenerator.h; sourceTree = "<group>"; };
 		6F3693CD173B4A98005BAC8B /* GameStartGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameStartGenerator.m; sourceTree = "<group>"; };
 		6F3693D1173B4AA9005BAC8B /* Countries.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Countries.plist; sourceTree = "<group>"; };
-		6F3693D8173BE11C005BAC8B /* place_names.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = place_names.csv; sourceTree = "<group>"; };
 		6F3693DC173BE195005BAC8B /* parseCSV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parseCSV.h; sourceTree = "<group>"; };
 		6F3693DD173BE195005BAC8B /* parseCSV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = parseCSV.m; sourceTree = "<group>"; };
 		6F3693DE173BE195005BAC8B /* NSMutableArray+Shuffling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Shuffling.h"; sourceTree = "<group>"; };
@@ -540,10 +539,6 @@
 		6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35-hd.png"; sourceTree = "<group>"; };
 		6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fedora-titles-35.fnt"; sourceTree = "<group>"; };
 		6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35.png"; sourceTree = "<group>"; };
-		6F369401173D685F005BAC8B /* item_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_types.csv; sourceTree = "<group>"; };
-		6F369402173D685F005BAC8B /* item_descriptors.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_descriptors.csv; sourceTree = "<group>"; };
-		6F369403173D685F005BAC8B /* item_objects.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_objects.csv; sourceTree = "<group>"; };
-		6F369407173D6901005BAC8B /* case_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = case_types.csv; sourceTree = "<group>"; };
 		6F8799A71741271600CA9E08 /* ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveSupportInflector.h; sourceTree = "<group>"; };
 		6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveSupportInflector.m; sourceTree = "<group>"; };
 		6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
@@ -551,6 +546,11 @@
 		6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ActiveSupportInflector.m"; sourceTree = "<group>"; };
 		6FCAC05D1747F717002ECBE7 /* newfog-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newfog-hd.png"; sourceTree = "<group>"; };
 		6FCAC05E1747F717002ECBE7 /* newfog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newfog.png; sourceTree = "<group>"; };
+		6FCAC0611747FCCE002ECBE7 /* place_names.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = place_names.csv; sourceTree = "<group>"; };
+		6FCAC0621747FCCE002ECBE7 /* item_objects.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_objects.csv; sourceTree = "<group>"; };
+		6FCAC0631747FCCE002ECBE7 /* item_descriptors.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_descriptors.csv; sourceTree = "<group>"; };
+		6FCAC0641747FCCE002ECBE7 /* item_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_types.csv; sourceTree = "<group>"; };
+		6FCAC0651747FCCE002ECBE7 /* case_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = case_types.csv; sourceTree = "<group>"; };
 		6FD387A11745B51000AC6F76 /* RandomMapGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomMapGenerator.h; sourceTree = "<group>"; };
 		6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RandomMapGenerator.m; sourceTree = "<group>"; };
 		6FD387A41745B5B600AC6F76 /* grasslands-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grasslands-hd.png"; sourceTree = "<group>"; };
@@ -1154,11 +1154,11 @@
 		6F3693DA173BE156005BAC8B /* Data Sources */ = {
 			isa = PBXGroup;
 			children = (
-				6F3693D8173BE11C005BAC8B /* place_names.csv */,
-				6F369401173D685F005BAC8B /* item_types.csv */,
-				6F369402173D685F005BAC8B /* item_descriptors.csv */,
-				6F369403173D685F005BAC8B /* item_objects.csv */,
-				6F369407173D6901005BAC8B /* case_types.csv */,
+				6FCAC0611747FCCE002ECBE7 /* place_names.csv */,
+				6FCAC0621747FCCE002ECBE7 /* item_objects.csv */,
+				6FCAC0631747FCCE002ECBE7 /* item_descriptors.csv */,
+				6FCAC0641747FCCE002ECBE7 /* item_types.csv */,
+				6FCAC0651747FCCE002ECBE7 /* case_types.csv */,
 				6F3693D1173B4AA9005BAC8B /* Countries.plist */,
 			);
 			name = "Data Sources";
@@ -1280,7 +1280,6 @@
 				6F3693CA173B4A5C005BAC8B /* fedora-70.fnt in Resources */,
 				6F3693CB173B4A5C005BAC8B /* fedora-70.png in Resources */,
 				6F3693D4173B4AA9005BAC8B /* Countries.plist in Resources */,
-				6F3693D9173BE11C005BAC8B /* place_names.csv in Resources */,
 				6F3693E9173BF8CC005BAC8B /* fedora-titles-50-hd.fnt in Resources */,
 				6F3693EA173BF8CC005BAC8B /* fedora-titles-50-hd.png in Resources */,
 				6F3693EB173BF8CC005BAC8B /* fedora-titles-50.fnt in Resources */,
@@ -1293,10 +1292,6 @@
 				6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */,
 				6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */,
 				6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */,
-				6F369404173D685F005BAC8B /* item_types.csv in Resources */,
-				6F369405173D685F005BAC8B /* item_descriptors.csv in Resources */,
-				6F369406173D685F005BAC8B /* item_objects.csv in Resources */,
-				6F369408173D6901005BAC8B /* case_types.csv in Resources */,
 				6F35964B173DC74C00C9C717 /* all_terrain.png in Resources */,
 				6F35964C173DC74C00C9C717 /* test_map.tmx in Resources */,
 				6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */,
@@ -1314,6 +1309,11 @@
 				6F0804F51746744600B55B55 /* hawker_hart.png in Resources */,
 				6FCAC05F1747F717002ECBE7 /* newfog-hd.png in Resources */,
 				6FCAC0601747F717002ECBE7 /* newfog.png in Resources */,
+				6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */,
+				6FCAC0671747FCCE002ECBE7 /* item_objects.csv in Resources */,
+				6FCAC0681747FCCE002ECBE7 /* item_descriptors.csv in Resources */,
+				6FCAC0691747FCCE002ECBE7 /* item_types.csv in Resources */,
+				6FCAC06A1747FCCE002ECBE7 /* case_types.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
