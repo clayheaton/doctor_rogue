@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F0804F41746744600B55B55 /* hawker_hart-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0804F21746744600B55B55 /* hawker_hart-hd.png */; };
+		6F0804F51746744600B55B55 /* hawker_hart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0804F31746744600B55B55 /* hawker_hart.png */; };
 		6F1CEE81174522F800040A05 /* temp_dc-hd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */; };
 		6F1CEE82174522F800040A05 /* temp_dc-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE80174522F800040A05 /* temp_dc-hd.png */; };
 		6F1CEE851745231200040A05 /* temp_dc.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE831745231200040A05 /* temp_dc.plist */; };
@@ -187,6 +189,8 @@
 		6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
+		6FCAC05F1747F717002ECBE7 /* newfog-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05D1747F717002ECBE7 /* newfog-hd.png */; };
+		6FCAC0601747F717002ECBE7 /* newfog.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05E1747F717002ECBE7 /* newfog.png */; };
 		6FD387A31745B51000AC6F76 /* RandomMapGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */; };
 		6FD387A81745B5B600AC6F76 /* grasslands-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A41745B5B600AC6F76 /* grasslands-hd.png */; };
 		6FD387A91745B5B600AC6F76 /* grasslands.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A51745B5B600AC6F76 /* grasslands.png */; };
@@ -199,6 +203,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F0804F21746744600B55B55 /* hawker_hart-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hawker_hart-hd.png"; sourceTree = "<group>"; };
+		6F0804F31746744600B55B55 /* hawker_hart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hawker_hart.png; sourceTree = "<group>"; };
 		6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "temp_dc-hd.plist"; sourceTree = "<group>"; };
 		6F1CEE80174522F800040A05 /* temp_dc-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "temp_dc-hd.png"; sourceTree = "<group>"; };
 		6F1CEE831745231200040A05 /* temp_dc.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = temp_dc.plist; sourceTree = "<group>"; };
@@ -543,6 +549,8 @@
 		6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
 		6F8799AC1741271600CA9E08 /* NSString+ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ActiveSupportInflector.h"; sourceTree = "<group>"; };
 		6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ActiveSupportInflector.m"; sourceTree = "<group>"; };
+		6FCAC05D1747F717002ECBE7 /* newfog-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newfog-hd.png"; sourceTree = "<group>"; };
+		6FCAC05E1747F717002ECBE7 /* newfog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newfog.png; sourceTree = "<group>"; };
 		6FD387A11745B51000AC6F76 /* RandomMapGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomMapGenerator.h; sourceTree = "<group>"; };
 		6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RandomMapGenerator.m; sourceTree = "<group>"; };
 		6FD387A41745B5B600AC6F76 /* grasslands-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grasslands-hd.png"; sourceTree = "<group>"; };
@@ -595,6 +603,8 @@
 				6F1CEE841745231200040A05 /* temp_dc.png */,
 				6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */,
 				6F1CEE80174522F800040A05 /* temp_dc-hd.png */,
+				6F0804F21746744600B55B55 /* hawker_hart-hd.png */,
+				6F0804F31746744600B55B55 /* hawker_hart.png */,
 			);
 			name = Placeholder;
 			path = placeholder;
@@ -638,6 +648,8 @@
 			children = (
 				6F359649173DC74C00C9C717 /* all_terrain.png */,
 				6F35964A173DC74C00C9C717 /* test_map.tmx */,
+				6FCAC05D1747F717002ECBE7 /* newfog-hd.png */,
+				6FCAC05E1747F717002ECBE7 /* newfog.png */,
 				6FD387A41745B5B600AC6F76 /* grasslands-hd.png */,
 				6FD387A51745B5B600AC6F76 /* grasslands.png */,
 				6FD387A61745B5B600AC6F76 /* test_grasslands-hd.tmx */,
@@ -1298,6 +1310,10 @@
 				6FD387A91745B5B600AC6F76 /* grasslands.png in Resources */,
 				6FD387AA1745B5B600AC6F76 /* test_grasslands-hd.tmx in Resources */,
 				6FD387AB1745B5B600AC6F76 /* test_grasslands.tmx in Resources */,
+				6F0804F41746744600B55B55 /* hawker_hart-hd.png in Resources */,
+				6F0804F51746744600B55B55 /* hawker_hart.png in Resources */,
+				6FCAC05F1747F717002ECBE7 /* newfog-hd.png in Resources */,
+				6FCAC0601747F717002ECBE7 /* newfog.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

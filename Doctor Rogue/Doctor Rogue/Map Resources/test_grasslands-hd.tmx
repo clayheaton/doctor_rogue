@@ -171,6 +171,50 @@
    </properties>
   </tile>
  </tileset>
+ <tileset firstgid="157" name="fog" tilewidth="128" tileheight="128">
+  <image source="newfog-hd.png" width="768" height="768"/>
+  <terraintypes>
+   <terrain name="clear" tile="-1"/>
+   <terrain name="partial" tile="-1"/>
+   <terrain name="black" tile="-1"/>
+  </terraintypes>
+  <tile id="0" terrain="1,1,1,0"/>
+  <tile id="1" terrain="1,1,0,0"/>
+  <tile id="2" terrain="1,1,0,1"/>
+  <tile id="3" terrain="1,1,1,2"/>
+  <tile id="4" terrain="1,1,2,2"/>
+  <tile id="5" terrain="1,1,2,1"/>
+  <tile id="6" terrain="1,0,1,0"/>
+  <tile id="7" terrain="0,0,0,0"/>
+  <tile id="8" terrain="0,1,0,1"/>
+  <tile id="9" terrain="1,2,1,2"/>
+  <tile id="10" terrain="2,2,2,2"/>
+  <tile id="11" terrain="2,1,2,1"/>
+  <tile id="12" terrain="1,0,1,1"/>
+  <tile id="13" terrain="0,0,1,1"/>
+  <tile id="14" terrain="0,1,1,1"/>
+  <tile id="15" terrain="1,2,1,1"/>
+  <tile id="16" terrain="2,2,1,1"/>
+  <tile id="17" terrain="2,1,1,1"/>
+  <tile id="18" terrain="0,0,0,1"/>
+  <tile id="19" terrain="0,0,1,1"/>
+  <tile id="20" terrain="0,0,1,0"/>
+  <tile id="21" terrain="2,2,2,1"/>
+  <tile id="22" terrain="2,2,1,1"/>
+  <tile id="23" terrain="2,2,1,2"/>
+  <tile id="24" terrain="0,1,0,1"/>
+  <tile id="25" terrain="1,1,1,1"/>
+  <tile id="26" terrain="1,0,1,0"/>
+  <tile id="27" terrain="2,1,2,1"/>
+  <tile id="28" terrain="1,1,1,1"/>
+  <tile id="29" terrain="1,2,1,2"/>
+  <tile id="30" terrain="0,1,0,0"/>
+  <tile id="31" terrain="1,1,0,0"/>
+  <tile id="32" terrain="1,0,0,0"/>
+  <tile id="33" terrain="2,1,2,2"/>
+  <tile id="34" terrain="1,1,2,2"/>
+  <tile id="35" terrain="1,2,2,2"/>
+ </tileset>
  <layer name="terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
    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
@@ -184,6 +228,11 @@
  <layer name="collisions" width="50" height="50">
   <data encoding="base64" compression="zlib">
    eJztzqENAAAIBDH2l7AwOxDEi9ZfclWkm0PT7xcAAAAAAAAAAADZFuB6ASY=
+  </data>
+ </layer>
+ <layer name="fog_of_war" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmN1uwjAMhfP+7wBsg/2UbWWwia2DMR5tiWSLg+ckXDRtJHzxqaWC1ifHx1FZOOcWxtWx8rwRS8+6gpouqXlJcN3Pnq2no+NnBXXmuPfceH6JO9Aw8ew9PxXUmfMhrP2D55H4qsQH2dtaj6+ofvbhCDqewI/GjZMNrO+W4F5p3CkH/B2sH3WwH+E4H1GDrO8AmhhNw8bTUv1Mid7iPgms3XkPpdb4Ug7ulHP2o4QOvH9DtXdwHfPah5ZSfYU1d+68j8PxuwcdPLP4OaX9QB0pP0LPvwLvxEdCB2a9pB+yfr6m+YFzFH/3Qlo2oI21tm54Hbl88KySc7gjLa1y39LzSqtdW+Nc/8c8kpkrpUPLtlzHnBbcI+RvNS0l9vTUrMLzoCWWZW2P0DzB631nJJVxTVdMj9wjYjOwVG/NIh7k8p+bY3JN5L379mPnmRIzpf5Yr8vMcEZSnk7gWSXfP1gT64nlXtvrtXklczH0u0fQs1f0yPPgCe5zsUxvyYux3gF37n9+ZI3aZy0bY7+PS29S+dVm7the5LyJ9Zo81qRBehPgeaB5MNRc6lPXVFD7fzqGYRiGYRiGYRiGYRjXwh9D/2AY
   </data>
  </layer>
 </map>

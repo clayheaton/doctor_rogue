@@ -171,6 +171,50 @@
    </properties>
   </tile>
  </tileset>
+ <tileset firstgid="157" name="fog" tilewidth="64" tileheight="64">
+  <image source="newfog.png" width="384" height="384"/>
+  <terraintypes>
+   <terrain name="clear" tile="-1"/>
+   <terrain name="partial" tile="-1"/>
+   <terrain name="black" tile="-1"/>
+  </terraintypes>
+  <tile id="0" terrain="1,1,1,0"/>
+  <tile id="1" terrain="1,1,0,0"/>
+  <tile id="2" terrain="1,1,0,1"/>
+  <tile id="3" terrain="1,1,1,2"/>
+  <tile id="4" terrain="1,1,2,2"/>
+  <tile id="5" terrain="1,1,2,1"/>
+  <tile id="6" terrain="1,0,1,0"/>
+  <tile id="7" terrain="0,0,0,0"/>
+  <tile id="8" terrain="0,1,0,1"/>
+  <tile id="9" terrain="1,2,1,2"/>
+  <tile id="10" terrain="2,2,2,2"/>
+  <tile id="11" terrain="2,1,2,1"/>
+  <tile id="12" terrain="1,0,1,1"/>
+  <tile id="13" terrain="0,0,1,1"/>
+  <tile id="14" terrain="0,1,1,1"/>
+  <tile id="15" terrain="1,2,1,1"/>
+  <tile id="16" terrain="2,2,1,1"/>
+  <tile id="17" terrain="2,1,1,1"/>
+  <tile id="18" terrain="0,0,0,1"/>
+  <tile id="19" terrain="0,0,1,1"/>
+  <tile id="20" terrain="0,0,1,0"/>
+  <tile id="21" terrain="2,2,2,1"/>
+  <tile id="22" terrain="2,2,1,1"/>
+  <tile id="23" terrain="2,2,1,2"/>
+  <tile id="24" terrain="0,1,0,1"/>
+  <tile id="25" terrain="1,1,1,1"/>
+  <tile id="26" terrain="1,0,1,0"/>
+  <tile id="27" terrain="2,1,2,1"/>
+  <tile id="28" terrain="1,1,1,1"/>
+  <tile id="29" terrain="1,2,1,2"/>
+  <tile id="30" terrain="0,1,0,0"/>
+  <tile id="31" terrain="1,1,0,0"/>
+  <tile id="32" terrain="1,0,0,0"/>
+  <tile id="33" terrain="2,1,2,2"/>
+  <tile id="34" terrain="1,1,2,2"/>
+  <tile id="35" terrain="1,2,2,2"/>
+ </tileset>
  <layer name="terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
    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
@@ -184,6 +228,11 @@
  <layer name="collisions" width="50" height="50">
   <data encoding="base64" compression="zlib">
    eJztzjENAAAIAzD8n2CYCw0kS6ugVZz+DgSb7wAAAAAAAAAAABBvAeRGASY=
+  </data>
+ </layer>
+ <layer name="fog_of_war" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztlutSwjAQhfP+74AKgqIiIt6KYOmjuZnZM56uie2vNM7sj2/SAGX25OwlyxDCcgRPwk641/V55Hs1ETU8CFfCXFgId/9Qy5tq6IRboSUt8GdnnrGvSWvUcaMaQKvegIVqPSv47LqC+FnHp9FhackvsBY+Kog/58deeBFeB7Q1lehAj4o1vtHYI9vQr5cUe/1dDf0g+nAg3gnWlfIF9VNDb1tR/Hbl579qB71tqvxKzQz2hZ9t7Twq8KmZyBPW0FEscX9OaNpo3Kgdq28qT+zcQw/luHIecc5xvsVzKD1LVuF3zqfmQ5OInXXxf0wxS1I6cjWM2Q1/WA/8Qw8u4QffZzEvhuZcau5xjuEsohcz4auADtTEPPzckbpMvHaeY78N/RnDOkrVxthc4nO3dc/gHJBTpWoj+oH+yb0/xdroGLqblMqpyFE4CRfCJWmyehDbIfTnBq+gtIaUJquH74gz/d5yIrCfSkPOI461htgcx3Ecx3Ecx3Ecx3Ecx3Ecpya+AawuUO8=
   </data>
  </layer>
 </map>
