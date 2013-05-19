@@ -1,0 +1,25 @@
+/* 
+  Localizable.strings
+  Doctor Rogue
+
+  Created by Clay Heaton on 5/18/13.
+*/
+
+// Terrain
+
+"terrain_grasslands_deep_grass"                         = "This is deep grass, a great place for snakes to hide.";
+"terrain_grasslands_deep_grass_border_medium_grass"     = "The grass here transitions from average height to deep.";
+"terrain_grasslands_medium_grass"                       = "This is grass of normal depth.";
+"terrain_grasslands_medium_grass_border_light_grass"    = "The grass here is beginning to thin out.";
+"terrain_grasslands_light_grass"                        = "The grass here is sparse and looks unhealthy.";
+"terrain_grasslands_light_grass_border_dirt"            = "The grass barely is surviving here. It's mostly dirt.";
+"terrain_grasslands_dirt"                               = "God made dirt and dirt don't hurt.";
+"terrain_grasslands_dirt_border_dirty_brick"            = "Worn brick emerges from below the dirt here.";
+"terrain_grasslands_dirty_brick"                        = "The brick here is dirty and worn.";
+"terrain_grasslands_dirty_brick_border_brick"           = "The brick here begins to look less worn.";
+"terrain_grasslands_brick"                              = "The brick here is clean and well preserved.";
+"terrain_grasslands_dirt_border_brick"                  = "The edge of a brick platform is visible here.";
+"terrain_grasslands_medium_grass_border_shallow_water"  = "The edge of a body of water is visible here.";
+"terrain_grasslands_shallow_water"                      = "This water is shallow enough to allow passage on foot.";
+"terrain_grasslands_shallow_water_border_deep_water"    = "The water appears to get much deeper here.";
+"terrain_grasslands_deep_water"                         = "You're not going to get across this deep water without help";

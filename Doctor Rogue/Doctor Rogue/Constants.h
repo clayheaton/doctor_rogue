@@ -19,6 +19,9 @@
 #define MAP_LAYER_OBJECTS           @"objects"
 #define MAP_LAYER_COLLISIONS        @"collisions"
 
+// Higher scrollRate is slower; default is 9
+// Default scrollDamping is 0.85f;
+
 #define MAP_ZOOM_OUT_LIMIT                  0.5f
 #define MAP_ZOOM_OUT_LIMIT_RETINA           0.25f
 #define MAP_ZOOM_IN_LIMIT                   1.0f
@@ -33,9 +36,8 @@
 // kTag_Parent_Child
 typedef enum {
     kTagMIN = 0,
-    // TODO: the first two are improperly capitalized
-    kTag_MainGameScene_MapLayer,
-    kTag_MainGameScene_UILayer,
+    kTag_MainGameScene_mapLayer,
+    kTag_MainGameScene_uiLayer,
     kTag_MapLayer_currentMap,
     kTag_UILayer_tempQuitButton,
     kTag_UILayer_toggleGridButton,
@@ -49,3 +51,17 @@ typedef enum
 	LoadingTargetScene_MainGameScene,
 	LoadingTargetSceneMAX,
 } LoadingTargetScenes;
+
+typedef enum
+{
+	TileMovement_Never,
+    TileMovement_Floating,
+    TileMovement_Always
+} TileMovementStatus;
+
+typedef enum
+{
+	FogofWar_TileVisible, // in LoS for player
+    FogofWar_TileVisited, // previously in LoS for player
+    FogofWar_TileBlack    // Never seen or visited.
+} FogOfWarStatus;

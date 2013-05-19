@@ -31,10 +31,10 @@
         // TODO: Change this initialization to allow for passing in a specified map
         
         MapLayer *mapLayer = [MapLayer node];
-        [self addChild:mapLayer z:1 tag:kTag_MainGameScene_MapLayer];
+        [self addChild:mapLayer z:1 tag:kTag_MainGameScene_mapLayer];
         
         UILayer *uiLayer   = [UILayer node];
-        [self addChild:uiLayer z:2 tag:kTag_MainGameScene_UILayer];
+        [self addChild:uiLayer z:2 tag:kTag_MainGameScene_uiLayer];
         
     }
     return self;
@@ -50,11 +50,11 @@
 
 - (MapLayer *)mapLayer
 {
-    return (MapLayer *)[self getChildByTag:kTag_MainGameScene_MapLayer];
+    return (MapLayer *)[self getChildByTag:kTag_MainGameScene_mapLayer];
 }
 - (UILayer  *)uiLayer
 {
-    return (UILayer  *)[self getChildByTag:kTag_MainGameScene_UILayer];
+    return (UILayer  *)[self getChildByTag:kTag_MainGameScene_uiLayer];
 }
 
 /* Not needed with ARC

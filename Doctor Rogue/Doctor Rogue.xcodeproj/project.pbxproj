@@ -184,6 +184,7 @@
 		6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
+		6FC4E475174873E000C36B5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6FC4E474174873E000C36B5A /* Localizable.strings */; };
 		6FCAC05F1747F717002ECBE7 /* newfog-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05D1747F717002ECBE7 /* newfog-hd.png */; };
 		6FCAC0601747F717002ECBE7 /* newfog.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05E1747F717002ECBE7 /* newfog.png */; };
 		6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0611747FCCE002ECBE7 /* place_names.csv */; };
@@ -544,6 +545,7 @@
 		6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
 		6F8799AC1741271600CA9E08 /* NSString+ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ActiveSupportInflector.h"; sourceTree = "<group>"; };
 		6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ActiveSupportInflector.m"; sourceTree = "<group>"; };
+		6FC4E474174873E000C36B5A /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		6FCAC05D1747F717002ECBE7 /* newfog-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newfog-hd.png"; sourceTree = "<group>"; };
 		6FCAC05E1747F717002ECBE7 /* newfog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newfog.png; sourceTree = "<group>"; };
 		6FCAC0611747FCCE002ECBE7 /* place_names.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = place_names.csv; sourceTree = "<group>"; };
@@ -1160,6 +1162,7 @@
 				6FCAC0641747FCCE002ECBE7 /* item_types.csv */,
 				6FCAC0651747FCCE002ECBE7 /* case_types.csv */,
 				6F3693D1173B4AA9005BAC8B /* Countries.plist */,
+				6FC4E474174873E000C36B5A /* Localizable.strings */,
 			);
 			name = "Data Sources";
 			sourceTree = "<group>";
@@ -1314,6 +1317,7 @@
 				6FCAC0681747FCCE002ECBE7 /* item_descriptors.csv in Resources */,
 				6FCAC0691747FCCE002ECBE7 /* item_types.csv in Resources */,
 				6FCAC06A1747FCCE002ECBE7 /* case_types.csv in Resources */,
+				6FC4E475174873E000C36B5A /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

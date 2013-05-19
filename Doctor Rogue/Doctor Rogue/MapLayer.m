@@ -9,6 +9,7 @@
 #import "HKTMXTiledMap.h"
 #import "Constants.h"
 #import "CCPanZoomController.h"
+#import "RandomMapGenerator.h"
 
 @interface MapLayer (PrivateMethods)
 - (void) registerForNotifications;
@@ -44,6 +45,15 @@
         
         [self registerForNotifications];
         
+        // Randomization could be moved to setUpWithMap:
+        RandomMapGenerator *rmg = [[RandomMapGenerator alloc] init];
+        
+        // [RandomMapGenerator randomize:] returns a HKTMXTiledMap, but since we're passing a pointer,
+        // we don't need to explicitly store the return value
+        [rmg randomize:map];
+        
+        
+        // At this point, we can assume the map is randomized
         [self setUpWithMap:map];
         
     }
@@ -94,7 +104,6 @@
     
     [_currentMap setAnchorPoint:ccp(0,0)];
     
-    
     // Get the number of tiles W x H
     CGSize ms = [_currentMap mapSize];
     CGSize ts = [_currentMap tileSize];
@@ -115,11 +124,6 @@
 
     _panZoomController.zoomOnDoubleTap      = NO;
     _panZoomController.centerOnPinch        = YES;
-    
-    
-    // TODO: Balance these values.
-    // Higher scrollRate is slower; default is 9
-    // Default scrollDamping is 0.85f;
     
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
     
@@ -151,7 +155,8 @@
     //[_panZoomController centerOnPoint:mapCenterPoint];
 
     
-    // Set up the grid that we will use to refer to the tiles.
+    // Set up the grid that we will use to refer to the tiles for gameplay purposes
+    // Randomization is handled earlier.
     // [self establishMapGrid];
 }
 
