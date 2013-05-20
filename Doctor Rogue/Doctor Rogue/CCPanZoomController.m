@@ -533,6 +533,8 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 
 - (void) endScroll:(CGPoint)pos
 {
+    // CCLOG(@"CCPZ node pos: %@", NSStringFromCGPoint(_node.position));
+    // CCLOG(@"CCPZ pos: %@", NSStringFromCGPoint(pos));
 }
 
 // New method for returning the length with a variety of points
@@ -542,6 +544,7 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     for (int i = 0; i < [points count] - 1; i++) {
         total += ccpDistance([[points objectAtIndex:i] CGPointValue], [[points objectAtIndex:i+1] CGPointValue]);
     }
+    
     return total;
 }
 

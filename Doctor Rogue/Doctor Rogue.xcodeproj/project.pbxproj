@@ -1224,6 +1224,7 @@
 				6F3691FE173B4106005BAC8B /* Frameworks */,
 				6F3691FF173B4106005BAC8B /* Resources */,
 				6FD387AC1745CDF600AC6F76 /* ShellScript */,
+				6FD7479C1749C875002AFF93 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1336,6 +1337,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "KEYWORDS=\"TODO:|FIXME:|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($KEYWORDS).*\\$\" | perl -p -e \"s/($KEYWORDS)/ warning: \\$1/\"";
+		};
+		6FD7479C1749C875002AFF93 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\nbN=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbN=$((bN += 1))\nbN=$(printf \"%d\" $bN)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $bN\" \"$INFOPLIST_FILE\"\nCFBuildDate=$(date -u +\"%a %b %d %T GMT %Y\")\n/usr/libexec/PlistBuddy -c \"Set :CFBuildDate $CFBuildDate\" \"$INFOPLIST_FILE\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

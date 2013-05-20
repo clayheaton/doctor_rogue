@@ -76,7 +76,16 @@
         feedbackLabel.anchorPoint = ccp(0.5,0);
         [self addChild:feedbackLabel z:1 tag:18];
         
+        NSString *buildNumber =[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
+        NSString *buildDate   =[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBuildDate"];
         
+        CCLabelTTF *buildNumberLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"Build %@ - %@", buildNumber, buildDate]
+                                                          fontName:[[UIFont systemFontOfSize:12] familyName]
+                                                          fontSize:18];
+        
+        buildNumberLabel.position = ccp(10, 10);
+        buildNumberLabel.anchorPoint = ccp(0,0);
+        [self addChild:buildNumberLabel z:1 tag:19];
 		
 		
 		/*

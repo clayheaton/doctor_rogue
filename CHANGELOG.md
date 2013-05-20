@@ -1,5 +1,7 @@
 ##### CHANGELOG - Add changes to the top.
 
+* 19 May 2013 - Clay - This build is the first to include the build number on the main menu screen. While it doesn't look like much else was done, I refactored some of the code for touch detection in the MapLayer to make certain that we were properly translating screen touches to map locations. We weren't. Now we are. To see the effects of this, double tap on any tile and an ugly white circle will appear there, indicating that you "selected" it. You then can scroll and zoom with the same tile selected. If you double-tap a different tile, it will become selected. If you double-tap a selected tile, the ugly white circle will disappear.
+
 * 18 May 2013 - Clay - Added fog of war tiles and examples of how they look onto the test maps.
 
 * 16 May 2013 - Clay - Created and added two grasslands test maps; one retina and one standard display. This revealed a number of bugs in the implementation of CCPanZoomController. These were addressed by performing a retina check in `MapLayer` and allowing for specific balancing of zooming and scrolling dampening values in `Constants.h`. Also added but did nothing with the `RandomMapGenerator` class.
