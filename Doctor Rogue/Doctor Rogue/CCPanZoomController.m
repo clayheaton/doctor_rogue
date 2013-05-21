@@ -441,8 +441,6 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
         
         //doesn't really do anything right now
         [self endZoom];
-		
-        // TODO: Consider reimplementing this to fix jitter on zoom
         
 		//which touch remains?
 		//if (touch == touch2)

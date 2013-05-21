@@ -3,11 +3,11 @@
 //  Doctor Rogue
 //
 //  Created by Clay Heaton on 5/10/13.
-//  Copyright 2013 The Perihelion Group. All rights reserved.
 //
 
 #import "GameWorld.h"
-
+#import "HKTMXTiledMap.h"
+#import "MapTile.h"
 
 @implementation GameWorld
 
@@ -18,6 +18,14 @@
         CCLOG(@"Init in GameWorld");
     }
     return self;
+}
+
+- (void) parseMap:(HKTMXTiledMap *)map
+{
+    CCLOG(@"GameWorld is parsing the map");
+    
+    
+    
 }
 
 @end

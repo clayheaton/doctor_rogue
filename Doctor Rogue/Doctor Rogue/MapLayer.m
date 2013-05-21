@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "CCPanZoomController.h"
 #import "RandomMapGenerator.h"
+#import "GameWorld.h"
 
 @interface MapLayer (PrivateMethods)
 - (void) registerForNotifications;
@@ -20,24 +21,19 @@
 @end
 
 @implementation MapLayer
-@synthesize currentMap          = _currentMap;
-@synthesize screenCenter        = _screenCenter;
-@synthesize mapDimensions       = _mapDimensions;
-@synthesize panZoomController   = _panZoomController;
-@synthesize showGrid            = _showGrid;
-@synthesize tapIsTargetingMapLayer = _tapIsTargetingMapLayer;
 
 - (id) init
 {
-    return [self initWithMap:[HKTMXTiledMap tiledMapWithTMXFile:@"test_grasslands.tmx"]];
+    return [self initWithMap:[HKTMXTiledMap tiledMapWithTMXFile:@"test_grasslands.tmx"] andGameWorld:nil];
 }
 
-- (id) initWithMap:(HKTMXTiledMap *)map
+- (id) initWithMap:(HKTMXTiledMap *)map andGameWorld:(GameWorld *)gw
 {
     self = [super init];
     if (self) {
         
-        _touchCount = 0;
+        NSAssert(gw != nil, @"MapLayer cannot initialize without a valid Gameworld");
+        
         _tileDoubleTapped = ccp(0,0);
         _previousTileDoubleTapped = ccp(0,0);
         _highlightDoubleTappedTile = NO;
@@ -55,8 +51,11 @@
         // we don't need to explicitly store the return value
         [rmg randomize:map];
         
+        // At this point, we can assume the map is randomized,
+        // and is safe to parse into the GameWorld
         
-        // At this point, we can assume the map is randomized
+        [gw parseMap:map]; // Builds an object representation of the map
+        
         [self setUpWithMap:map];
         
     }
@@ -99,7 +98,8 @@
 #pragma mark Map Loading and Initialization
 -(void) setUpWithMap:(HKTMXTiledMap *)mapToUse
 {
-    CCLOG(@"MapLayer: setUpWithMap");
+    
+    
     
     CGSize screenSize = [[CCDirector sharedDirector] winSize];
     [self setScreenCenter:CGPointMake(screenSize.width / 2, screenSize.height / 2)];
@@ -149,7 +149,6 @@
     
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
     
-    // TODO: Change this to center on the map entry point
     CGPoint testMapLoadPoint = ccp((ms.width * ts.width) * 0.1, (ms.height * ts.height) * 0.9);
     
     if ([[CCDirector sharedDirector] enableRetinaDisplay:YES]) {

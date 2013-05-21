@@ -17,7 +17,7 @@
     
 }
 
-@property (retain, readonly) GameWorld *gameWorld;
+@property (retain, readwrite) GameWorld *gameWorld;
 
 + (CCScene *)scene;
 - (MapLayer *)mapLayer;

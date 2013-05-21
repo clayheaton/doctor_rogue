@@ -9,9 +9,9 @@
 #import "MapLayer.h"
 #import "UILayer.h"
 #import "GameWorld.h"
+#import "HKTMXTiledMap.h"
 
 @implementation MainGameScene
-@synthesize gameWorld       = _gameWorld;
 
 +(CCScene *) scene
 {
@@ -28,9 +28,7 @@
 
         _gameWorld     = [GameWorld node];
         
-        // TODO: Change this initialization to allow for passing in a specified map
-        
-        MapLayer *mapLayer = [MapLayer node];
+        MapLayer *mapLayer = [[MapLayer alloc] initWithMap:[HKTMXTiledMap tiledMapWithTMXFile:@"test_grasslands.tmx"] andGameWorld:_gameWorld];
         [self addChild:mapLayer z:1 tag:kTag_MainGameScene_mapLayer];
         
         UILayer *uiLayer   = [UILayer node];

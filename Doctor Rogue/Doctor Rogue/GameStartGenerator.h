@@ -39,7 +39,7 @@ typedef enum
 - (NSString *)generateArtifact;
 - (NSString *)generateGameTitle;
 
-// TODO: Implement these
+// Not yet implemented
 - (NSString *)generateCultureName;
 - (NSString *)generateDietyName;
 - (NSString *)generateTotemName;

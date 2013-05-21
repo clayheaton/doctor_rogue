@@ -28,7 +28,7 @@
     
     
     // These are placeholders for testing
-    // TODO: Remove placeholders & replace with real UI
+
     CCLabelTTF *quitButtonLabel = [CCLabelTTF labelWithString:@"Quit to Menu"
                                                       fontName:[[UIFont systemFontOfSize:12] familyName]
                                                       fontSize:20];

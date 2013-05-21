@@ -243,20 +243,20 @@ static GameStartGenerator *generator;
     return answer;
 }
 
-// TODO: Implement these
+
 - (NSString *)generateCultureName
 {
-    
+    return @"";
 }
 
 - (NSString *)generateDietyName
 {
-    
+    return @"";
 }
 
 - (NSString *)generateTotemName
 {
-    
+    return @"";
 }
 
 @end

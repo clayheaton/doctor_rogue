@@ -10,6 +10,7 @@
 
 @class HKTMXTiledMap;
 @class CCPanZoomController;
+@class GameWorld;
 
 @interface MapLayer : CCLayer {
     
@@ -27,11 +28,9 @@
 @property (assign, readwrite) BOOL showGrid;
 @property (assign, readwrite) BOOL tapIsTargetingMapLayer;
 
-@property (assign, readwrite) unsigned short touchCount; // TODO: Should get rid of this here...
-
 // Tutorial for gesture recognizers: http://www.raywenderlich.com/4817/how-to-integrate-cocos2d-and-uikit
 @property (retain) UITapGestureRecognizer * doubleTapRecognizer;
 
-- (id) initWithMap:(HKTMXTiledMap *)map;
+- (id) initWithMap:(HKTMXTiledMap *)map andGameWorld:(GameWorld *)gw;
 
 @end

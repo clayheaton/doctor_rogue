@@ -34,6 +34,7 @@
 
 - (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map
 {
+    CCLOG(@"RandomMapGenerator is generating the map.");
     return map;
 }
 

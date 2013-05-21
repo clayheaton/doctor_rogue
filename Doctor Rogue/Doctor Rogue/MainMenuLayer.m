@@ -225,7 +225,6 @@
         }
         [[GameStartGenerator generator] makeNewAdventureWithSeed:[value intValue]];
         [TestFlight passCheckpoint:@"Entered a non-blank seed"];
-        // TODO: Validate that seeds are only numeric
         
         [self addMainTitle];
     }
