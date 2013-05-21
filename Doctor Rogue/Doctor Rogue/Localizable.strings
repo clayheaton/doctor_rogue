@@ -18,7 +18,8 @@
 "terrain_grasslands_dirty_brick"                        = "The brick here is dirty and worn.";
 "terrain_grasslands_dirty_brick_border_brick"           = "The brick here begins to look less worn.";
 "terrain_grasslands_brick"                              = "The brick here is clean and well preserved.";
-"terrain_grasslands_dirt_border_brick"                  = "The edge of a brick platform is visible here.";
+"terrain_grasslands_hole"                               = "A gaping hole in the ground.";
+"terrain_grasslands_dirt_border_hole"                   = "The edge of a gaping hole is here.";
 "terrain_grasslands_medium_grass_border_shallow_water"  = "The edge of a body of water is visible here.";
 "terrain_grasslands_shallow_water"                      = "This water is shallow enough to allow passage on foot.";
 "terrain_grasslands_shallow_water_border_deep_water"    = "The water appears to get much deeper here.";
