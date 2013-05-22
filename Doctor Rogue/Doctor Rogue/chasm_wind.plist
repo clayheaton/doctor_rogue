@@ -17,13 +17,13 @@
 	<key>finishColorAlpha</key>
 	<real>1</real>
 	<key>finishColorBlue</key>
-	<real>0.20000000298023224</real>
+	<real>0.29803922772407532</real>
 	<key>finishColorGreen</key>
-	<real>0.20000000298023224</real>
+	<real>0.29803922772407532</real>
 	<key>finishColorRed</key>
-	<real>0.20000000298023224</real>
+	<real>0.29803922772407532</real>
 	<key>finishColorVarianceAlpha</key>
-	<real>0.0</real>
+	<real>0.80000001192092896</real>
 	<key>finishColorVarianceBlue</key>
 	<real>0.0</real>
 	<key>finishColorVarianceGreen</key>
@@ -35,11 +35,11 @@
 	<key>finishParticleSizeVariance</key>
 	<integer>2</integer>
 	<key>gravityx</key>
-	<integer>73</integer>
+	<integer>30</integer>
 	<key>gravityy</key>
 	<integer>0</integer>
 	<key>maxParticles</key>
-	<integer>6000</integer>
+	<integer>2500</integer>
 	<key>maxRadius</key>
 	<integer>0</integer>
 	<key>maxRadiusVariance</key>
@@ -77,19 +77,19 @@
 	<key>sourcePositiony</key>
 	<integer>308</integer>
 	<key>speed</key>
-	<integer>48</integer>
+	<integer>5</integer>
 	<key>speedVariance</key>
-	<integer>0</integer>
+	<integer>5</integer>
 	<key>startColorAlpha</key>
 	<real>1</real>
 	<key>startColorBlue</key>
-	<real>0.20000000298023224</real>
+	<real>0.29803922772407532</real>
 	<key>startColorGreen</key>
-	<real>0.20000000298023224</real>
+	<real>0.29803922772407532</real>
 	<key>startColorRed</key>
-	<real>0.20000000298023224</real>
+	<real>0.29803922772407532</real>
 	<key>startColorVarianceAlpha</key>
-	<real>0.0</real>
+	<real>0.80000001192092896</real>
 	<key>startColorVarianceBlue</key>
 	<real>0.0</real>
 	<key>startColorVarianceGreen</key>
@@ -97,15 +97,15 @@
 	<key>startColorVarianceRed</key>
 	<real>0.0</real>
 	<key>startParticleSize</key>
-	<integer>4</integer>
-	<key>startParticleSizeVariance</key>
 	<integer>2</integer>
+	<key>startParticleSizeVariance</key>
+	<integer>1</integer>
 	<key>tangentialAccelVariance</key>
-	<integer>15</integer>
+	<integer>40</integer>
 	<key>tangentialAcceleration</key>
 	<integer>0</integer>
 	<key>textureFileName</key>
-	<string>F0D63B2C-B457-4B78-90E7-F32885057039</string>
+	<string>578C619A-DCC8-44F8-977E-FBB4F314EF34</string>
 	<key>textureImageData</key>
 	<string>H4sIAAAAAAAAA92XP2hTURSH72slJm2EmKi1EIklkLRZmkVKQCGFDkVSGprNLoHa
 zXTokEIHlxJ0ylKyJODQJSBIwS2LhI4dBaFzh6wu7vF37Kc8gq0W/7xqy5fzODnn

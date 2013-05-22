@@ -182,7 +182,7 @@
 		6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */; };
 		6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */; };
 		6F6E889F174CD6AA008500EA /* Flower.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F6E889E174CD6AA008500EA /* Flower.plist */; };
-		6F6E88A1174CF04D008500EA /* chasm_wind.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F6E88A0174CF04D008500EA /* chasm_wind.plist */; };
+		6F6E88A5174D1EE6008500EA /* chasm_wind.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F6E88A4174D1EE6008500EA /* chasm_wind.plist */; };
 		6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
@@ -546,7 +546,7 @@
 		6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fedora-titles-35.fnt"; sourceTree = "<group>"; };
 		6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35.png"; sourceTree = "<group>"; };
 		6F6E889E174CD6AA008500EA /* Flower.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Flower.plist; sourceTree = "<group>"; };
-		6F6E88A0174CF04D008500EA /* chasm_wind.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = chasm_wind.plist; sourceTree = "<group>"; };
+		6F6E88A4174D1EE6008500EA /* chasm_wind.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = chasm_wind.plist; sourceTree = "<group>"; };
 		6F8799A71741271600CA9E08 /* ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveSupportInflector.h; sourceTree = "<group>"; };
 		6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveSupportInflector.m; sourceTree = "<group>"; };
 		6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
@@ -1201,7 +1201,7 @@
 			isa = PBXGroup;
 			children = (
 				6F6E889E174CD6AA008500EA /* Flower.plist */,
-				6F6E88A0174CF04D008500EA /* chasm_wind.plist */,
+				6F6E88A4174D1EE6008500EA /* chasm_wind.plist */,
 			);
 			name = "Particle Effects";
 			sourceTree = "<group>";
@@ -1347,7 +1347,7 @@
 				6FD747AE174BF11E002AFF93 /* underlayer-hd.png in Resources */,
 				6FD747AF174BF11E002AFF93 /* underlayer.png in Resources */,
 				6F6E889F174CD6AA008500EA /* Flower.plist in Resources */,
-				6F6E88A1174CF04D008500EA /* chasm_wind.plist in Resources */,
+				6F6E88A5174D1EE6008500EA /* chasm_wind.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

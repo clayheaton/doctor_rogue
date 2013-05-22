@@ -82,7 +82,7 @@
             ul.anchorPoint = ccp(0,0);
             ul.position = ccp(i * ul.contentSize.width, j * ul.contentSize.height);
             _underlayerDimension += ul.boundingBox.size.width;
-            ul.opacity = 140;
+            ul.opacity = 160;
         }
     }
     
