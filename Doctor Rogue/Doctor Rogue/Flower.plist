@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>angle</key>
-	<integer>0</integer>
-	<key>angleVariance</key>
 	<integer>90</integer>
+	<key>angleVariance</key>
+	<integer>360</integer>
 	<key>blendFuncDestination</key>
-	<integer>771</integer>
-	<key>blendFuncSource</key>
 	<integer>1</integer>
+	<key>blendFuncSource</key>
+	<integer>770</integer>
 	<key>duration</key>
 	<integer>-1</integer>
 	<key>emitterType</key>
@@ -17,11 +17,11 @@
 	<key>finishColorAlpha</key>
 	<real>1</real>
 	<key>finishColorBlue</key>
-	<real>0.20000000298023224</real>
+	<real>0.0</real>
 	<key>finishColorGreen</key>
-	<real>0.20000000298023224</real>
+	<real>0.0</real>
 	<key>finishColorRed</key>
-	<real>0.20000000298023224</real>
+	<real>0.0</real>
 	<key>finishColorVarianceAlpha</key>
 	<real>0.0</real>
 	<key>finishColorVarianceBlue</key>
@@ -31,15 +31,15 @@
 	<key>finishColorVarianceRed</key>
 	<real>0.0</real>
 	<key>finishParticleSize</key>
-	<integer>2</integer>
+	<integer>30</integer>
 	<key>finishParticleSizeVariance</key>
-	<integer>2</integer>
+	<integer>0</integer>
 	<key>gravityx</key>
-	<integer>73</integer>
+	<integer>0</integer>
 	<key>gravityy</key>
 	<integer>0</integer>
 	<key>maxParticles</key>
-	<integer>6000</integer>
+	<integer>250</integer>
 	<key>maxRadius</key>
 	<integer>0</integer>
 	<key>maxRadiusVariance</key>
@@ -49,13 +49,13 @@
 	<key>minRadiusVariance</key>
 	<integer>0</integer>
 	<key>particleLifespan</key>
-	<real>10</real>
+	<real>4</real>
 	<key>particleLifespanVariance</key>
-	<real>0.0</real>
+	<real>1</real>
 	<key>radialAccelVariance</key>
 	<integer>0</integer>
 	<key>radialAcceleration</key>
-	<integer>0</integer>
+	<integer>-60</integer>
 	<key>rotatePerSecond</key>
 	<integer>0</integer>
 	<key>rotatePerSecondVariance</key>
@@ -71,57 +71,63 @@
 	<key>sourcePositionVariancex</key>
 	<integer>0</integer>
 	<key>sourcePositionVariancey</key>
-	<integer>100</integer>
+	<integer>0</integer>
 	<key>sourcePositionx</key>
 	<integer>231</integer>
 	<key>sourcePositiony</key>
 	<integer>308</integer>
 	<key>speed</key>
-	<integer>48</integer>
+	<integer>80</integer>
 	<key>speedVariance</key>
-	<integer>0</integer>
+	<integer>10</integer>
 	<key>startColorAlpha</key>
 	<real>1</real>
 	<key>startColorBlue</key>
-	<real>0.20000000298023224</real>
+	<real>0.5</real>
 	<key>startColorGreen</key>
-	<real>0.20000000298023224</real>
+	<real>0.5</real>
 	<key>startColorRed</key>
-	<real>0.20000000298023224</real>
+	<real>0.5</real>
 	<key>startColorVarianceAlpha</key>
 	<real>0.0</real>
 	<key>startColorVarianceBlue</key>
-	<real>0.0</real>
+	<real>0.5</real>
 	<key>startColorVarianceGreen</key>
-	<real>0.0</real>
+	<real>0.5</real>
 	<key>startColorVarianceRed</key>
-	<real>0.0</real>
+	<real>0.5</real>
 	<key>startParticleSize</key>
-	<integer>4</integer>
+	<integer>30</integer>
 	<key>startParticleSizeVariance</key>
-	<integer>2</integer>
+	<integer>10</integer>
 	<key>tangentialAccelVariance</key>
-	<integer>15</integer>
-	<key>tangentialAcceleration</key>
 	<integer>0</integer>
+	<key>tangentialAcceleration</key>
+	<integer>15</integer>
 	<key>textureFileName</key>
-	<string>F0D63B2C-B457-4B78-90E7-F32885057039</string>
+	<string>6B7945D7-4D7C-40A5-801B-4883F571980D</string>
 	<key>textureImageData</key>
-	<string>H4sIAAAAAAAAA92XP2hTURSH72slJm2EmKi1EIklkLRZmkVKQCGFDkVSGprNLoHa
-zXTokEIHlxJ0ylKyJODQJSBIwS2LhI4dBaFzh6wu7vF37Kc8gq0W/7xqy5fzODnn
-d9695977XlZWXM65WHg4HLp/jOsiIibEJDaC/0/WjIqYuCWmxF0xjZ3CHyPud91L
-CL0EtVIiLbJiTuSwWfwp4hLkhX6hdpjx2PhmxKyYFw9EQTwUj7AF/PPEzZAXQ+ey
-ta2fcZEUGZGnxqJYFiWxKsrYEv5F4vLkJdGJXHLclnOPubVxFcVjURFPRFVsiKfY
-Kv4KcUXy5tCJ/+Q8hJizJLkLYolxrotNURPboi52sNv4N4krk7eAThLdH62HKH3L
-cP+mscb4nlHrudgTL8RL7B7+OnFV8pbQyaAbvaC27RlbtzP0r8g4TGtL7IqGaIqW
-aIsOtoW/QdwWeWV08ugmhufvTbs32zu2fgv0cZ3x7DLOffFKdMUbcYjt4t8nbpe8
-dXQK6E5fMAfWn9TwbA/ZOq7QzzrjMu0DavZEXxxhe/gPiGuQt4nOIrop6nxv7u38
-StMv20u2nmv0tcn4rMY7cSzeiw/YY/yHxDXJq6GzjG6aOqM9sP1pZ2iWuSrRP1vX
-e/S3yzit1ok4FQPsCf4ecS3yttEpoZulzuh5YM8QW5+2V+w8szNlgzm0frbpc5/x
-Ws2P4hP2FH+fuDZ5dXRW0Z2jzsRIfXuO2dqw89zOVFu3drbY/rY91mFuj5jzAbWH
-2AH+I+I65O2gU0Y3R53JKzb+oPsf9PoPev9fhfMv6PM/6OffVXj+B/3+4z8Pgnr/
-889DUO+//vUQ1Pv/6N4M4vfPeffyt3///be4G55z4845z93Xh+e7Hvtyfc252Gtv
-HL+CvRDXY/q4ad+b14W9uC/mNtf61rvj05z6Gh9zXtIXv+bTrHyr+9bZX5h/7+z/
-M47fHKa6EAAA</string>
+	<string>H4sIAAAAAAAAA72W30tbZxjHz0lLjD8YrrpqmczIRq3SzUAnI9CVBQvdOrtG7cVq
+YTWLh65MazjGHy3MGynuZoVR3EWEym7mzaQORlkvBuJNR7ddtMX9AV70QgZl1s7S
+due7T05SPDGJZoPtheecJ8/zfd7n5/uenDhhtBpGIGD8R0tlKleFKqFylf1DyypV
+q1Z1qtc+qA6+Gtm2u2jQffrB1WDVqFfVrBa1Qs3wjchq0Plz8ZvLCTmrCuCnXk06
+oDa1K6zDehsKw7cha0JXLbdiWlUoLwJLDxXSfiisiN5Vp04qCnXCR5CldQ3ao1ec
+NedsnnUAzayk43oH6lGv+hRXP9QH3+PK28nmTTBf5Vn7iawB7U3JOaczxDIoW6Ma
+g2x4C1lUR9XlSAtg/Vvsq8htP/sf1S0Qs1hNaFJT+hyahB/VAHFcceT8CK5eVVs6
+VkN1QkQYVZ/zwPVxRdNKaQaahr+sS/oa69/BhMDWeLuJ933UN0yOZ/BzifpIi5rT
+vK5Dc7qmq/oO6wfoj4M7AN4TAfk00qEIVbKI9LKuOo/Y4Q57LEE32WUJ6zV0FpgI
+2EZVe6KvZULa6VIvlZog2mu67jxmhxUt665uaxnrdeQT6HvBtYOvfZ4B813HjIXp
+cx+1niTfOXzedp66Ea/oPu8NZNPobDCdYJuxKc/aV1DPFubsJL0epd4pcl7E74rz
+F918DD3h9zzyKfRxcIfB16sia19JNVqZ1CjTMkbHZtL5Evl9rTMrcp7BLyGbQTcG
+Jgq2FZvKnfzrEdbpLVa29V8kfzfvZ2Tx1O1F8fwL1t+t+ZNM/d1eLBarf6H+u/3e
+2Oy/Ow8LhfufP3/urK3nzp87k7NF5i9n/t05X8uff/dcfFFo/nPO34g7NQXPH6dH
++ij//HnO//sg7m1z/n8lhkP55z97/7yF9ocd7p8FMK9ttc7MAZr5Eu6/bxwVtN/A
+W0n3r85qI886pSOl3/86olSuvbPL080Svj+b+MLr33///uf1gmkY6VxMI8jD9PA+
+l/cZASNg7srKAZt+D/+isdvl+Sth7vHIX8ryPh57PXvWPccHDLPBg+/24HuyftFM
+DRvUzhwHfyMTrjkeSyQGfJzewQtJ+1h35PSHp3uDZcvgzAwiFh9ORKLRzuIp//lb
+Bnvv9fReqZ9b/lj9qevLG03fftC2/NnCDvXa3W8Nx3l/D43EE3aSmA7CN396qrsD
+/lS6pmPJRFreD1+bxafXyx2xgfMf27Gk1R88ZscuBjuGBobs4UQsbpXartJX0hpP
+pt8dQ4mL9vlznySDEbK18DmYGEla9sHgexfibxhGfMQezZqYvkOGka5n5ufDLrdO
+5t5f/gYxdWFJLgoAAA==</string>
 </dict>
 </plist>

@@ -39,6 +39,7 @@ typedef enum {
     kTag_MainGameScene_mapLayer,
     kTag_MainGameScene_uiLayer,
     kTag_MainGameScene_underlayer,
+    kTag_MainGameScene_chasmwind,
     kTag_MapLayer_currentMap,
     kTag_UILayer_tempQuitButton,
     kTag_UILayer_toggleGridButton,

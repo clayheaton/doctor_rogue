@@ -86,18 +86,20 @@
         }
     }
     
-    [self addChild:underlayer z:-1 tag:kTag_MainGameScene_underlayer];
+    [self addChild:underlayer z:-2 tag:kTag_MainGameScene_underlayer];
     
     //TODO: Make this make sense
     underlayer.position = ccp(-[[CCDirector sharedDirector] winSize].width,-[[CCDirector sharedDirector] winSize].height);
     underlayer.visible = YES;
     
-    /*
-    CCParticleSystemQuad *chasm_wind = [CCParticleSystem particleWithFile:@"chasm_wind.plist"];
-    chasm_wind.position = ccp(underlayer.contentSize.width/2,underlayer.contentSize.height/2);
-    [underlayer addChild:chasm_wind];
+    
+    CCParticleSystemQuad *chasm_wind = [CCParticleSystemQuad particleWithFile:@"chasm_wind.plist"];
+    chasm_wind.position = ccp(-20, [[CCDirector sharedDirector]winSize].height * 0.5);//ccp(underlayer.contentSize.width/2,underlayer.contentSize.height/2);
+    chasm_wind.visible = YES;
+    [self addChild:chasm_wind z:-1 tag:kTag_MainGameScene_chasmwind];
+    
      
-     */
+     
     
     // Hide the mapLayer for testing
     //[self getChildByTag:kTag_MainGameScene_mapLayer].visible = NO;
