@@ -33,4 +33,6 @@
 
 - (id) initWithMap:(HKTMXTiledMap *)map andGameWorld:(GameWorld *)gw;
 
+- (BOOL) underlayerIsNeeded;
+
 @end

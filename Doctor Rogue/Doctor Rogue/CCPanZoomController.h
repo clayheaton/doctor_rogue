@@ -55,6 +55,10 @@
 	//touches
 	CGPoint _firstTouch;
     CGPoint _zoomCenter;
+    CGPoint _lastPos;
+    BOOL    _boundX;
+    BOOL    _boundY;
+    
 	float   _firstLength;
 	float   _oldScale;
 	

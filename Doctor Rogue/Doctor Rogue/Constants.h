@@ -38,6 +38,7 @@ typedef enum {
     kTagMIN = 0,
     kTag_MainGameScene_mapLayer,
     kTag_MainGameScene_uiLayer,
+    kTag_MainGameScene_underlayer,
     kTag_MapLayer_currentMap,
     kTag_UILayer_tempQuitButton,
     kTag_UILayer_toggleGridButton,

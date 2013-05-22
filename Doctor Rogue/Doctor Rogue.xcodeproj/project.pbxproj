@@ -181,6 +181,7 @@
 		6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */; };
 		6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */; };
 		6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */; };
+		6F6E889D174C74A0008500EA /* chasm_wind.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F6E889C174C74A0008500EA /* chasm_wind.plist */; };
 		6F8799AE1741271600CA9E08 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
@@ -196,8 +197,10 @@
 		6FD387AA1745B5B600AC6F76 /* test_grasslands-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A61745B5B600AC6F76 /* test_grasslands-hd.tmx */; };
 		6FD387AB1745B5B600AC6F76 /* test_grasslands.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A71745B5B600AC6F76 /* test_grasslands.tmx */; };
 		6FD7479F174B12D4002AFF93 /* MapTile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD7479E174B12D3002AFF93 /* MapTile.m */; };
-		6FD747A2174B246B002AFF93 /* grasslands-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747A0174B246A002AFF93 /* grasslands-hd.png */; };
-		6FD747A3174B246B002AFF93 /* grasslands.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747A1174B246A002AFF93 /* grasslands.png */; };
+		6FD747AA174BE01B002AFF93 /* grasslands-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747A8174BE01B002AFF93 /* grasslands-hd.png */; };
+		6FD747AB174BE01B002AFF93 /* grasslands.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747A9174BE01B002AFF93 /* grasslands.png */; };
+		6FD747AE174BF11E002AFF93 /* underlayer-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747AC174BF11E002AFF93 /* underlayer-hd.png */; };
+		6FD747AF174BF11E002AFF93 /* underlayer.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747AD174BF11E002AFF93 /* underlayer.png */; };
 		6FD7EDB51743E0F9001022EB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FD7EDB11743E0F9001022EB /* libTestFlight.a */; };
 		6FD7EDB61743E0F9001022EB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB21743E0F9001022EB /* README.md */; };
 		6FD7EDB71743E0F9001022EB /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB31743E0F9001022EB /* release_notes.md */; };
@@ -541,6 +544,7 @@
 		6F3693F8173BFD04005BAC8B /* fedora-titles-35-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35-hd.png"; sourceTree = "<group>"; };
 		6F3693F9173BFD04005BAC8B /* fedora-titles-35.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fedora-titles-35.fnt"; sourceTree = "<group>"; };
 		6F3693FA173BFD04005BAC8B /* fedora-titles-35.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fedora-titles-35.png"; sourceTree = "<group>"; };
+		6F6E889C174C74A0008500EA /* chasm_wind.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = chasm_wind.plist; sourceTree = "<group>"; };
 		6F8799A71741271600CA9E08 /* ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveSupportInflector.h; sourceTree = "<group>"; };
 		6F8799A81741271600CA9E08 /* ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveSupportInflector.m; sourceTree = "<group>"; };
 		6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
@@ -560,8 +564,10 @@
 		6FD387A71745B5B600AC6F76 /* test_grasslands.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test_grasslands.tmx; sourceTree = "<group>"; };
 		6FD7479D174B12D3002AFF93 /* MapTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapTile.h; sourceTree = "<group>"; };
 		6FD7479E174B12D3002AFF93 /* MapTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapTile.m; sourceTree = "<group>"; };
-		6FD747A0174B246A002AFF93 /* grasslands-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grasslands-hd.png"; sourceTree = "<group>"; };
-		6FD747A1174B246A002AFF93 /* grasslands.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grasslands.png; sourceTree = "<group>"; };
+		6FD747A8174BE01B002AFF93 /* grasslands-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grasslands-hd.png"; sourceTree = "<group>"; };
+		6FD747A9174BE01B002AFF93 /* grasslands.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grasslands.png; sourceTree = "<group>"; };
+		6FD747AC174BF11E002AFF93 /* underlayer-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "underlayer-hd.png"; sourceTree = "<group>"; };
+		6FD747AD174BF11E002AFF93 /* underlayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = underlayer.png; sourceTree = "<group>"; };
 		6FD7EDB11743E0F9001022EB /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		6FD7EDB21743E0F9001022EB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		6FD7EDB31743E0F9001022EB /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
@@ -657,10 +663,12 @@
 				6F35964A173DC74C00C9C717 /* test_map.tmx */,
 				6FCAC05D1747F717002ECBE7 /* newfog-hd.png */,
 				6FCAC05E1747F717002ECBE7 /* newfog.png */,
-				6FD747A0174B246A002AFF93 /* grasslands-hd.png */,
-				6FD747A1174B246A002AFF93 /* grasslands.png */,
+				6FD747A8174BE01B002AFF93 /* grasslands-hd.png */,
+				6FD747A9174BE01B002AFF93 /* grasslands.png */,
 				6FD387A61745B5B600AC6F76 /* test_grasslands-hd.tmx */,
 				6FD387A71745B5B600AC6F76 /* test_grasslands.tmx */,
+				6FD747AC174BF11E002AFF93 /* underlayer-hd.png */,
+				6FD747AD174BF11E002AFF93 /* underlayer.png */,
 			);
 			path = "Map Resources";
 			sourceTree = "<group>";
@@ -744,6 +752,7 @@
 		6F369219173B4107005BAC8B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6F6E889B174C7488008500EA /* Particle Effects */,
 				6F1CEE7D1744804600040A05 /* Art */,
 				6F359648173DC6FD00C9C717 /* Map Resources */,
 				6F3693BB173B4929005BAC8B /* Fonts */,
@@ -1186,6 +1195,14 @@
 			name = "Utility Classes";
 			sourceTree = "<group>";
 		};
+		6F6E889B174C7488008500EA /* Particle Effects */ = {
+			isa = PBXGroup;
+			children = (
+				6F6E889C174C74A0008500EA /* chasm_wind.plist */,
+			);
+			name = "Particle Effects";
+			sourceTree = "<group>";
+		};
 		6F8799A61741270300CA9E08 /* Active Support Inflector (plurals) */ = {
 			isa = PBXGroup;
 			children = (
@@ -1322,8 +1339,11 @@
 				6FCAC0691747FCCE002ECBE7 /* item_types.csv in Resources */,
 				6FCAC06A1747FCCE002ECBE7 /* case_types.csv in Resources */,
 				6FC4E475174873E000C36B5A /* Localizable.strings in Resources */,
-				6FD747A2174B246B002AFF93 /* grasslands-hd.png in Resources */,
-				6FD747A3174B246B002AFF93 /* grasslands.png in Resources */,
+				6FD747AA174BE01B002AFF93 /* grasslands-hd.png in Resources */,
+				6FD747AB174BE01B002AFF93 /* grasslands.png in Resources */,
+				6FD747AE174BF11E002AFF93 /* underlayer-hd.png in Resources */,
+				6FD747AF174BF11E002AFF93 /* underlayer.png in Resources */,
+				6F6E889D174C74A0008500EA /* chasm_wind.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

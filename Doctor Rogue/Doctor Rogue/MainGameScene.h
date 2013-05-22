@@ -18,9 +18,14 @@
 }
 
 @property (retain, readwrite) GameWorld *gameWorld;
+@property (assign, readwrite) BOOL       usingUnderlayer;
+
+@property (assign, readwrite) float underlayerDimension;
 
 + (CCScene *)scene;
 - (MapLayer *)mapLayer;
 - (UILayer  *)uiLayer;
 
+- (void) establishUnderlayer;
+- (void) positionUnderlayer:(CGPoint)mapPixelsMove;
 @end

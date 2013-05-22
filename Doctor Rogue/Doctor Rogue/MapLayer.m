@@ -11,6 +11,7 @@
 #import "CCPanZoomController.h"
 #import "RandomMapGenerator.h"
 #import "GameWorld.h"
+#import "MainGameScene.h"
 
 @interface MapLayer (PrivateMethods)
 - (void) registerForNotifications;
@@ -60,6 +61,11 @@
         
     }
     return self;
+}
+
+- (BOOL) underlayerIsNeeded
+{
+    return YES;
 }
 
 #pragma mark onEnter and onExit
@@ -177,6 +183,7 @@
     // Set up the grid that we will use to refer to the tiles for gameplay purposes
     // Randomization is handled earlier.
     // [self establishMapGrid];
+    
 }
 
 - (void) draw

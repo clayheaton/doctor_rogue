@@ -20,6 +20,7 @@
  */
 
 #import "CCPanZoomController.h"
+#import "MainGameScene.h"
 
 //Special scale action so view stays centered on a given point
 @interface CCPanZoomControllerScale : CCScaleTo
@@ -184,6 +185,9 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     _pinchDamping = .9;
     _pinchDistanceThreshold = 3;
     _doubleTapZoomDuration = .2;
+    
+    _boundX = NO;
+    _boundY = NO;
 	
 	return self;
 }
@@ -252,16 +256,27 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     CGPoint bottomLeft = ccpSub(ccpAdd(ccpMult(_bl, scale), _winBl), anchor);
     
     //bound x
-	if (pos.x > bottomLeft.x)
-		pos.x = bottomLeft.x;
-	else if (pos.x < -topRight.x)
-		pos.x = -topRight.x;
+	if (pos.x > bottomLeft.x) {
+        pos.x = bottomLeft.x;
+        _boundX = YES;
+    } else if (pos.x < -topRight.x) {
+        pos.x = -topRight.x;
+        _boundX = YES;
+    } else {
+        _boundX = NO;
+    }
+		
 	
     //bound y
-	if (pos.y > bottomLeft.y)
-		pos.y = bottomLeft.y;
-	else if (pos.y < -topRight.y)
+	if (pos.y > bottomLeft.y) {
+        pos.y = bottomLeft.y;
+        _boundY = YES;
+    } else if (pos.y < -topRight.y) {
 		pos.y = -topRight.y;
+        _boundY = YES;
+    } else {
+        _boundY = NO;
+    }
 	
 	return pos;
 }
@@ -513,6 +528,7 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 
 - (void) moveScroll:(CGPoint)pos
 {
+    
     // diff
 	pos = ccpSub(pos, _firstTouch);
     
@@ -525,8 +541,21 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     
     //debug
     //NSLog(@"Moving to: (%.2f, %.2f)", pos.x, pos.y);
+    
+    CGPoint newPos    = ccpAdd(_node.position, pos);
+    CGPoint pixelMove = ccpSub(_node.position, newPos);
+    
+    if (_boundX) {
+        pixelMove.x = 0;
+    }
+    
+    if (_boundY) {
+        pixelMove.y = 0;
+    }
+    
+    [(MainGameScene *)[_node parent] positionUnderlayer:pixelMove];
 	
-	[self updatePosition:ccpAdd(_node.position, pos)];
+	[self updatePosition:newPos];
 }
 
 - (void) endScroll:(CGPoint)pos
