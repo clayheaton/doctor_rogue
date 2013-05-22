@@ -2,175 +2,748 @@
 <map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="128" tileheight="128">
  <tileset firstgid="1" name="grasslands" tilewidth="128" tileheight="128">
   <image source="grasslands-hd.png" width="1536" height="1664"/>
-  <terraintypes>
-   <terrain name="grass_light" tile="-1"/>
-   <terrain name="grass_medium" tile="-1"/>
-   <terrain name="grass_heavy" tile="-1"/>
-   <terrain name="water_shallow" tile="-1"/>
-   <terrain name="water_deep" tile="-1"/>
-   <terrain name="dirt" tile="-1"/>
-   <terrain name="brick" tile="-1"/>
-   <terrain name="brick_dirty" tile="-1"/>
-   <terrain name="hole" tile="-1"/>
-  </terraintypes>
-  <tile id="0" terrain="1,1,1,0"/>
-  <tile id="1" terrain="1,1,0,0"/>
-  <tile id="2" terrain="1,1,0,1"/>
-  <tile id="3" terrain="2,2,2,1"/>
-  <tile id="4" terrain="2,2,1,1"/>
-  <tile id="5" terrain="2,2,1,2"/>
-  <tile id="6" terrain="1,1,1,3"/>
-  <tile id="7" terrain="1,1,3,3"/>
-  <tile id="8" terrain="1,1,3,1"/>
-  <tile id="9" terrain="3,3,3,4"/>
-  <tile id="10" terrain="3,3,4,4"/>
-  <tile id="11" terrain="3,3,4,3"/>
-  <tile id="12" terrain="1,0,1,0"/>
-  <tile id="13" terrain="0,0,0,0"/>
-  <tile id="14" terrain="0,1,0,1"/>
-  <tile id="15" terrain="2,1,2,1"/>
-  <tile id="16" terrain="1,1,1,1"/>
-  <tile id="17" terrain="1,2,1,2"/>
-  <tile id="18" terrain="1,3,1,3"/>
-  <tile id="19" terrain="3,3,3,3"/>
-  <tile id="20" terrain="3,1,3,1"/>
-  <tile id="21" terrain="3,4,3,4"/>
-  <tile id="22" terrain="4,4,4,4">
-   <properties>
-    <property name="blocks_movement" value="1"/>
-   </properties>
-  </tile>
-  <tile id="23" terrain="4,3,4,3"/>
-  <tile id="24" terrain="1,0,1,1"/>
-  <tile id="25" terrain="0,0,1,1"/>
-  <tile id="26" terrain="0,1,1,1"/>
-  <tile id="27" terrain="2,1,2,2"/>
-  <tile id="28" terrain="1,1,2,2"/>
-  <tile id="29" terrain="1,2,2,2"/>
-  <tile id="30" terrain="1,3,1,1"/>
-  <tile id="31" terrain="3,3,1,1"/>
-  <tile id="32" terrain="3,1,1,1"/>
-  <tile id="33" terrain="3,4,3,3"/>
-  <tile id="34" terrain="4,4,3,3"/>
-  <tile id="35" terrain="4,3,3,3"/>
-  <tile id="36" terrain="0,0,0,1"/>
-  <tile id="37" terrain="0,0,1,1"/>
-  <tile id="38" terrain="0,0,1,0"/>
-  <tile id="39" terrain="1,1,1,2"/>
-  <tile id="40" terrain="1,1,2,2"/>
-  <tile id="41" terrain="1,1,2,1"/>
-  <tile id="42" terrain="3,3,3,1"/>
-  <tile id="43" terrain="3,3,1,1"/>
-  <tile id="44" terrain="3,3,1,3"/>
-  <tile id="45" terrain="4,4,4,3"/>
-  <tile id="46" terrain="4,4,3,3"/>
-  <tile id="47" terrain="4,4,3,4"/>
-  <tile id="48" terrain="0,1,0,1"/>
-  <tile id="49" terrain="1,1,1,1"/>
-  <tile id="50" terrain="1,0,1,0"/>
-  <tile id="51" terrain="1,2,1,2"/>
-  <tile id="52" terrain="2,2,2,2"/>
-  <tile id="53" terrain="2,1,2,1"/>
-  <tile id="54" terrain="3,1,3,1"/>
-  <tile id="55" terrain="1,1,1,1"/>
-  <tile id="56" terrain="1,3,1,3"/>
-  <tile id="57" terrain="4,3,4,3"/>
-  <tile id="58" terrain="3,3,3,3"/>
-  <tile id="59" terrain="3,4,3,4"/>
-  <tile id="60" terrain="0,1,0,0"/>
-  <tile id="61" terrain="1,1,0,0"/>
-  <tile id="62" terrain="1,0,0,0"/>
-  <tile id="63" terrain="1,2,1,1"/>
-  <tile id="64" terrain="2,2,1,1"/>
-  <tile id="65" terrain="2,1,1,1"/>
-  <tile id="66" terrain="3,1,3,3"/>
-  <tile id="67" terrain="1,1,3,3"/>
-  <tile id="68" terrain="1,3,3,3"/>
-  <tile id="69" terrain="4,3,4,4"/>
-  <tile id="70" terrain="3,3,4,4"/>
-  <tile id="71" terrain="3,4,4,4"/>
-  <tile id="72" terrain="5,5,5,0"/>
-  <tile id="73" terrain="5,5,0,0"/>
-  <tile id="74" terrain="5,5,0,5"/>
-  <tile id="75" terrain="8,8,8,5"/>
-  <tile id="76" terrain="8,8,5,5"/>
-  <tile id="77" terrain="8,8,5,8"/>
-  <tile id="78" terrain="6,6,6,7"/>
-  <tile id="79" terrain="6,6,7,7"/>
-  <tile id="80" terrain="6,6,7,6"/>
-  <tile id="81" terrain="7,7,7,5"/>
-  <tile id="82" terrain="7,7,5,5"/>
-  <tile id="83" terrain="7,7,5,7"/>
-  <tile id="84" terrain="5,0,5,0"/>
-  <tile id="85" terrain="0,0,0,0"/>
-  <tile id="86" terrain="0,5,0,5"/>
-  <tile id="87" terrain="8,5,8,5"/>
-  <tile id="88" terrain="5,5,5,5"/>
-  <tile id="89" terrain="5,8,5,8"/>
-  <tile id="90" terrain="6,7,6,7"/>
-  <tile id="91" terrain="7,7,7,7"/>
-  <tile id="92" terrain="7,6,7,6"/>
-  <tile id="93" terrain="7,5,7,5"/>
-  <tile id="94" terrain="5,5,5,5"/>
-  <tile id="95" terrain="5,7,5,7"/>
-  <tile id="96" terrain="5,0,5,5"/>
-  <tile id="97" terrain="0,0,5,5"/>
-  <tile id="98" terrain="0,5,5,5"/>
-  <tile id="99" terrain="8,5,8,8"/>
-  <tile id="100" terrain="5,5,8,8"/>
-  <tile id="101" terrain="5,8,8,8"/>
-  <tile id="102" terrain="6,7,6,6"/>
-  <tile id="103" terrain="7,7,6,6"/>
-  <tile id="104" terrain="7,6,6,6"/>
-  <tile id="105" terrain="7,5,7,7"/>
-  <tile id="106" terrain="5,5,7,7"/>
-  <tile id="107" terrain="5,7,7,7"/>
-  <tile id="108" terrain="0,0,0,5"/>
-  <tile id="109" terrain="0,0,5,5"/>
-  <tile id="110" terrain="0,0,5,0"/>
-  <tile id="111" terrain="5,5,5,8"/>
-  <tile id="112" terrain="5,5,8,8"/>
-  <tile id="113" terrain="5,5,8,5"/>
-  <tile id="114" terrain="7,7,7,6"/>
-  <tile id="115" terrain="7,7,6,6"/>
-  <tile id="116" terrain="7,7,6,7"/>
-  <tile id="117" terrain="5,5,5,7"/>
-  <tile id="118" terrain="5,5,7,7"/>
-  <tile id="119" terrain="5,5,7,5"/>
-  <tile id="120" terrain="0,5,0,5"/>
-  <tile id="121" terrain="5,5,5,5"/>
-  <tile id="122" terrain="5,0,5,0"/>
-  <tile id="123" terrain="5,8,5,8"/>
-  <tile id="124" terrain="8,8,8,8"/>
-  <tile id="125" terrain="8,5,8,5"/>
-  <tile id="126" terrain="7,6,7,6"/>
-  <tile id="127" terrain="6,6,6,6"/>
-  <tile id="128" terrain="6,7,6,7"/>
-  <tile id="129" terrain="5,7,5,7"/>
-  <tile id="130" terrain="7,7,7,7"/>
-  <tile id="131" terrain="7,5,7,5"/>
-  <tile id="132" terrain="0,5,0,0"/>
-  <tile id="133" terrain="5,5,0,0"/>
-  <tile id="134" terrain="5,0,0,0"/>
-  <tile id="135" terrain="5,8,5,5"/>
-  <tile id="136" terrain="8,8,5,5"/>
-  <tile id="137" terrain="8,5,5,5"/>
-  <tile id="138" terrain="7,6,7,7"/>
-  <tile id="139" terrain="6,6,7,7"/>
-  <tile id="140" terrain="6,7,7,7"/>
-  <tile id="141" terrain="5,7,5,5"/>
-  <tile id="142" terrain="7,7,5,5"/>
-  <tile id="143" terrain="7,5,5,5"/>
-  <tile id="145">
-   <properties>
-    <property name="blocks_movement" value="1"/>
-   </properties>
-  </tile>
-  <tile id="146">
-   <properties>
-    <property name="entry_exit" value="1"/>
-   </properties>
-  </tile>
+     <terraintypes>
+         <terrain name="grass_light" tile="-1"/>
+         <terrain name="grass_medium" tile="-1"/>
+         <terrain name="grass_heavy" tile="-1"/>
+         <terrain name="water_shallow" tile="-1"/>
+         <terrain name="water_deep" tile="-1"/>
+         <terrain name="dirt" tile="-1"/>
+         <terrain name="brick" tile="-1"/>
+         <terrain name="brick_dirty" tile="-1"/>
+         <terrain name="hole" tile="-1"/>
+     </terraintypes>
+     <tile id="0" terrain="1,1,1,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="1" terrain="1,1,0,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="2" terrain="1,1,0,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="3" terrain="2,2,2,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="4" terrain="2,2,1,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="5" terrain="2,2,1,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="6" terrain="1,1,1,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="7" terrain="1,1,3,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="8" terrain="1,1,3,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="9" terrain="3,3,3,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="10" terrain="3,3,4,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="11" terrain="3,3,4,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="12" terrain="1,0,1,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="13" terrain="0,0,0,0">
+         <properties>
+             <property name="terrain_type" value="light_grass"/>
+         </properties>
+     </tile>
+     <tile id="14" terrain="0,1,0,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="15" terrain="2,1,2,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="16" terrain="1,1,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="17" terrain="1,2,1,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="18" terrain="1,3,1,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="19" terrain="3,3,3,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="20" terrain="3,1,3,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="21" terrain="3,4,3,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="22" terrain="4,4,4,4">
+         <properties>
+             <property name="blocks_movement" value="1"/>
+             <property name="terrain_type" value="deep_water"/>
+         </properties>
+     </tile>
+     <tile id="23" terrain="4,3,4,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="24" terrain="1,0,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="25" terrain="0,0,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="26" terrain="0,1,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="27" terrain="2,1,2,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="28" terrain="1,1,2,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="29" terrain="1,2,2,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="30" terrain="1,3,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="31" terrain="3,3,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="32" terrain="3,1,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="33" terrain="3,4,3,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="34" terrain="4,4,3,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="35" terrain="4,3,3,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="36" terrain="0,0,0,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="37" terrain="0,0,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="38" terrain="0,0,1,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="39" terrain="1,1,1,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="40" terrain="1,1,2,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="41" terrain="1,1,2,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="42" terrain="3,3,3,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="43" terrain="3,3,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="44" terrain="3,3,1,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="45" terrain="4,4,4,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="46" terrain="4,4,3,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="47" terrain="4,4,3,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="48" terrain="0,1,0,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="49" terrain="1,1,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="50" terrain="1,0,1,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="51" terrain="1,2,1,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="52" terrain="2,2,2,2">
+         <properties>
+             <property name="terrain_type" value="deep_grass"/>
+         </properties>
+     </tile>
+     <tile id="53" terrain="2,1,2,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="54" terrain="3,1,3,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="55" terrain="1,1,1,1">
+         <properties>
+             <property name="terrain_type" value="medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="56" terrain="1,3,1,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="57" terrain="4,3,4,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="58" terrain="3,3,3,3">
+         <properties>
+             <property name="terrain_type" value="shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="59" terrain="3,4,3,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="60" terrain="0,1,0,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="61" terrain="1,1,0,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="62" terrain="1,0,0,0">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_light_grass"/>
+         </properties>
+     </tile>
+     <tile id="63" terrain="1,2,1,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="64" terrain="2,2,1,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="65" terrain="2,1,1,1">
+         <properties>
+             <property name="terrain_type" value="deep_grass_border_medium_grass"/>
+         </properties>
+     </tile>
+     <tile id="66" terrain="3,1,3,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="67" terrain="1,1,3,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="68" terrain="1,3,3,3">
+         <properties>
+             <property name="terrain_type" value="medium_grass_border_shallow_water"/>
+         </properties>
+     </tile>
+     <tile id="69" terrain="4,3,4,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="70" terrain="3,3,4,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="71" terrain="3,4,4,4">
+         <properties>
+             <property name="terrain_type" value="shallow_water_border_deep_water"/>
+         </properties>
+     </tile>
+     <tile id="72" terrain="5,5,5,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="73" terrain="5,5,0,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="74" terrain="5,5,0,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="75" terrain="8,8,8,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="76" terrain="8,8,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="77" terrain="8,8,5,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="78" terrain="6,6,6,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="79" terrain="6,6,7,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="80" terrain="6,6,7,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="81" terrain="7,7,7,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="82" terrain="7,7,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="83" terrain="7,7,5,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="84" terrain="5,0,5,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="85" terrain="0,0,0,0">
+         <properties>
+             <property name="terrain_type" value="light_grass"/>
+         </properties>
+     </tile>
+     <tile id="86" terrain="0,5,0,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="87" terrain="8,5,8,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="88" terrain="5,5,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt"/>
+         </properties>
+     </tile>
+     <tile id="89" terrain="5,8,5,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="90" terrain="6,7,6,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="91" terrain="7,7,7,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="92" terrain="7,6,7,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="93" terrain="7,5,7,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="94" terrain="5,5,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt"/>
+         </properties>
+     </tile>
+     <tile id="95" terrain="5,7,5,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="96" terrain="5,0,5,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="97" terrain="0,0,5,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="98" terrain="0,5,5,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="99" terrain="8,5,8,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="100" terrain="5,5,8,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="101" terrain="5,8,8,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="102" terrain="6,7,6,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="103" terrain="7,7,6,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="104" terrain="7,6,6,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="105" terrain="7,5,7,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="106" terrain="5,5,7,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="107" terrain="5,7,7,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="108" terrain="0,0,0,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="109" terrain="0,0,5,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="110" terrain="0,0,5,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="111" terrain="5,5,5,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="112" terrain="5,5,8,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="113" terrain="5,5,8,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="114" terrain="7,7,7,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="115" terrain="7,7,6,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="116" terrain="7,7,6,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="117" terrain="5,5,5,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="118" terrain="5,5,7,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="119" terrain="5,5,7,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="120" terrain="0,5,0,5">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="121" terrain="5,5,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt"/>
+         </properties>
+     </tile>
+     <tile id="122" terrain="5,0,5,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="123" terrain="5,8,5,8">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="124" terrain="8,8,8,8">
+         <properties>
+             <property name="terrain_type" value="hole"/>
+         </properties>
+     </tile>
+     <tile id="125" terrain="8,5,8,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="126" terrain="7,6,7,6">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="127" terrain="6,6,6,6">
+         <properties>
+             <property name="terrain_type" value="brick"/>
+         </properties>
+     </tile>
+     <tile id="128" terrain="6,7,6,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="129" terrain="5,7,5,7">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="130" terrain="7,7,7,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="131" terrain="7,5,7,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="132" terrain="0,5,0,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="133" terrain="5,5,0,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="134" terrain="5,0,0,0">
+         <properties>
+             <property name="terrain_type" value="light_grass_border_dirt"/>
+         </properties>
+     </tile>
+     <tile id="135" terrain="5,8,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="136" terrain="8,8,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="137" terrain="8,5,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_hole"/>
+         </properties>
+     </tile>
+     <tile id="138" terrain="7,6,7,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="139" terrain="6,6,7,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="140" terrain="6,7,7,7">
+         <properties>
+             <property name="terrain_type" value="dirty_brick_border_brick"/>
+         </properties>
+     </tile>
+     <tile id="141" terrain="5,7,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="142" terrain="7,7,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="143" terrain="7,5,5,5">
+         <properties>
+             <property name="terrain_type" value="dirt_border_dirty_brick"/>
+         </properties>
+     </tile>
+     <tile id="145">
+         <properties>
+             <property name="blocks_movement" value="1"/>
+         </properties>
+     </tile>
+     <tile id="146">
+         <properties>
+             <property name="entry_exit" value="1"/>
+         </properties>
+     </tile>
  </tileset>
  <tileset firstgid="157" name="fog" tilewidth="128" tileheight="128">
   <image source="newfog-hd.png" width="768" height="768"/>
@@ -218,7 +791,7 @@
  </tileset>
  <layer name="terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="objects" width="50" height="50">
