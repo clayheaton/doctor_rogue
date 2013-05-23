@@ -14,7 +14,15 @@
     
 }
 
+@property (retain, nonatomic) HKTMXTiledMap       *map;
+@property (retain, nonatomic) NSMutableArray      *mapGrid;
+@property (retain, nonatomic) NSMutableDictionary *tileTypes;
+
+@property (assign, readwrite) unsigned int fogTileID;
+
 - (void) parseMap:(HKTMXTiledMap *)map;
 
+- (NSString *) descriptionForTileAt:(CGPoint)coord;
+- (CCSprite *) spriteForTileAt:(CGPoint)coord;
 
 @end

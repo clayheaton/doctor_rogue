@@ -23,4 +23,5 @@
 "terrain_grasslands_medium_grass_border_shallow_water"  = "The edge of a body of water is visible here.";
 "terrain_grasslands_shallow_water"                      = "This water is shallow enough to allow passage on foot.";
 "terrain_grasslands_shallow_water_border_deep_water"    = "The water appears to get much deeper here.";
-"terrain_grasslands_deep_water"                         = "You're not going to get across this deep water without help";
+"terrain_grasslands_deep_water"                         = "That water is deep. You'll need help to cross.";
+"terrain_grasslands_fog_black"                          = "You cannot make out the details of that location.";

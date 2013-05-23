@@ -12,12 +12,20 @@
 #endif
 */
 
-#define NOTIFICATION_TOGGLE_GRID    @"toggle_grid"
-#define NOTIFICATION_TOUCH_ENDED    @"CCPanZoom Touch Ended"
+#define NOTIFICATION_TOGGLE_GRID        @"toggle_grid"
+#define NOTIFICATION_TOUCH_ENDED        @"CCPanZoom Touch Ended"
+#define NOTIFICATION_DISPLAY_TILE_INFO  @"Display tile info"
+#define NOTIFICATION_HIDE_TILE_INFO     @"Hide tile info"
 
-#define MAP_LAYER_TERRAIN           @"terrain"
-#define MAP_LAYER_OBJECTS           @"objects"
-#define MAP_LAYER_COLLISIONS        @"collisions"
+#define MAP_LAYER_TERRAIN               @"terrain"
+#define MAP_LAYER_OBJECTS               @"objects"
+#define MAP_LAYER_COLLISIONS            @"collisions"
+#define MAP_LAYER_FOG                   @"fog_of_war"
+
+#define BLACK_FOG                       @"fog_black"
+
+#define TILE                            @"tile"
+#define TILE_DESCRIPTION                @"tile_description"
 
 // Higher scrollRate is slower; default is 9
 // Default scrollDamping is 0.85f;
@@ -43,6 +51,9 @@ typedef enum {
     kTag_MapLayer_currentMap,
     kTag_UILayer_tempQuitButton,
     kTag_UILayer_toggleGridButton,
+    kTag_UILayer_tileInfoBar,
+    kTag_UILayer_tileInfoBarTileDescription,
+    kTag_UILayer_topInfoBar,
     kTagMAX
 } ChildTags;
 

@@ -10,4 +10,14 @@
 
 @implementation MapTile
 
+- (id)initWithCoordinate:(CGPoint)coord
+{
+    self = [super init];
+    if (self) {
+        _mapCoord = coord;
+        _obscuredByFog = NO;
+    }
+    return self;
+}
+
 @end

@@ -16,6 +16,8 @@
     
 }
 
+@property (retain, nonatomic) GameWorld *gameWorld;
+
 @property (retain, nonatomic) HKTMXTiledMap *currentMap;
 @property (assign, readwrite) CGPoint screenCenter;
 @property (assign, readwrite) CGPoint mapDimensions;

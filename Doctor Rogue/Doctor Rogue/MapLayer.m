@@ -35,6 +35,8 @@
         
         NSAssert(gw != nil, @"MapLayer cannot initialize without a valid Gameworld");
         
+        _gameWorld = gw;
+        
         _tileDoubleTapped = ccp(0,0);
         _previousTileDoubleTapped = ccp(0,0);
         _highlightDoubleTappedTile = NO;
@@ -55,7 +57,7 @@
         // At this point, we can assume the map is randomized,
         // and is safe to parse into the GameWorld
         
-        [gw parseMap:map]; // Builds an object representation of the map
+        [_gameWorld parseMap:map]; // Builds an object representation of the map
         
         [self setUpWithMap:map];
         
@@ -272,6 +274,25 @@
     } else {
         _highlightDoubleTappedTile = YES;
     }
+    
+    if (_highlightDoubleTappedTile) {
+        // send notification to open the UI panel
+        NSDictionary *tileInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  [_gameWorld descriptionForTileAt:tileCoord], TILE_DESCRIPTION,
+                                  [[[_gameWorld mapGrid] objectAtIndex:tileCoord.x] objectAtIndex:tileCoord.y], TILE,
+                                  nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_DISPLAY_TILE_INFO
+                                                            object:nil
+                                                          userInfo:tileInfo];
+    } else {
+        // send notification to close the UI panel
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_HIDE_TILE_INFO
+                                                            object:nil
+                                                          userInfo:nil];
+    }
+    
+    // Testing retrieval of tile description
+    // CCLOG(@"Tile Desc: %@", [_gameWorld descriptionForTileAt:tileCoord]);
 }
 
 -(CGPoint) locationFromTouch:(UITouch*)touch
