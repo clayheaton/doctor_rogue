@@ -394,16 +394,19 @@
   </tile>
   <tile id="75" terrain="8,8,8,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="76" terrain="8,8,5,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="77" terrain="8,8,5,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
@@ -454,6 +457,7 @@
   </tile>
   <tile id="87" terrain="8,5,8,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
@@ -464,6 +468,7 @@
   </tile>
   <tile id="89" terrain="5,8,5,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
@@ -514,16 +519,19 @@
   </tile>
   <tile id="99" terrain="8,5,8,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="100" terrain="5,5,8,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="101" terrain="5,8,8,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
@@ -574,16 +582,19 @@
   </tile>
   <tile id="111" terrain="5,5,5,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="112" terrain="5,5,8,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="113" terrain="5,5,8,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
@@ -634,16 +645,19 @@
   </tile>
   <tile id="123" terrain="5,8,5,8">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="124" terrain="8,8,8,8">
    <properties>
     <property name="terrain_type" value="hole"/>
+    <property name="will_fall" value="YES"/>
    </properties>
   </tile>
   <tile id="125" terrain="8,5,8,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
@@ -694,16 +708,19 @@
   </tile>
   <tile id="135" terrain="5,8,5,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="136" terrain="8,8,5,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
   <tile id="137" terrain="8,5,5,5">
    <properties>
+    <property name="might_fall" value="YES"/>
     <property name="terrain_type" value="dirt_border_hole"/>
    </properties>
   </tile>
