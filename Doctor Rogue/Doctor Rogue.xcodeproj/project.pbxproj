@@ -9,6 +9,26 @@
 /* Begin PBXBuildFile section */
 		6F0804F41746744600B55B55 /* hawker_hart-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0804F21746744600B55B55 /* hawker_hart-hd.png */; };
 		6F0804F51746744600B55B55 /* hawker_hart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0804F31746744600B55B55 /* hawker_hart.png */; };
+		6F16CD4517527E0D003FFC38 /* map_grasslands_75x75-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3117527E0D003FFC38 /* map_grasslands_75x75-hd.tmx */; };
+		6F16CD4617527E0D003FFC38 /* map_grasslands_50x50-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3217527E0D003FFC38 /* map_grasslands_50x50-hd.tmx */; };
+		6F16CD4717527E0D003FFC38 /* map_grasslands_50x25-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3317527E0D003FFC38 /* map_grasslands_50x25-hd.tmx */; };
+		6F16CD4817527E0D003FFC38 /* map_grasslands_25x50-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3417527E0D003FFC38 /* map_grasslands_25x50-hd.tmx */; };
+		6F16CD4917527E0D003FFC38 /* map_grasslands_25x25-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3517527E0D003FFC38 /* map_grasslands_25x25-hd.tmx */; };
+		6F16CD4A17527E0D003FFC38 /* fog-hd.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3617527E0D003FFC38 /* fog-hd.tsx */; };
+		6F16CD4B17527E0D003FFC38 /* grasslands-hd.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3717527E0D003FFC38 /* grasslands-hd.tsx */; };
+		6F16CD4C17527E0D003FFC38 /* map_grasslands_75x75.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3817527E0D003FFC38 /* map_grasslands_75x75.tmx */; };
+		6F16CD4D17527E0D003FFC38 /* map_grasslands_25x50.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3917527E0D003FFC38 /* map_grasslands_25x50.tmx */; };
+		6F16CD4E17527E0D003FFC38 /* map_grasslands_50x50.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3A17527E0D003FFC38 /* map_grasslands_50x50.tmx */; };
+		6F16CD4F17527E0D003FFC38 /* map_grasslands_50x25.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3B17527E0D003FFC38 /* map_grasslands_50x25.tmx */; };
+		6F16CD5017527E0D003FFC38 /* map_grasslands_25x25.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3C17527E0D003FFC38 /* map_grasslands_25x25.tmx */; };
+		6F16CD5117527E0D003FFC38 /* fog.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3D17527E0D003FFC38 /* fog.tsx */; };
+		6F16CD5217527E0D003FFC38 /* grasslands.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3E17527E0D003FFC38 /* grasslands.tsx */; };
+		6F16CD5317527E0D003FFC38 /* test_grasslands-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD3F17527E0D003FFC38 /* test_grasslands-hd.tmx */; };
+		6F16CD5417527E0D003FFC38 /* test_grasslands.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4017527E0D003FFC38 /* test_grasslands.tmx */; };
+		6F16CD5517527E0D003FFC38 /* grasslands.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4117527E0D003FFC38 /* grasslands.png */; };
+		6F16CD5617527E0D003FFC38 /* grasslands-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4217527E0D003FFC38 /* grasslands-hd.png */; };
+		6F16CD5717527E0D003FFC38 /* newfog.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4317527E0D003FFC38 /* newfog.png */; };
+		6F16CD5817527E0D003FFC38 /* newfog-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4417527E0D003FFC38 /* newfog-hd.png */; };
 		6F1CEE81174522F800040A05 /* temp_dc-hd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */; };
 		6F1CEE82174522F800040A05 /* temp_dc-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE80174522F800040A05 /* temp_dc-hd.png */; };
 		6F1CEE851745231200040A05 /* temp_dc.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE831745231200040A05 /* temp_dc.plist */; };
@@ -18,8 +38,6 @@
 		6F359645173DC49E00C9C717 /* HKTMXLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359640173DC49E00C9C717 /* HKTMXLayer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F359646173DC49E00C9C717 /* HKTMXLayer+Experimental.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359642173DC49E00C9C717 /* HKTMXLayer+Experimental.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F359647173DC49E00C9C717 /* HKTMXTiledMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359644173DC49E00C9C717 /* HKTMXTiledMap.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6F35964B173DC74C00C9C717 /* all_terrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F359649173DC74C00C9C717 /* all_terrain.png */; };
-		6F35964C173DC74C00C9C717 /* test_map.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6F35964A173DC74C00C9C717 /* test_map.tmx */; };
 		6F35964F173DC84C00C9C717 /* MainGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F35964E173DC84C00C9C717 /* MainGameScene.m */; };
 		6F359653173DC9E500C9C717 /* MapLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359652173DC9E500C9C717 /* MapLayer.m */; };
 		6F359656173DCA1400C9C717 /* UILayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359655173DCA1400C9C717 /* UILayer.m */; };
@@ -188,19 +206,13 @@
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
 		6FA00F7B174D879F002345E5 /* CCSprite+GLBoxes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FA00F7A174D879E002345E5 /* CCSprite+GLBoxes.m */; };
 		6FC4E475174873E000C36B5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6FC4E474174873E000C36B5A /* Localizable.strings */; };
-		6FCAC05F1747F717002ECBE7 /* newfog-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05D1747F717002ECBE7 /* newfog-hd.png */; };
-		6FCAC0601747F717002ECBE7 /* newfog.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC05E1747F717002ECBE7 /* newfog.png */; };
 		6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0611747FCCE002ECBE7 /* place_names.csv */; };
 		6FCAC0671747FCCE002ECBE7 /* item_objects.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0621747FCCE002ECBE7 /* item_objects.csv */; };
 		6FCAC0681747FCCE002ECBE7 /* item_descriptors.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0631747FCCE002ECBE7 /* item_descriptors.csv */; };
 		6FCAC0691747FCCE002ECBE7 /* item_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0641747FCCE002ECBE7 /* item_types.csv */; };
 		6FCAC06A1747FCCE002ECBE7 /* case_types.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0651747FCCE002ECBE7 /* case_types.csv */; };
 		6FD387A31745B51000AC6F76 /* RandomMapGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */; };
-		6FD387AA1745B5B600AC6F76 /* test_grasslands-hd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A61745B5B600AC6F76 /* test_grasslands-hd.tmx */; };
-		6FD387AB1745B5B600AC6F76 /* test_grasslands.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6FD387A71745B5B600AC6F76 /* test_grasslands.tmx */; };
 		6FD7479F174B12D4002AFF93 /* MapTile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD7479E174B12D3002AFF93 /* MapTile.m */; };
-		6FD747AA174BE01B002AFF93 /* grasslands-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747A8174BE01B002AFF93 /* grasslands-hd.png */; };
-		6FD747AB174BE01B002AFF93 /* grasslands.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747A9174BE01B002AFF93 /* grasslands.png */; };
 		6FD747AE174BF11E002AFF93 /* underlayer-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747AC174BF11E002AFF93 /* underlayer-hd.png */; };
 		6FD747AF174BF11E002AFF93 /* underlayer.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FD747AD174BF11E002AFF93 /* underlayer.png */; };
 		6FD7EDB51743E0F9001022EB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FD7EDB11743E0F9001022EB /* libTestFlight.a */; };
@@ -212,6 +224,26 @@
 /* Begin PBXFileReference section */
 		6F0804F21746744600B55B55 /* hawker_hart-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hawker_hart-hd.png"; sourceTree = "<group>"; };
 		6F0804F31746744600B55B55 /* hawker_hart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hawker_hart.png; sourceTree = "<group>"; };
+		6F16CD3117527E0D003FFC38 /* map_grasslands_75x75-hd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "map_grasslands_75x75-hd.tmx"; sourceTree = "<group>"; };
+		6F16CD3217527E0D003FFC38 /* map_grasslands_50x50-hd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "map_grasslands_50x50-hd.tmx"; sourceTree = "<group>"; };
+		6F16CD3317527E0D003FFC38 /* map_grasslands_50x25-hd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "map_grasslands_50x25-hd.tmx"; sourceTree = "<group>"; };
+		6F16CD3417527E0D003FFC38 /* map_grasslands_25x50-hd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "map_grasslands_25x50-hd.tmx"; sourceTree = "<group>"; };
+		6F16CD3517527E0D003FFC38 /* map_grasslands_25x25-hd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "map_grasslands_25x25-hd.tmx"; sourceTree = "<group>"; };
+		6F16CD3617527E0D003FFC38 /* fog-hd.tsx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "fog-hd.tsx"; sourceTree = "<group>"; };
+		6F16CD3717527E0D003FFC38 /* grasslands-hd.tsx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "grasslands-hd.tsx"; sourceTree = "<group>"; };
+		6F16CD3817527E0D003FFC38 /* map_grasslands_75x75.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = map_grasslands_75x75.tmx; sourceTree = "<group>"; };
+		6F16CD3917527E0D003FFC38 /* map_grasslands_25x50.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = map_grasslands_25x50.tmx; sourceTree = "<group>"; };
+		6F16CD3A17527E0D003FFC38 /* map_grasslands_50x50.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = map_grasslands_50x50.tmx; sourceTree = "<group>"; };
+		6F16CD3B17527E0D003FFC38 /* map_grasslands_50x25.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = map_grasslands_50x25.tmx; sourceTree = "<group>"; };
+		6F16CD3C17527E0D003FFC38 /* map_grasslands_25x25.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = map_grasslands_25x25.tmx; sourceTree = "<group>"; };
+		6F16CD3D17527E0D003FFC38 /* fog.tsx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fog.tsx; sourceTree = "<group>"; };
+		6F16CD3E17527E0D003FFC38 /* grasslands.tsx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = grasslands.tsx; sourceTree = "<group>"; };
+		6F16CD3F17527E0D003FFC38 /* test_grasslands-hd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "test_grasslands-hd.tmx"; sourceTree = "<group>"; };
+		6F16CD4017527E0D003FFC38 /* test_grasslands.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test_grasslands.tmx; sourceTree = "<group>"; };
+		6F16CD4117527E0D003FFC38 /* grasslands.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grasslands.png; sourceTree = "<group>"; };
+		6F16CD4217527E0D003FFC38 /* grasslands-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grasslands-hd.png"; sourceTree = "<group>"; };
+		6F16CD4317527E0D003FFC38 /* newfog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newfog.png; sourceTree = "<group>"; };
+		6F16CD4417527E0D003FFC38 /* newfog-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newfog-hd.png"; sourceTree = "<group>"; };
 		6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "temp_dc-hd.plist"; sourceTree = "<group>"; };
 		6F1CEE80174522F800040A05 /* temp_dc-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "temp_dc-hd.png"; sourceTree = "<group>"; };
 		6F1CEE831745231200040A05 /* temp_dc.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = temp_dc.plist; sourceTree = "<group>"; };
@@ -226,8 +258,6 @@
 		6F359642173DC49E00C9C717 /* HKTMXLayer+Experimental.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "HKTMXLayer+Experimental.m"; sourceTree = "<group>"; };
 		6F359643173DC49E00C9C717 /* HKTMXTiledMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKTMXTiledMap.h; sourceTree = "<group>"; };
 		6F359644173DC49E00C9C717 /* HKTMXTiledMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKTMXTiledMap.m; sourceTree = "<group>"; };
-		6F359649173DC74C00C9C717 /* all_terrain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = all_terrain.png; sourceTree = "<group>"; };
-		6F35964A173DC74C00C9C717 /* test_map.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test_map.tmx; sourceTree = "<group>"; };
 		6F35964D173DC84C00C9C717 /* MainGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainGameScene.h; sourceTree = "<group>"; };
 		6F35964E173DC84C00C9C717 /* MainGameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainGameScene.m; sourceTree = "<group>"; };
 		6F359651173DC9E500C9C717 /* MapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapLayer.h; sourceTree = "<group>"; };
@@ -556,8 +586,6 @@
 		6FA00F79174D879E002345E5 /* CCSprite+GLBoxes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CCSprite+GLBoxes.h"; sourceTree = "<group>"; };
 		6FA00F7A174D879E002345E5 /* CCSprite+GLBoxes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CCSprite+GLBoxes.m"; sourceTree = "<group>"; };
 		6FC4E474174873E000C36B5A /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
-		6FCAC05D1747F717002ECBE7 /* newfog-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newfog-hd.png"; sourceTree = "<group>"; };
-		6FCAC05E1747F717002ECBE7 /* newfog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newfog.png; sourceTree = "<group>"; };
 		6FCAC0611747FCCE002ECBE7 /* place_names.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = place_names.csv; sourceTree = "<group>"; };
 		6FCAC0621747FCCE002ECBE7 /* item_objects.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_objects.csv; sourceTree = "<group>"; };
 		6FCAC0631747FCCE002ECBE7 /* item_descriptors.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_descriptors.csv; sourceTree = "<group>"; };
@@ -565,12 +593,8 @@
 		6FCAC0651747FCCE002ECBE7 /* case_types.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = case_types.csv; sourceTree = "<group>"; };
 		6FD387A11745B51000AC6F76 /* RandomMapGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomMapGenerator.h; sourceTree = "<group>"; };
 		6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RandomMapGenerator.m; sourceTree = "<group>"; };
-		6FD387A61745B5B600AC6F76 /* test_grasslands-hd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "test_grasslands-hd.tmx"; sourceTree = "<group>"; };
-		6FD387A71745B5B600AC6F76 /* test_grasslands.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test_grasslands.tmx; sourceTree = "<group>"; };
 		6FD7479D174B12D3002AFF93 /* MapTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapTile.h; sourceTree = "<group>"; };
 		6FD7479E174B12D3002AFF93 /* MapTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapTile.m; sourceTree = "<group>"; };
-		6FD747A8174BE01B002AFF93 /* grasslands-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grasslands-hd.png"; sourceTree = "<group>"; };
-		6FD747A9174BE01B002AFF93 /* grasslands.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grasslands.png; sourceTree = "<group>"; };
 		6FD747AC174BF11E002AFF93 /* underlayer-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "underlayer-hd.png"; sourceTree = "<group>"; };
 		6FD747AD174BF11E002AFF93 /* underlayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = underlayer.png; sourceTree = "<group>"; };
 		6FD7EDB11743E0F9001022EB /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
@@ -603,6 +627,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F16CD3017527DE0003FFC38 /* Underlayer */ = {
+			isa = PBXGroup;
+			children = (
+				6FD747AC174BF11E002AFF93 /* underlayer-hd.png */,
+				6FD747AD174BF11E002AFF93 /* underlayer.png */,
+			);
+			name = Underlayer;
+			sourceTree = "<group>";
+		};
 		6F1CEE7D1744804600040A05 /* Art */ = {
 			isa = PBXGroup;
 			children = (
@@ -664,16 +697,27 @@
 		6F359648173DC6FD00C9C717 /* Map Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6F359649173DC74C00C9C717 /* all_terrain.png */,
-				6F35964A173DC74C00C9C717 /* test_map.tmx */,
-				6FCAC05D1747F717002ECBE7 /* newfog-hd.png */,
-				6FCAC05E1747F717002ECBE7 /* newfog.png */,
-				6FD747A8174BE01B002AFF93 /* grasslands-hd.png */,
-				6FD747A9174BE01B002AFF93 /* grasslands.png */,
-				6FD387A61745B5B600AC6F76 /* test_grasslands-hd.tmx */,
-				6FD387A71745B5B600AC6F76 /* test_grasslands.tmx */,
-				6FD747AC174BF11E002AFF93 /* underlayer-hd.png */,
-				6FD747AD174BF11E002AFF93 /* underlayer.png */,
+				6F16CD3117527E0D003FFC38 /* map_grasslands_75x75-hd.tmx */,
+				6F16CD3217527E0D003FFC38 /* map_grasslands_50x50-hd.tmx */,
+				6F16CD3317527E0D003FFC38 /* map_grasslands_50x25-hd.tmx */,
+				6F16CD3417527E0D003FFC38 /* map_grasslands_25x50-hd.tmx */,
+				6F16CD3517527E0D003FFC38 /* map_grasslands_25x25-hd.tmx */,
+				6F16CD3617527E0D003FFC38 /* fog-hd.tsx */,
+				6F16CD3717527E0D003FFC38 /* grasslands-hd.tsx */,
+				6F16CD3817527E0D003FFC38 /* map_grasslands_75x75.tmx */,
+				6F16CD3917527E0D003FFC38 /* map_grasslands_25x50.tmx */,
+				6F16CD3A17527E0D003FFC38 /* map_grasslands_50x50.tmx */,
+				6F16CD3B17527E0D003FFC38 /* map_grasslands_50x25.tmx */,
+				6F16CD3C17527E0D003FFC38 /* map_grasslands_25x25.tmx */,
+				6F16CD3D17527E0D003FFC38 /* fog.tsx */,
+				6F16CD3E17527E0D003FFC38 /* grasslands.tsx */,
+				6F16CD3F17527E0D003FFC38 /* test_grasslands-hd.tmx */,
+				6F16CD4017527E0D003FFC38 /* test_grasslands.tmx */,
+				6F16CD4117527E0D003FFC38 /* grasslands.png */,
+				6F16CD4217527E0D003FFC38 /* grasslands-hd.png */,
+				6F16CD4317527E0D003FFC38 /* newfog.png */,
+				6F16CD4417527E0D003FFC38 /* newfog-hd.png */,
+				6F16CD3017527DE0003FFC38 /* Underlayer */,
 			);
 			path = "Map Resources";
 			sourceTree = "<group>";
@@ -1326,8 +1370,6 @@
 				6F3693FC173BFD04005BAC8B /* fedora-titles-35-hd.png in Resources */,
 				6F3693FD173BFD04005BAC8B /* fedora-titles-35.fnt in Resources */,
 				6F3693FE173BFD04005BAC8B /* fedora-titles-35.png in Resources */,
-				6F35964B173DC74C00C9C717 /* all_terrain.png in Resources */,
-				6F35964C173DC74C00C9C717 /* test_map.tmx in Resources */,
 				6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */,
 				6FD7EDB61743E0F9001022EB /* README.md in Resources */,
 				6FD7EDB71743E0F9001022EB /* release_notes.md in Resources */,
@@ -1335,24 +1377,38 @@
 				6F1CEE82174522F800040A05 /* temp_dc-hd.png in Resources */,
 				6F1CEE851745231200040A05 /* temp_dc.plist in Resources */,
 				6F1CEE861745231200040A05 /* temp_dc.png in Resources */,
-				6FD387AA1745B5B600AC6F76 /* test_grasslands-hd.tmx in Resources */,
-				6FD387AB1745B5B600AC6F76 /* test_grasslands.tmx in Resources */,
 				6F0804F41746744600B55B55 /* hawker_hart-hd.png in Resources */,
 				6F0804F51746744600B55B55 /* hawker_hart.png in Resources */,
-				6FCAC05F1747F717002ECBE7 /* newfog-hd.png in Resources */,
-				6FCAC0601747F717002ECBE7 /* newfog.png in Resources */,
 				6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */,
 				6FCAC0671747FCCE002ECBE7 /* item_objects.csv in Resources */,
 				6FCAC0681747FCCE002ECBE7 /* item_descriptors.csv in Resources */,
 				6FCAC0691747FCCE002ECBE7 /* item_types.csv in Resources */,
 				6FCAC06A1747FCCE002ECBE7 /* case_types.csv in Resources */,
 				6FC4E475174873E000C36B5A /* Localizable.strings in Resources */,
-				6FD747AA174BE01B002AFF93 /* grasslands-hd.png in Resources */,
-				6FD747AB174BE01B002AFF93 /* grasslands.png in Resources */,
 				6FD747AE174BF11E002AFF93 /* underlayer-hd.png in Resources */,
 				6FD747AF174BF11E002AFF93 /* underlayer.png in Resources */,
 				6F6E889F174CD6AA008500EA /* Flower.plist in Resources */,
 				6F6E88A5174D1EE6008500EA /* chasm_wind.plist in Resources */,
+				6F16CD4517527E0D003FFC38 /* map_grasslands_75x75-hd.tmx in Resources */,
+				6F16CD4617527E0D003FFC38 /* map_grasslands_50x50-hd.tmx in Resources */,
+				6F16CD4717527E0D003FFC38 /* map_grasslands_50x25-hd.tmx in Resources */,
+				6F16CD4817527E0D003FFC38 /* map_grasslands_25x50-hd.tmx in Resources */,
+				6F16CD4917527E0D003FFC38 /* map_grasslands_25x25-hd.tmx in Resources */,
+				6F16CD4A17527E0D003FFC38 /* fog-hd.tsx in Resources */,
+				6F16CD4B17527E0D003FFC38 /* grasslands-hd.tsx in Resources */,
+				6F16CD4C17527E0D003FFC38 /* map_grasslands_75x75.tmx in Resources */,
+				6F16CD4D17527E0D003FFC38 /* map_grasslands_25x50.tmx in Resources */,
+				6F16CD4E17527E0D003FFC38 /* map_grasslands_50x50.tmx in Resources */,
+				6F16CD4F17527E0D003FFC38 /* map_grasslands_50x25.tmx in Resources */,
+				6F16CD5017527E0D003FFC38 /* map_grasslands_25x25.tmx in Resources */,
+				6F16CD5117527E0D003FFC38 /* fog.tsx in Resources */,
+				6F16CD5217527E0D003FFC38 /* grasslands.tsx in Resources */,
+				6F16CD5317527E0D003FFC38 /* test_grasslands-hd.tmx in Resources */,
+				6F16CD5417527E0D003FFC38 /* test_grasslands.tmx in Resources */,
+				6F16CD5517527E0D003FFC38 /* grasslands.png in Resources */,
+				6F16CD5617527E0D003FFC38 /* grasslands-hd.png in Resources */,
+				6F16CD5717527E0D003FFC38 /* newfog.png in Resources */,
+				6F16CD5817527E0D003FFC38 /* newfog-hd.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="128" tileheight="128">
+ <tileset firstgid="1" source="grasslands-hd.tsx"/>
+ <tileset firstgid="157" source="fog-hd.tsx"/>
+ <layer name="terrain" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQEJAAAAAqAu9P9sOwK1AQAAAAAAAAAAgH8Dvz4AEg==
+  </data>
+ </layer>
+ <layer name="objects" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwTENAAAAAiD7nyY2hxvQAAAAAAAAAAAAwL8Bb3oAkw==
+  </data>
+ </layer>
+ <layer name="collisions" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwTENAAAAAiD7fzY2hxvQAAAAAAAAAAAAwL8BSGoAkg==
+  </data>
+ </layer>
+ <layer name="fog_of_war" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQEJAAAAAqD+H+lmOwK1AQAAAAAAAAAAgH8Do/cAqA==
+  </data>
+ </layer>
+</map>
