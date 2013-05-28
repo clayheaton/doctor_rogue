@@ -71,7 +71,7 @@
         }
     }
     
-    CCLOG(@"tile types dict: %@", _tileTypes);
+    // CCLOG(@"tile types dict: %@", _tileTypes);
     
     CCLOG(@"--- > Map parsing is complete\n\n");
 }

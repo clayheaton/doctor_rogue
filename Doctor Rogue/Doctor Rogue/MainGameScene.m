@@ -13,11 +13,37 @@
 
 @implementation MainGameScene
 
-+(CCScene *) scene
++(CCScene *) sceneWithMapTemplate:(NSString *)templateName
 {
-	CCScene *scene = [CCScene node];
-	[scene addChild: [MainGameScene node]];
+	CCScene *scene       = [CCScene node];
+    MainGameScene   *mgs = [[MainGameScene alloc] initWithMapTemplate:templateName];
+    
+	[scene addChild: mgs];
 	return scene;
+}
+
+- (id) initWithMapTemplate:(NSString *)templateName
+{
+    self = [super init];
+    
+    if (self) {
+        
+        _usingUnderlayer = NO;
+        
+        _gameWorld     = [GameWorld node];
+        
+        MapLayer *mapLayer = [[MapLayer alloc] initWithMap:[HKTMXTiledMap tiledMapWithTMXFile:templateName] andGameWorld:_gameWorld];
+        [self addChild:mapLayer z:1 tag:kTag_MainGameScene_mapLayer];
+        
+        UILayer *uiLayer   = [UILayer node];
+        [self addChild:uiLayer z:2 tag:kTag_MainGameScene_uiLayer];
+        
+        if ([mapLayer underlayerIsNeeded]) {
+            [self establishUnderlayer];
+        }
+        
+    }
+    return self;
 }
 
 - (id)init

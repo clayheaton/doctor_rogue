@@ -3,14 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-typedef enum
-{
-    CaseTypeDescriptorObject = 0,
-    CaseTypeType,
-    CaseTypeObjectType,
-    QuestionTypeMAX
-} CaseType;
+#import "Constants.h"
 
 @interface GameStartGenerator : NSObject
 
@@ -24,7 +17,7 @@ typedef enum
 @property (copy, readwrite) NSString *artifactDescriptor;
 @property (copy, readwrite) NSString *artifactFullName;
 @property (copy, readwrite) NSString *gameTitle;
-@property (assign, readwrite) uint seed;
+@property (assign, readwrite) uint    seed;
 
 + (GameStartGenerator *) generator;
 + (GameStartGenerator *) generatorWithSeed:(uint)seed;

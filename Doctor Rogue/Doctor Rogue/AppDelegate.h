@@ -7,6 +7,7 @@
 #import <UIKit/UIKit.h>
 #import "cocos2d.h"
 #import "GameStartGenerator.h"
+#import "GameState.h"
 
 // Added only for iOS 6 support
 @interface MyNavigationController : UINavigationController <CCDirectorDelegate>
@@ -24,5 +25,6 @@
 @property (readonly) MyNavigationController *navController;
 @property (readonly) CCDirectorIOS *director;
 @property (strong, nonatomic) GameStartGenerator *generator;
+@property (strong, nonatomic) GameState *gameState;
 
 @end

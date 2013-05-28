@@ -36,9 +36,16 @@
     return self;
 }
 
+- (void)onEnter
+{
+    [super onEnter];
+}
+
 - (void)onExit
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+    [super onExit];
 }
 
 #pragma mark -

@@ -22,7 +22,10 @@
 
 @property (assign, readwrite) float underlayerDimension;
 
-+ (CCScene *)scene;
++ (CCScene *) sceneWithMapTemplate:(NSString *)templateName;
+
+- (id) initWithMapTemplate:(NSString *)templateName;
+
 - (MapLayer *)mapLayer;
 - (UILayer  *)uiLayer;
 

@@ -27,6 +27,8 @@
 #define TILE                            @"tile"
 #define TILE_DESCRIPTION                @"tile_description"
 
+#define MAP_PREFIX_GRASSLANDS           @"grasslands"
+
 // Higher scrollRate is slower; default is 9
 // Default scrollDamping is 0.85f;
 
@@ -40,6 +42,14 @@
 #define MAP_SCROLL_RATE_RETINA              25
 #define MAP_SCROLL_DAMPING                  0.95f
 #define MAP_SCROLL_DAMPING_RETINA           0.5f
+
+typedef enum
+{
+    CaseTypeDescriptorObject = 0,
+    CaseTypeType,
+    CaseTypeObjectType,
+    QuestionTypeMAX
+} CaseType;
 
 // kTag_Parent_Child
 typedef enum {

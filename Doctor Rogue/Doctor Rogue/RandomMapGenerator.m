@@ -34,6 +34,14 @@
 
 - (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map
 {
+    // Check for map property test_map with a value of YES
+    
+    BOOL isTest = [[map propertyNamed:@"test_map"] boolValue];
+    
+    if (isTest) {
+        CCLOG(@"RandomMapGenerator detects a test map: skipping randomizer.");
+    }
+    
     CCLOG(@"RandomMapGenerator is generating the map.");
     return map;
 }

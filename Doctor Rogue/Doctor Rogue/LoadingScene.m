@@ -9,7 +9,7 @@
 #import "LoadingScene.h"
 #import "MainMenuLayer.h"
 #import "MainGameScene.h"
-
+#import "GameState.h"
 
 
 @interface LoadingScene (PrivateMethods)
@@ -32,9 +32,18 @@
 {
 	if ((self = [super init]))
 	{
-		targetScene_ = targetScene;
-		
-        CCLabelBMFont *label = [CCLabelBMFont labelWithString:@"Loading..." fntFile:@"fedora-titles-35.fnt"];
+		targetScene_  = targetScene;
+		NSString *title;
+        
+        if (targetScene == LoadingTargetScene_MainGameScene) {
+            _locationInfo = [[GameState gameState] nextMapAndLocation];
+            title = [NSString stringWithFormat:@"Flying to %@", [_locationInfo objectAtIndex:0]];
+        } else {
+            title = @"Loading";
+        }
+        
+        
+        CCLabelBMFont *label = [CCLabelBMFont labelWithString:title fntFile:@"fedora-titles-35.fnt"];
 		CGSize size = [[CCDirector sharedDirector] winSize];
 		label.position = CGPointMake(size.width / 2, size.height / 2);
 		[self addChild:label];
@@ -59,6 +68,12 @@
 		case LoadingTargetScene_MainMenuScene:
         {
             
+            // TODO: Remove temporary reset of GameState
+            // At the moment, this allows reproducability with the same seed because it sets the location number
+            // and the map number back to -1 on the GameState
+            
+            [[GameState gameState] temporaryReset];
+            
             CCScene *mainMenuScene = [MainMenuLayer scene];
             CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:mainMenuScene withColor:ccBLACK];
 			[[CCDirector sharedDirector] replaceScene:transition];
@@ -67,8 +82,11 @@
 
 		case LoadingTargetScene_MainGameScene:
 		{
+            NSString *mapTemplateName = [_locationInfo objectAtIndex:1];
             
-			CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:[MainGameScene scene] withColor:ccBLACK];
+            CCScene *mainGameScene = [MainGameScene sceneWithMapTemplate:mapTemplateName];
+            
+			CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:mainGameScene withColor:ccBLACK];
 			[[CCDirector sharedDirector] replaceScene:transition];
 			break;
 		}
@@ -82,13 +100,5 @@
 
 }
 
-/* Not needed with ARC
--(void) dealloc
-{
-	CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
-    
-    [super dealloc];
-}
- */
 
 @end

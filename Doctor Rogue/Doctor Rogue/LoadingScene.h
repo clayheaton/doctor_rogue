@@ -15,6 +15,7 @@
 }
 
 @property (retain, readwrite) NSDictionary *infoDict;
+@property (retain, readwrite) NSArray      *locationInfo;
 
 +(id) sceneWithTargetScene:(LoadingTargetScenes)targetScene;
 -(id) initWithTargetScene:(LoadingTargetScenes)targetScene;

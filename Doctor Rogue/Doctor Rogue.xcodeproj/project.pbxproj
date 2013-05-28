@@ -29,6 +29,8 @@
 		6F16CD5617527E0D003FFC38 /* grasslands-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4217527E0D003FFC38 /* grasslands-hd.png */; };
 		6F16CD5717527E0D003FFC38 /* newfog.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4317527E0D003FFC38 /* newfog.png */; };
 		6F16CD5817527E0D003FFC38 /* newfog-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD4417527E0D003FFC38 /* newfog-hd.png */; };
+		6F16CD5B1754EDA5003FFC38 /* AdventureLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F16CD5A1754EDA5003FFC38 /* AdventureLocation.m */; };
+		6F16CD5E1754F939003FFC38 /* GameState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F16CD5D1754F939003FFC38 /* GameState.m */; };
 		6F1CEE81174522F800040A05 /* temp_dc-hd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */; };
 		6F1CEE82174522F800040A05 /* temp_dc-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE80174522F800040A05 /* temp_dc-hd.png */; };
 		6F1CEE851745231200040A05 /* temp_dc.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE831745231200040A05 /* temp_dc.plist */; };
@@ -244,6 +246,10 @@
 		6F16CD4217527E0D003FFC38 /* grasslands-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grasslands-hd.png"; sourceTree = "<group>"; };
 		6F16CD4317527E0D003FFC38 /* newfog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newfog.png; sourceTree = "<group>"; };
 		6F16CD4417527E0D003FFC38 /* newfog-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newfog-hd.png"; sourceTree = "<group>"; };
+		6F16CD591754EDA5003FFC38 /* AdventureLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdventureLocation.h; sourceTree = "<group>"; };
+		6F16CD5A1754EDA5003FFC38 /* AdventureLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdventureLocation.m; sourceTree = "<group>"; };
+		6F16CD5C1754F939003FFC38 /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameState.h; sourceTree = "<group>"; };
+		6F16CD5D1754F939003FFC38 /* GameState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameState.m; sourceTree = "<group>"; };
 		6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "temp_dc-hd.plist"; sourceTree = "<group>"; };
 		6F1CEE80174522F800040A05 /* temp_dc-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "temp_dc-hd.png"; sourceTree = "<group>"; };
 		6F1CEE831745231200040A05 /* temp_dc.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = temp_dc.plist; sourceTree = "<group>"; };
@@ -781,6 +787,10 @@
 				6F3693B9173B4655005BAC8B /* MainMenuLayer.m */,
 				6F3693CC173B4A98005BAC8B /* GameStartGenerator.h */,
 				6F3693CD173B4A98005BAC8B /* GameStartGenerator.m */,
+				6F16CD5C1754F939003FFC38 /* GameState.h */,
+				6F16CD5D1754F939003FFC38 /* GameState.m */,
+				6F16CD591754EDA5003FFC38 /* AdventureLocation.h */,
+				6F16CD5A1754EDA5003FFC38 /* AdventureLocation.m */,
 				6F35965B173DD29000C9C717 /* LoadingScene.h */,
 				6F35965C173DD29000C9C717 /* LoadingScene.m */,
 				6F359658173DCCEB00C9C717 /* GameWorld.h */,
@@ -1579,6 +1589,8 @@
 				6FD387A31745B51000AC6F76 /* RandomMapGenerator.m in Sources */,
 				6FD7479F174B12D4002AFF93 /* MapTile.m in Sources */,
 				6FA00F7B174D879F002345E5 /* CCSprite+GLBoxes.m in Sources */,
+				6F16CD5B1754EDA5003FFC38 /* AdventureLocation.m in Sources */,
+				6F16CD5E1754F939003FFC38 /* GameState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

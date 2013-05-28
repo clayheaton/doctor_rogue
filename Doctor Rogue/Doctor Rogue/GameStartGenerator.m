@@ -4,6 +4,8 @@
 
 #import "GameStartGenerator.h"
 #import "parseCSV.h"
+#import "AdventureLocation.h"
+#import "GameState.h"
 
 @implementation GameStartGenerator
 
@@ -15,7 +17,7 @@ static GameStartGenerator *generator;
     return [GameStartGenerator generatorWithSeed:arc4random()];
 }
 
-// Used to initialize with a specific seed - probably not needed
+// Used to initialize with a specific seed
 + (GameStartGenerator *) generatorWithSeed:(uint)seed
 {
     if (!generator) {
@@ -35,26 +37,75 @@ static GameStartGenerator *generator;
     return self;
 }
 
+#pragma mark -
+#pragma mark Preparing Games from a seed
+
 // Called by MainMenuLayer when user enters a seed
 - (void) makeNewAdventureWithSeed:(uint)newSeed
 {
-    srand(newSeed);
+    _seed = newSeed;
+    srand(_seed);
     [self prepareGame];
 }
 
 // Called by MainMenuLayer when user creates another random adventure
 - (void) makeNewAdventure
 {
-    srand(arc4random());
+    _seed = arc4random();
+    srand(_seed);
     [self prepareGame];
 }
 
 - (void) prepareGame
 {
+    GameState *gameState = [GameState gameState];
+    
+    [gameState setSeed:_seed];
+    [gameState setNumLocations:4];
+    
+    // Temp for now, to allow linear progression
+    [gameState setCurrentLocationNumber:-1];
+    [gameState setCurrentMapNumberInLocation:-1];
+    
+    [gameState setAdventureLocations:nil];
+    [gameState setAdventureLocations:[NSMutableArray arrayWithCapacity:[gameState numLocations]]];
+    
+    // Create the AdventureLocations first
+    // Remember that no maps are generated at this point
+    [self prepareAdventureLocations];
+    
+    // Create the place names, etc.
     _placeName        = [self generatePlaceName];
     _artifactFullName = [self generateArtifact];
     _gameTitle        = [self generateGameTitle];
 }
+
+
+- (void) prepareAdventureLocations
+{
+    GameState *gameState = [GameState gameState];
+    
+    NSArray *terrainTypes = [NSArray arrayWithObjects:MAP_PREFIX_GRASSLANDS, nil];
+
+    for (int i = 0; i < [gameState numLocations]; i++) {
+        int numMaps = (rand() % 4) + 3;
+        
+        AdventureLocation *location = [[AdventureLocation alloc] initWithNumMaps:numMaps];
+        
+        // TODO: Remove this temporary name
+        [location setLocationName:[self generatePlaceName]];
+        
+        NSString *locationTerrain   = [terrainTypes objectAtIndex:rand() % [terrainTypes count]];
+        
+        [location prepareMapTemplatesWithTerrain:locationTerrain];
+        
+        [[gameState adventureLocations] addObject:location];
+    }
+
+}
+
+#pragma mark -
+#pragma mark Detail Methods
 
 - (NSString *)generatePlaceName
 {

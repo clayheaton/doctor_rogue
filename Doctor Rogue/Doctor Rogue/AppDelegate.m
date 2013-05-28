@@ -139,8 +139,9 @@
 	// make main window visible
 	[window_ makeKeyAndVisible];
     
-    // Initialize the GameStartGenerator
+    // Initialize the GameStartGenerator & GameState
     _generator = [GameStartGenerator generatorWithSeed:arc4random()];
+    _gameState = [GameState gameState];
 	
 	return YES;
 }
