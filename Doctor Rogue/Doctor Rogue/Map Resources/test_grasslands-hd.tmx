@@ -2,7 +2,6 @@
 <map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="128" tileheight="128">
  <properties>
   <property name="terrain_prefix" value="terrain_grasslands_"/>
-  <property name="test_map" value="YES"/>
  </properties>
  <tileset firstgid="1" name="grasslands" tilewidth="128" tileheight="128">
   <image source="grasslands-hd.png" width="1536" height="1664"/>
@@ -99,6 +98,7 @@
   </tile>
   <tile id="16" terrain="1,1,1,1">
    <properties>
+    <property name="default_tile" value="YES"/>
     <property name="terrain_type" value="medium_grass"/>
    </properties>
   </tile>

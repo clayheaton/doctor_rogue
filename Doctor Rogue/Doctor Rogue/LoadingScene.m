@@ -69,8 +69,10 @@
         {
             
             // TODO: Remove temporary reset of GameState
+            
             // At the moment, this allows reproducability with the same seed because it sets the location number
-            // and the map number back to -1 on the GameState
+            // and the map number back to -1 on the GameState. This is acceptable because we do not currently
+            // have a way to save the gamestate with regards to map changes, etc.
             
             [[GameState gameState] temporaryReset];
             

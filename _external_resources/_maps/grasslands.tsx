@@ -94,6 +94,7 @@
  </tile>
  <tile id="16" terrain="1,1,1,1">
   <properties>
+   <property name="default_tile" value="YES"/>
    <property name="terrain_type" value="medium_grass"/>
   </properties>
  </tile>
