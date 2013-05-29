@@ -8,6 +8,8 @@
 #import "RandomMapGenerator.h"
 #import "HKTMXTiledMap.h"
 #import "Constants.h"
+#import "GameState.h"
+#import "TSXTerrainSetParser.h"
 
 @implementation RandomMapGenerator
 
@@ -64,7 +66,18 @@
     [self cleanTempTilesFrom:map];
     [self setDefaultTerrainFor:map];
     
+    [self parseTerrainFiles];
+    
     return map;
+}
+
+#pragma mark -
+#pragma mark Building the Allowed Neighbors Map
+
+- (void) parseTerrainFiles
+{
+    NSString *templateName = [[GameState gameState] activeMapTemplate];
+    CCLOG(@"Active Map Template: %@", templateName);
 }
 
 #pragma mark -

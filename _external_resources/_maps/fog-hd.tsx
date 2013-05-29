@@ -35,10 +35,18 @@
  <tile id="22" terrain="2,2,1,1"/>
  <tile id="23" terrain="2,2,1,2"/>
  <tile id="24" terrain="0,1,0,1"/>
- <tile id="25" terrain="1,1,1,1"/>
+ <tile id="25" terrain="1,1,1,1">
+  <properties>
+   <property name="terrain_type" value="fog_grey"/>
+  </properties>
+ </tile>
  <tile id="26" terrain="1,0,1,0"/>
  <tile id="27" terrain="2,1,2,1"/>
- <tile id="28" terrain="1,1,1,1"/>
+ <tile id="28" terrain="1,1,1,1">
+  <properties>
+   <property name="terrain_type" value="fog_grey"/>
+  </properties>
+ </tile>
  <tile id="29" terrain="1,2,1,2"/>
  <tile id="30" terrain="0,1,0,0"/>
  <tile id="31" terrain="1,1,0,0"/>

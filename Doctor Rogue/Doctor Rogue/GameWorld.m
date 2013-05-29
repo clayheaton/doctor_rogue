@@ -113,8 +113,6 @@
     
     mapLayers = nil;
     
-    // CCLOG(@"Tile minGID: %i maxGID: %i", minGID, maxGID);
-    
     for (int i = minGID; i < maxGID + 1; i++) {
         [self gatherTileDescription:i withPrefix:terrainPrefix];
     }
@@ -131,7 +129,7 @@
         
         NSString *terrain_type_str = [[_map propertiesForGID:tileID] objectForKey:@"terrain_type"];
         
-        if ([terrain_type_str isEqualToString:BLACK_FOG]) {
+        if ([terrain_type_str isEqualToString:FOG_BLACK]) {
             // Set the fog tile id here so that we can check it easily for other tiles
             _fogTileID = tileID;
         }

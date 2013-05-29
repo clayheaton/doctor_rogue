@@ -751,12 +751,22 @@
    <property name="terrain_type" value="dirt_border_dirty_brick"/>
   </properties>
  </tile>
+ <tile id="144">
+  <properties>
+   <property name="entry" value="1"/>
+  </properties>
+ </tile>
  <tile id="145">
   <properties>
    <property name="blocks_movement" value="1"/>
   </properties>
  </tile>
  <tile id="146">
+  <properties>
+   <property name="exit" value="1"/>
+  </properties>
+ </tile>
+ <tile id="147">
   <properties>
    <property name="entry_exit" value="1"/>
   </properties>

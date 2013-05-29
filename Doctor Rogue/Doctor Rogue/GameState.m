@@ -49,9 +49,9 @@ static GameState *gameState;
     // TODO: this should check whether the map has been created and created it if not. Or something like that.
     // If GameState is to store saved games, the AdventureLocation needs a pointer to the map or needs to store
     // actions that have altered the map so that the state can be recreated upon load.
-    NSString *mapTemplate  = [[loc mapTemplates] objectAtIndex:_currentMapNumberInLocation];
+    _activeMapTemplate  = [[loc mapTemplates] objectAtIndex:_currentMapNumberInLocation];
     
-    return [NSArray arrayWithObjects:locationName, mapTemplate, nil];
+    return [NSArray arrayWithObjects:locationName, _activeMapTemplate, nil];
 }
 
 - (void) temporaryReset

@@ -17,6 +17,8 @@
 @property (assign, readwrite) unsigned short currentLocationNumber;
 @property (assign, readwrite) unsigned short currentMapNumberInLocation;
 
+@property (copy, readwrite) NSString *activeMapTemplate;
+
 // Initialize or get the singleton gameState
 + (GameState *) gameState;
 

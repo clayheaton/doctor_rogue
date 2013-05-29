@@ -22,7 +22,8 @@
 #define MAP_LAYER_COLLISIONS            @"collisions"
 #define MAP_LAYER_FOG                   @"fog_of_war"
 
-#define BLACK_FOG                       @"fog_black"
+#define FOG_BLACK                       @"fog_black"
+#define FOG_GREY                        @"fog_grey"
 
 #define TILE                            @"tile"
 #define TILE_DESCRIPTION                @"tile_description"
@@ -81,6 +82,14 @@ typedef enum
     TileMovement_Floating,
     TileMovement_Always
 } TileMovementStatus;
+
+typedef enum
+{
+	TerrainTileRotation_0,
+    TerrainTileRotation_90,
+    TerrainTileRotation_180,
+    TerrainTileRotation_270
+} TerrainTileRotation;
 
 typedef enum
 {
