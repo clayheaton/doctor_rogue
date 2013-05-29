@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "Constants.h"
 
+@class TerrainTilePositioned;
+
 @interface TerrainTile : NSObject
 
 @property (assign, readwrite) unsigned int tileGID;
@@ -17,5 +19,12 @@
 @property (assign, readwrite) unsigned int cornerNETarget;
 @property (assign, readwrite) unsigned int cornerSETarget;
 @property (assign, readwrite) unsigned int cornerSWTarget;
+
+- (unsigned int) northTarget;
+- (unsigned int) eastTarget;
+- (unsigned int) southTarget;
+- (unsigned int) westTarget;
+
+- (TerrainTilePositioned *) tileToMatch:(unsigned int)signature forSide:(TerrainTileSide)tileSide;
 
 @end

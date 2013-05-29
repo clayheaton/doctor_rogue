@@ -78,6 +78,10 @@
 {
     NSString *templateName = [[GameState gameState] activeMapTemplate];
     CCLOG(@"Active Map Template: %@", templateName);
+    
+    NSDictionary *test = [TSXTerrainSetParser parseTileset:templateName];
+    
+    CCLOG(@"Tileset parsed");
 }
 
 #pragma mark -

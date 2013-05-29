@@ -93,6 +93,14 @@ typedef enum
 
 typedef enum
 {
+	TerrainTileSide_North,
+    TerrainTileSide_East,
+    TerrainTileSide_South,
+    TerrainTileSide_West
+} TerrainTileSide;
+
+typedef enum
+{
 	FogofWar_TileVisible, // in LoS for player
     FogofWar_TileVisited, // previously in LoS for player
     FogofWar_TileBlack    // Never seen or visited.

@@ -14,11 +14,16 @@
 @property (retain, readwrite) TerrainTile        *terrainTile;
 @property (assign, readwrite) TerrainTileRotation rotation;
 
-- (id) initWithTerrainTile:(TerrainTile *)tile;
+- (id) initWithTerrainTile:(TerrainTile *)tile andRotation:(TerrainTileRotation)rot;
 
 - (unsigned int) cornerNWTarget;
 - (unsigned int) cornerNETarget;
 - (unsigned int) cornerSETarget;
 - (unsigned int) cornerSWTarget;
+
+- (unsigned int) northTarget;
+- (unsigned int) eastTarget;
+- (unsigned int) southTarget;
+- (unsigned int) westTarget;
 
 @end

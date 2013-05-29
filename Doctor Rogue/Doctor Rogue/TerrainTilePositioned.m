@@ -9,12 +9,12 @@
 
 @implementation TerrainTilePositioned
 
-- (id) initWithTerrainTile:(TerrainTile *)tile
+- (id) initWithTerrainTile:(TerrainTile *)tile  andRotation:(TerrainTileRotation)rot
 {
     self = [super init];
     if (self) {
         _terrainTile = tile;
-        _rotation    = TerrainTileRotation_0;
+        _rotation    = rot;
     }
     return self;
 }
@@ -136,6 +136,134 @@
         case TerrainTileRotation_270:
         {
             return [_terrainTile cornerNWTarget];
+            break;
+        }
+            
+        default:
+        {
+            NSLog(@"Illegal tile rotation");
+            break;
+        }
+    }
+}
+
+- (unsigned int) northTarget
+{
+    switch (_rotation) {
+        case TerrainTileRotation_0:
+        {
+            return [_terrainTile northTarget];
+            break;
+        }
+        case TerrainTileRotation_90:
+        {
+            return [_terrainTile westTarget];
+            break;
+        }
+        case TerrainTileRotation_180:
+        {
+            return [_terrainTile southTarget];
+            break;
+        }
+        case TerrainTileRotation_270:
+        {
+            return [_terrainTile eastTarget];
+            break;
+        }
+            
+        default:
+        {
+            NSLog(@"Illegal tile rotation");
+            break;
+        }
+    }
+}
+
+- (unsigned int) eastTarget
+{
+    switch (_rotation) {
+        case TerrainTileRotation_0:
+        {
+            return [_terrainTile eastTarget];
+            break;
+        }
+        case TerrainTileRotation_90:
+        {
+            return [_terrainTile northTarget];
+            break;
+        }
+        case TerrainTileRotation_180:
+        {
+            return [_terrainTile westTarget];
+            break;
+        }
+        case TerrainTileRotation_270:
+        {
+            return [_terrainTile southTarget];
+            break;
+        }
+            
+        default:
+        {
+            NSLog(@"Illegal tile rotation");
+            break;
+        }
+    }
+}
+
+- (unsigned int) southTarget
+{
+    switch (_rotation) {
+        case TerrainTileRotation_0:
+        {
+            return [_terrainTile southTarget];
+            break;
+        }
+        case TerrainTileRotation_90:
+        {
+            return [_terrainTile eastTarget];
+            break;
+        }
+        case TerrainTileRotation_180:
+        {
+            return [_terrainTile northTarget];
+            break;
+        }
+        case TerrainTileRotation_270:
+        {
+            return [_terrainTile westTarget];
+            break;
+        }
+            
+        default:
+        {
+            NSLog(@"Illegal tile rotation");
+            break;
+        }
+    }
+}
+
+- (unsigned int) westTarget
+{
+    switch (_rotation) {
+        case TerrainTileRotation_0:
+        {
+            return [_terrainTile westTarget];
+            break;
+        }
+        case TerrainTileRotation_90:
+        {
+            return [_terrainTile southTarget];
+            break;
+        }
+        case TerrainTileRotation_180:
+        {
+            return [_terrainTile eastTarget];
+            break;
+        }
+        case TerrainTileRotation_270:
+        {
+            return [_terrainTile northTarget];
             break;
         }
             
