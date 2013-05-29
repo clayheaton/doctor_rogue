@@ -145,7 +145,7 @@
     // CGPoint centerTile = CGPointMake((int)(ms.width * 0.5), (int)(ms.height * 0.5));
     // CCLOG(@"  centerTile: %f, %f", centerTile.x, centerTile.y);
     
-    CGRect boundingRect = CGRectMake(0, 0, (ms.width * ts.width), ms.height * ts.height);
+    CGRect boundingRect = CGRectMake(0, 0, (ms.width * ts.width), (ms.height * ts.height) + [[CCDirector sharedDirector] winSize].height * 0.05);
     
     // the pan/zoom controller
     _panZoomController                      = [CCPanZoomController controllerWithNode:self];
@@ -159,8 +159,36 @@
     
     CGPoint testMapLoadPoint = ccp((ms.width * ts.width) * 0.1, (ms.height * ts.height) * 0.9);
     
+    // Zoom fixing for small maps.. Retina always will be 0.5 times the value for non-retina
+    
+    // Determine the width of the map, in pixels. The zoom out limit should be the greater
+    // of the either the factor by which the map must be multiplied to be the width of the screen
+    // or the default zoom out limit.
+    
+    float zoomOutLimit = MAP_ZOOM_OUT_LIMIT;
+    
+    CCLOG(@"Map Dimensions:    %@", NSStringFromCGPoint(_mapDimensions));
+    CCLOG(@"Screen Dimensions: %@", NSStringFromCGSize([[CCDirector sharedDirector] winSizeInPixels]));
+    
+    CGSize screenDim = [[CCDirector sharedDirector] winSizeInPixels];
+    
+    float xMultFactor = screenDim.width  / _mapDimensions.x;
+    float yMultFactor = screenDim.height / _mapDimensions.y;
+    
+    if (xMultFactor > zoomOutLimit) {
+        zoomOutLimit = xMultFactor;
+    }
+    
+    if (yMultFactor > zoomOutLimit) {
+        zoomOutLimit = yMultFactor;
+    }
+    
+    CCLOG(@"zoomOutLimit: %f", zoomOutLimit);
+    
+    float zoomOutLimitRetina = zoomOutLimit * 0.5;
+    
     if ([[CCDirector sharedDirector] enableRetinaDisplay:YES]) {
-        _panZoomController.zoomOutLimit         = MAP_ZOOM_OUT_LIMIT_RETINA;
+        _panZoomController.zoomOutLimit         = zoomOutLimitRetina;
         _panZoomController.zoomInLimit          = MAP_ZOOM_IN_LIMIT_RETINA;
         _panZoomController.zoomCenteringDamping = MAP_ZOOM_CENTERING_DAMPING_RETINA;
         _panZoomController.scrollRate           = MAP_SCROLL_RATE_RETINA;
@@ -169,7 +197,7 @@
         [_panZoomController zoomOnPoint:testMapLoadPoint duration:0 scale:0.5f];
     } else {
         
-        _panZoomController.zoomOutLimit         = MAP_ZOOM_OUT_LIMIT;
+        _panZoomController.zoomOutLimit         = zoomOutLimit;
         _panZoomController.zoomInLimit          = MAP_ZOOM_IN_LIMIT;
         _panZoomController.zoomCenteringDamping = MAP_ZOOM_CENTERING_DAMPING;
         _panZoomController.scrollRate           = MAP_SCROLL_RATE;
@@ -179,13 +207,7 @@
     }
     
     // CGPoint mapCenterPoint = ccp((ms.width * ts.width) * 0.5, (ms.height * ts.height) * 0.5);
-    //[_panZoomController centerOnPoint:mapCenterPoint];
-
-    
-    // Set up the grid that we will use to refer to the tiles for gameplay purposes
-    // Randomization is handled earlier.
-    // [self establishMapGrid];
-    
+    //[_panZoomController centerOnPoint:mapCenterPoint];    
 }
 
 - (void) draw
@@ -198,7 +220,8 @@
     }
 }
 
-#pragma mark Grid
+#pragma mark -
+#pragma mark Drawing the Grid
 - (void) toggleGrid:(NSNotification *)notification
 {
     _showGrid = !_showGrid;
@@ -235,6 +258,8 @@
     }
 }
 
+#pragma mark -
+#pragma mark Finding Tiles
 // Given a screen position, return the tile coordinate
 -(CGPoint) tileCoordFromScreenPoint:(CGPoint)location
 {
@@ -253,6 +278,19 @@
 }
 
 
+#pragma mark -
+#pragma mark Adjustments to CCPanZoomController
+
+- (void) adjustTopBoundTo:(float)dist
+{
+    CGSize ms = [_currentMap mapSize];
+    CGSize ts = [_currentMap tileSize];
+    
+    _panZoomController.boundingRect = CGRectMake(0, 0, (ms.width * ts.width), (ms.height * ts.height) + [[CCDirector sharedDirector] winSize].height * dist);
+    
+}
+
+#pragma mark -
 #pragma mark Handling touch events
 
 // Current implementation of double-tap is to select a tile on the map;
@@ -284,15 +322,20 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_DISPLAY_TILE_INFO
                                                             object:nil
                                                           userInfo:tileInfo];
+        
+        // When the tile info panel is open, we need to adjust the bounds of the CCPanZoomController to show the entire map
+        [self adjustTopBoundTo:0.2f];
+        
     } else {
         // send notification to close the UI panel
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_HIDE_TILE_INFO
                                                             object:nil
                                                           userInfo:nil];
+        
+        // When the tile info panel is closed, we need to adjust the bounds of the CCPanZoomController to close the gap
+        [self adjustTopBoundTo:0.05f];
     }
     
-    // Testing retrieval of tile description
-    // CCLOG(@"Tile Desc: %@", [_gameWorld descriptionForTileAt:tileCoord]);
 }
 
 -(CGPoint) locationFromTouch:(UITouch*)touch

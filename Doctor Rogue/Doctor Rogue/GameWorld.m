@@ -24,6 +24,8 @@
     return self;
 }
 
+#pragma mark -
+#pragma mark Parsing the map
 - (void) parseMap:(HKTMXTiledMap *)map
 {
     CCLOG(@"\n\n--- > GameWorld is parsing the map");
@@ -44,6 +46,8 @@
     
     // Get the map terrain prefix
     NSString *terrain_prefix = [_map propertyNamed:@"terrain_prefix"];
+    
+    NSAssert(terrain_prefix != nil, @"The map must include a property called 'terrain_prefix'.");
     
     // Iterate through the map layers and set MapTile info based on properties
     HKTMXLayer *terrainLayer = [_map layerNamed:@"terrain"];
@@ -75,10 +79,13 @@
     [self gatherTileDescriptionsWithTerrainPrefix:terrain_prefix];
     
     
-    CCLOG(@"tile types dict: %@", _tileTypes);
+    // CCLOG(@"tile types dict: %@", _tileTypes);
     
     CCLOG(@"--- > Map parsing is complete\n\n");
 }
+
+#pragma mark -
+#pragma mark Managing Tile Descriptions
 
 - (void) gatherTileDescriptionsWithTerrainPrefix:(NSString *)terrainPrefix
 {
@@ -106,7 +113,7 @@
     
     mapLayers = nil;
     
-    CCLOG(@"Tile minGID: %i maxGID: %i", minGID, maxGID);
+    // CCLOG(@"Tile minGID: %i maxGID: %i", minGID, maxGID);
     
     for (int i = minGID; i < maxGID + 1; i++) {
         [self gatherTileDescription:i withPrefix:terrainPrefix];
@@ -152,6 +159,7 @@
     NSString *val = [_tileTypes objectForKey:[NSString stringWithFormat:@"%i", [[self mapTileForCoord:coord] terrainTileGID]]];
     
     if (!val) {
+        CCLOG(@"The tile at %@ is missing a description.", NSStringFromCGPoint(coord));
         return @"";
     }
     
@@ -164,7 +172,8 @@
 
 - (CCSprite *) spriteForTileAt:(CGPoint)coord
 {
-
+    // TODO: Iterate through the layers and get the sprite from the uppermost layer
+    
     HKTMXLayer *terrainLayer = [_map layerNamed:@"terrain"];
     return [terrainLayer tileAt:coord];
 }

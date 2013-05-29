@@ -183,6 +183,7 @@
     } else {
         // Panel is showing, change the displayed info
     }
+    
 }
 
 - (void)hideTileInfo:(NSNotification *)notification
