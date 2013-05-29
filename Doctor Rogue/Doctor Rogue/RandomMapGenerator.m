@@ -17,6 +17,7 @@
     self = [super init];
     if (self) {
         // Set up whatever parameters...
+
     }
     return self;
 }
@@ -54,6 +55,12 @@
     
     CCLOG(@"RandomMapGenerator is generating the map.");
     
+    // Create layer references
+    _terrainLayer       = [map layerNamed:MAP_LAYER_TERRAIN];
+    _collisionsLayer    = [map layerNamed:MAP_LAYER_COLLISIONS];
+    _objectsLayer       = [map layerNamed:MAP_LAYER_OBJECTS];
+    _fogLayer           = [map layerNamed:MAP_LAYER_FOG];
+    
     [self cleanTempTilesFrom:map];
     [self setDefaultTerrainFor:map];
     
@@ -65,26 +72,16 @@
 
 - (void) cleanTempTilesFrom:(HKTMXTiledMap *)map
 {
-    HKTMXLayer *terrainLayer    = [map layerNamed:MAP_LAYER_TERRAIN];
-    HKTMXLayer *collisionsLayer = [map layerNamed:MAP_LAYER_COLLISIONS];
-    HKTMXLayer *objectsLayer    = [map layerNamed:MAP_LAYER_OBJECTS];
-    HKTMXLayer *fogLayer        = [map layerNamed:MAP_LAYER_FOG];
     
-    [terrainLayer    setTileGID:0 at:ccp(0,0)];
-    [collisionsLayer setTileGID:0 at:ccp(0,0)];
-    [objectsLayer    setTileGID:0 at:ccp(0,0)];
-    [fogLayer        setTileGID:0 at:ccp(0,0)];
+    [_terrainLayer    setTileGID:0 at:ccp(0,0)];
+    [_collisionsLayer setTileGID:0 at:ccp(0,0)];
+    [_objectsLayer    setTileGID:0 at:ccp(0,0)];
+    [_fogLayer        setTileGID:0 at:ccp(0,0)];
 }
 
 - (void) setDefaultTerrainFor:(HKTMXTiledMap *)map
 {
     BOOL defaultLocated = NO;
-    
-    unsigned short mw = map.mapSize.width;
-    unsigned short mh = map.mapSize.height;
-    
-    // Iterate through the map layers and set MapTile info based on properties
-    HKTMXLayer *terrainLayer = [map layerNamed:MAP_LAYER_TERRAIN];
     
     unsigned int defaultTileID = 0;
     
@@ -104,12 +101,23 @@
     }
     
     // Fill the terrain layer with the default tile
+    [self fillLayer:_terrainLayer onMap:map withTileID:defaultTileID];
+}
+
+
+#pragma mark -
+#pragma mark Utility Methods
+
+- (void) fillLayer:(HKTMXLayer *)layer onMap:(HKTMXTiledMap *)map withTileID:(unsigned short)tileID
+{
+    unsigned short mw = map.mapSize.width;
+    unsigned short mh = map.mapSize.height;
+    
     for (int i = 0; i < mw; i++) {
         for (int j=0; j < mh; j++) {
-            [terrainLayer setTileGID:defaultTileID at:ccp(i,j)];
+            [layer setTileGID:tileID at:ccp(i,j)];
         }
     }
-    
 }
 
 @end

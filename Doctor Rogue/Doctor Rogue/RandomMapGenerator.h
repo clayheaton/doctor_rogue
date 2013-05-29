@@ -9,10 +9,16 @@
 #import "cocos2d.h"
 
 @class HKTMXTiledMap;
+@class HKTMXLayer;
 
 @interface RandomMapGenerator : CCNode {
     
 }
+
+@property (retain, readwrite) HKTMXLayer *terrainLayer;
+@property (retain, readwrite) HKTMXLayer *objectsLayer;
+@property (retain, readwrite) HKTMXLayer *collisionsLayer;
+@property (retain, readwrite) HKTMXLayer *fogLayer;
 
 - (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map;
 
