@@ -54,7 +54,7 @@
     
     _mapTemplates = [NSArray arrayWithArray:tempMapTemplates];
 
-    NSLog(@"mapTemplates: %@", _mapTemplates);
+    // NSLog(@"mapTemplates: %@", _mapTemplates);
     
     tempMapTemplates = nil;
 

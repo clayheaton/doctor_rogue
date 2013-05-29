@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="25" height="25" tilewidth="128" tileheight="128">
+ <properties>
+  <property name="terrain_prefix" value="terrain_grasslands_"/>
+ </properties>
  <tileset firstgid="1" source="grasslands-hd.tsx"/>
  <tileset firstgid="157" source="fog-hd.tsx"/>
  <layer name="terrain" width="25" height="25">

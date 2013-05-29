@@ -14,8 +14,9 @@
 {
     self = [super init];
     if (self) {
-        _mapCoord = coord;
+        _mapCoord      = coord;
         _obscuredByFog = NO;
+        _fogTileGID    = 0;
     }
     return self;
 }

@@ -19,6 +19,7 @@
     if (self) {
         CCLOG(@"Init in GameWorld");
         _tileTypes = [[NSMutableDictionary alloc] init];
+        _fogTileID = 9999;
     }
     return self;
 }
@@ -71,7 +72,7 @@
         }
     }
     
-    // CCLOG(@"tile types dict: %@", _tileTypes);
+    CCLOG(@"tile types dict: %@", _tileTypes);
     
     CCLOG(@"--- > Map parsing is complete\n\n");
 }
@@ -104,7 +105,9 @@
 {
     // Look for fog first
     
-    if ([[self mapTileForCoord:coord] fogTileGID] == _fogTileID) {
+    unsigned int tileFogID = [[self mapTileForCoord:coord] fogTileGID];
+    
+    if ( tileFogID == _fogTileID) {
         NSString *fogKey = [_tileTypes objectForKey:[NSString stringWithFormat:@"%i", _fogTileID]];
         return NSLocalizedString(fogKey, nil);
     }
