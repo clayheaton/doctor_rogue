@@ -61,14 +61,14 @@
 @end
 
 @implementation HKTMXLayer
-@synthesize layerSize = layerSize_, layerName = layerName_, tiles=tiles_;
-@synthesize tileset=tileset_;
-@synthesize layerOrientation=layerOrientation_;
-@synthesize mapTileSize=mapTileSize_;
-@synthesize properties=properties_;
-@synthesize opacity=opacity_;
-@synthesize color=color_;
-@synthesize blendFunc = blendFunc_;
+@synthesize layerSize           = layerSize_, layerName = layerName_, tiles=tiles_;
+@synthesize tileset             = tileset_;
+@synthesize layerOrientation    = layerOrientation_;
+@synthesize mapTileSize         = mapTileSize_;
+@synthesize properties          = properties_;
+@synthesize opacity             = opacity_;
+@synthesize color               = color_;
+@synthesize blendFunc           = blendFunc_;
 
 #pragma mark CCTMXLayer - init & alloc & dealloc
 
@@ -648,6 +648,16 @@ texdone:
     if( newBlend )
 		ccGLBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
     
+}
+
+- (unsigned int)minGID
+{
+    return minGID_;
+}
+
+- (unsigned int)maxGID
+{
+    return maxGID_;
 }
 
 

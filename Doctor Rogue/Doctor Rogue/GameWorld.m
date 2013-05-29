@@ -49,7 +49,7 @@
     HKTMXLayer *terrainLayer = [_map layerNamed:@"terrain"];
     HKTMXLayer *fogLayer     = [_map layerNamed:@"fog_of_war"];
     
-    
+    // Create the MapTiles
     for (int i = 0; i < mw; i++) {
         for (int j=0; j < mh; j++) {
             
@@ -72,9 +72,45 @@
         }
     }
     
+    [self gatherTileDescriptionsWithTerrainPrefix:terrain_prefix];
+    
+    
     CCLOG(@"tile types dict: %@", _tileTypes);
     
     CCLOG(@"--- > Map parsing is complete\n\n");
+}
+
+- (void) gatherTileDescriptionsWithTerrainPrefix:(NSString *)terrainPrefix
+{
+    int minGID = 999999;
+    int maxGID = -1;
+    NSMutableArray *mapLayers = [[NSMutableArray alloc] init];
+    
+    for(id layer in [_map children])
+    {
+        if([layer isKindOfClass:NSClassFromString(@"HKTMXLayer")]) {
+            [mapLayers addObject:layer];
+        }
+    }
+    
+    for (HKTMXLayer *layer in mapLayers) {
+        int layerMin = [layer minGID];
+        int layerMax = [layer maxGID];
+        if (layerMin < minGID) {
+            minGID = layerMin;
+        }
+        if (layerMax > maxGID) {
+            maxGID = layerMax;
+        }
+    }
+    
+    mapLayers = nil;
+    
+    CCLOG(@"Tile minGID: %i maxGID: %i", minGID, maxGID);
+    
+    for (int i = minGID; i < maxGID + 1; i++) {
+        [self gatherTileDescription:i withPrefix:terrainPrefix];
+    }
 }
 
 - (void) gatherTileDescription:(unsigned int)tileID withPrefix:(NSString *)terrainPrefix

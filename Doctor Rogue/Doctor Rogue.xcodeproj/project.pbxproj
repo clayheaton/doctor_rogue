@@ -687,6 +687,7 @@
 		6F35963E173DC48B00C9C717 /* Map Management */ = {
 			isa = PBXGroup;
 			children = (
+				6F359650173DC9AF00C9C717 /* HKTMX Files */,
 				6F35965E173DE7C400C9C717 /* CCPanZoomController.h */,
 				6F35965F173DE7C400C9C717 /* CCPanZoomController.m */,
 				6F359651173DC9E500C9C717 /* MapLayer.h */,
@@ -695,7 +696,6 @@
 				6FD7479E174B12D3002AFF93 /* MapTile.m */,
 				6FD387A11745B51000AC6F76 /* RandomMapGenerator.h */,
 				6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */,
-				6F359650173DC9AF00C9C717 /* HKTMX Files */,
 			);
 			name = "Map Management";
 			sourceTree = "<group>";

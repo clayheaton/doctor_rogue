@@ -118,21 +118,28 @@ struct HKTMXAnimCacheEntry {
 
 /** name of the layer */
 @property (nonatomic,readwrite,retain) NSString *layerName;
+
 /** size of the layer in tiles */
 @property (nonatomic,readwrite) CGSize layerSize;
+
 /** size of the map's tile (could be differnt from the tile's size) */
 @property (nonatomic,readwrite) CGSize mapTileSize;
+
 /** pointer to the map of tiles */
 @property (nonatomic,readwrite) unsigned int *tiles;
+
 /** Tileset information for the layer */
 @property (nonatomic,readwrite,retain) CCTMXTilesetInfo *tileset;
+
 /** Layer orientation, which is the same as the map orientation */
 @property (nonatomic,readwrite) int layerOrientation;
+
 /** properties from the layer. They can be added using Tiled */
 @property (nonatomic,readwrite,retain) NSMutableArray *properties;
 
 /** creates an HKTMXLayer with a tileset info, a layer info and a map info */
 +(id) layerWithTilesetInfo:(CCTMXTilesetInfo*)tilesetInfo layerInfo:(CCTMXLayerInfo*)layerInfo mapInfo:(CCTMXMapInfo*)mapInfo;
+
 /** initializes an HKTMXLayer with a tileset info, a layer info and a map info */
 -(id) initWithTilesetInfo:(CCTMXTilesetInfo*)tilesetInfo layerInfo:(CCTMXLayerInfo*)layerInfo mapInfo:(CCTMXMapInfo*)mapInfo;
 
@@ -175,6 +182,10 @@ struct HKTMXAnimCacheEntry {
 
 // sets the flipbits for a tile at given coordinates
 -(void) setTileFlipBits:(unsigned int)flipbits at:(CGPoint) tileCoordinate;
+
+// Methods added by Clay for parsing tiles in GameWorld
+- (unsigned int)minGID;
+- (unsigned int)maxGID;
 
 
 
