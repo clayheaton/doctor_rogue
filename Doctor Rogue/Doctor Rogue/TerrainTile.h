@@ -25,6 +25,8 @@
 - (unsigned int) southTarget;
 - (unsigned int) westTarget;
 
+// Please do not call this method now. It doesn't work with our tile sets. Maybe it should be removed.
+// It would be ok to use if we supported rotated tiles.
 - (TerrainTilePositioned *) tileToMatch:(unsigned int)signature forSide:(TerrainTileSide)tileSide;
 
 @end

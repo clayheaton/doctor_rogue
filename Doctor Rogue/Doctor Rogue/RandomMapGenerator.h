@@ -20,6 +20,14 @@
 @property (retain, readwrite) HKTMXLayer *collisionsLayer;
 @property (retain, readwrite) HKTMXLayer *fogLayer;
 
+@property (retain, readwrite) NSDictionary   *tileDict;
+@property (retain, readwrite) NSMutableArray *tileDictKeyArray;
+@property (retain, readwrite) NSMutableArray *workingMap;
+
+@property (retain, readwrite) NSMutableSet *processedTiles;
+
+@property (assign, readwrite) CGSize mapSize;
+
 - (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map;
 
 @end

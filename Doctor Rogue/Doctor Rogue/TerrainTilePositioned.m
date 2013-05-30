@@ -9,14 +9,83 @@
 
 @implementation TerrainTilePositioned
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%i", self.tileGID];
+}
+
+
+
 - (id) initWithTerrainTile:(TerrainTile *)tile  andRotation:(TerrainTileRotation)rot
 {
     self = [super init];
     if (self) {
         _terrainTile = tile;
         _rotation    = rot;
+        _lockedOnMap = NO;
     }
     return self;
+}
+
+
+- (void) assignNeighborsFrom:(NSMutableArray *)possibleNeighbors
+{
+    NSMutableArray *tempWest  = [[NSMutableArray alloc] init];
+    NSMutableArray *tempNorth = [[NSMutableArray alloc] init];
+    NSMutableArray *tempEast  = [[NSMutableArray alloc] init];
+    NSMutableArray *tempSouth = [[NSMutableArray alloc] init];
+    
+    for (TerrainTilePositioned *tp in possibleNeighbors) {
+        //NSLog(@".......\n\n");
+        //NSLog(@"self id: %i tp id: %i", [self tileGID], [tp tileGID]);
+        //NSLog(@"self corners: %i, %i", [self cornerNWTarget], [self cornerNETarget]);
+        //NSLog(@"              %i, %i", [self cornerSWTarget], [self cornerSETarget]);
+        //NSLog(@"tp   corners: %i, %i", [tp cornerNWTarget], [tp cornerNETarget]);
+        //NSLog(@"              %i, %i", [tp cornerSWTarget], [tp cornerSETarget]);
+        
+        
+        if ([self cornerNWTarget] == [tp cornerNETarget] && [self cornerSWTarget] == [tp cornerSETarget]) {
+            [tempWest addObject:tp];
+            //NSLog(@"match as: WEST neighbor.");
+        }
+        if ([self cornerNWTarget] == [tp cornerSWTarget] && [self cornerNETarget] == [tp cornerSETarget]) {
+            [tempNorth addObject:tp];
+            //NSLog(@"match as: NORTH neighbor.");
+        }
+        if ([self cornerNETarget] == [tp cornerNWTarget] && [self cornerSETarget] == [tp cornerSWTarget]) {
+            [tempEast addObject:tp];
+            //NSLog(@"match as: EAST neighbor.");
+        }
+        if ([self cornerSWTarget] == [tp cornerNWTarget] && [self cornerSETarget] == [tp cornerNETarget]) {
+            [tempSouth addObject:tp];
+            //NSLog(@"match as: SOUTH neighbor.");
+        }
+    }
+    
+    _neighborsWest  = [NSArray arrayWithArray:tempWest];
+    _neighborsNorth = [NSArray arrayWithArray:tempNorth];
+    _neighborsEast  = [NSArray arrayWithArray:tempEast];
+    _neighborsSouth = [NSArray arrayWithArray:tempSouth];
+    
+    // Testing
+    /*
+    if ([self tileGID] == 2) {
+        NSLog(@"TEST tile id 11.");
+        NSLog(@"_neighborsWest:  %@", _neighborsWest);
+        NSLog(@"_neighborsEast:  %@", _neighborsEast);
+        NSLog(@"_neighborsNorth: %@", _neighborsNorth);
+        NSLog(@"_neighborsSouth: %@", _neighborsSouth);
+    }
+     */
+    
+}
+
+
+#pragma mark -
+
+- (unsigned int) tileGID
+{
+    return _terrainTile.tileGID;
 }
 
 - (unsigned int) cornerNWTarget

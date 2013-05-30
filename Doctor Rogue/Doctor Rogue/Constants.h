@@ -30,6 +30,9 @@
 
 #define MAP_PREFIX_GRASSLANDS           @"grasslands"
 
+// Terrain Dictionary
+#define TERRAIN_DICT_TERRAINS           @"TerrainsOrderedByName"
+
 // Higher scrollRate is slower; default is 9
 // Default scrollDamping is 0.85f;
 
@@ -98,6 +101,14 @@ typedef enum
     TerrainTileSide_South,
     TerrainTileSide_West
 } TerrainTileSide;
+
+typedef enum
+{
+	North,
+    East,
+    South,
+    West
+} CardinalDirections;
 
 typedef enum
 {

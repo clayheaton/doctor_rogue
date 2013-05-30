@@ -10,6 +10,8 @@
 #import "Constants.h"
 #import "GameState.h"
 #import "TSXTerrainSetParser.h"
+#import "TerrainTile.h"
+#import "TerrainTilePositioned.h"
 
 @implementation RandomMapGenerator
 
@@ -66,7 +68,28 @@
     [self cleanTempTilesFrom:map];
     [self setDefaultTerrainFor:map];
     
-    [self parseTerrainFiles];
+    [self parseTerrainTileset:map];
+    
+    NSAssert(_tileDict != nil, @"The tileDict is nil so the map cannot be randomized.");
+    
+    // Create a 2D array in memory to represent the map. We'll randomize and check this, and then
+    // use the final result of it to set the actual map tiles.
+    _mapSize = [map mapSize];
+    
+    _workingMap = [[NSMutableArray alloc] initWithCapacity:_mapSize.width];
+    
+    for (int i = 0; i < _mapSize.width; i++) {
+        NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
+        
+        // TODO: Optimize this with normal c arrays instead of creating the world with [NSNull null] defaults
+        for (int i = 0; i < _mapSize.height; i++) {
+            [nested addObject:[NSNull null]];
+        }
+        
+        [_workingMap addObject:nested];
+    }
+    
+    [self testRandomizeOutdoorMap:map];
     
     return map;
 }
@@ -74,14 +97,258 @@
 #pragma mark -
 #pragma mark Building the Allowed Neighbors Map
 
-- (void) parseTerrainFiles
+- (void) parseTerrainTileset:(HKTMXTiledMap *)map
 {
-    NSString *templateName = [[GameState gameState] activeMapTemplate];
-    CCLOG(@"Active Map Template: %@", templateName);
+    NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
+    _tileDict             = [TSXTerrainSetParser parseTileset:tilesetName];
+    _tileDictKeyArray     = [[NSMutableArray alloc] init];
     
-    NSDictionary *test = [TSXTerrainSetParser parseTileset:templateName];
+    for (NSString *key in _tileDict) {
+        if ([key isEqualToString:TERRAIN_DICT_TERRAINS]) {
+            continue;
+        }
+        [_tileDictKeyArray addObject:key];
+    }
+    
+    // Testing Output
+    /*
+    NSArray *tiles = [_tileDict objectForKey:@"0"];
+    
+    TerrainTilePositioned *t = [tiles objectAtIndex:TerrainTileRotation_0]; // Currently, the only object in the array
+    NSArray *t_northNeighbors = [t neighborsNorth];
+    
+    CCLOG(@"--------- TESTING TILE DICT -----------");
+    CCLOG(@"Test tile GID: %i rot: %i", [t tileGID], [t rotation]);
+    CCLOG(@"Test tile North Neighbors:");
+    for (TerrainTilePositioned *tp in t_northNeighbors) {
+        CCLOG(@" gid: %i", [tp tileGID]);
+    }
+    CCLOG(@"--------- END TESTING TILE DICT -----------");
+     */
     
     CCLOG(@"Tileset parsed");
+}
+
+# pragma mark -
+# pragma mark Testing randomization
+
+- (void) testRandomizeOutdoorMap:(HKTMXTiledMap *)map
+{
+    
+    // Start at (0,0) and walk the map
+    
+    // Queue up the coordinates
+    NSMutableArray *queueToProcess = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < _mapSize.height; i++) {
+        for (int j = 0; j < _mapSize.width; j++) {
+            if (i == 0 && j == 0) {
+                continue;
+            }
+            [queueToProcess addObject:[NSValue valueWithCGPoint:ccp(j,i)]];
+        }
+    }
+    
+    // Place the (0,0) tile
+    TerrainTilePositioned *seedTile = [[_tileDict objectForKey:@"1"] objectAtIndex:0];
+    [seedTile setLockedOnMap:YES];
+    
+    // Place the seed tile on the working map
+    [[_workingMap objectAtIndex:0] setObject:seedTile atIndex:0];
+
+    while ([queueToProcess count] > 0) {
+        
+        CGPoint thisCoord = [[queueToProcess objectAtIndex:0] CGPointValue];
+        [queueToProcess removeObjectAtIndex:0];
+        
+        NSMutableSet *possibleTilesForCoord = [[NSMutableSet alloc] init];
+        NSSet *tilesNorth = nil;
+        NSSet *tilesEast  = nil;
+        NSSet *tilesSouth = nil;
+        NSSet *tilesWest  = nil;
+        
+        TerrainTilePositioned *t;
+        
+        t = [self tileTo:South ofTileAt:thisCoord];
+        
+        if (t) {
+            NSArray *neighbors = [t neighborsNorth];
+            tilesNorth = [NSSet setWithArray:neighbors];
+        }
+        
+        t = [self tileTo:North ofTileAt:thisCoord];
+        
+        if (t) {
+            NSArray *neighbors = [t neighborsSouth];
+            tilesSouth = [NSSet setWithArray:neighbors];
+        }
+        
+        t = [self tileTo:East ofTileAt:thisCoord];
+        
+        if (t) {
+            NSArray *neighbors = [t neighborsWest];
+            tilesWest = [NSSet setWithArray:neighbors];
+        }
+        
+        t = [self tileTo:West ofTileAt:thisCoord];
+        
+        if (t) {
+            NSArray *neighbors = [t neighborsEast];
+            tilesEast = [NSSet setWithArray:neighbors];
+        }
+        
+        // Initialize the mutable set that we will interset the other sets with
+        if (tilesNorth && tilesNorth.count > 0) {
+            [possibleTilesForCoord unionSet:tilesNorth];
+        } else if (tilesEast && tilesEast.count > 0) {
+            [possibleTilesForCoord unionSet:tilesEast];
+        } else if (tilesSouth && tilesSouth.count > 0){
+            [possibleTilesForCoord unionSet:tilesSouth];
+        } else if (tilesWest && tilesWest.count > 0) {
+            [possibleTilesForCoord unionSet:tilesWest];
+        } else {
+            // NSAssert([possibleTilesForCoord count] != 0, @"Unable to initialize possible tiles set");
+        }
+        
+        // Intersect the sets
+        if (tilesNorth.count > 0) {
+            [possibleTilesForCoord intersectSet:tilesNorth];
+        }
+        
+        if (tilesEast.count > 0) {
+            [possibleTilesForCoord intersectSet:tilesEast];
+        }
+        
+        if (tilesSouth.count > 0) {
+            [possibleTilesForCoord intersectSet:tilesSouth];
+        }
+        
+        if (tilesWest.count > 0) {
+            [possibleTilesForCoord intersectSet:tilesWest];
+        }
+        
+        // At this point, our set includes possible tiles. Add one to the working map
+        // NSAssert([possibleTilesForCoord count] != 0, @"There are no possible tiles for this coordinate");
+        
+        if ([possibleTilesForCoord count] > 0) {
+            NSArray *arrayOfPossibleTiles = [possibleTilesForCoord allObjects];
+            
+            TerrainTilePositioned *chosenTile = [arrayOfPossibleTiles objectAtIndex:rand() % arrayOfPossibleTiles.count];
+            [chosenTile setLockedOnMap:YES];
+            
+            [[_workingMap objectAtIndex:thisCoord.x] setObject:chosenTile atIndex:thisCoord.y];
+        } else {
+            [_terrainLayer setTileGID:0 at:thisCoord];
+        }
+        
+    }
+    
+    CCLOG(@"Map randomization complete");
+    // CCLOG(@"_workingMap: %@", _workingMap);
+    
+    for (int i = 0; i < _mapSize.width; i++) {
+        for (int j = 0; j < _mapSize.height; j++) {
+            if ([[_workingMap objectAtIndex:i] objectAtIndex:j] != [NSNull null]) {
+                TerrainTilePositioned * tile = [[_workingMap objectAtIndex:i] objectAtIndex:j];
+                [_terrainLayer setTileGID:[tile tileGID] at:ccp(i,j)];
+            }
+        }
+    }
+    
+}
+
+- (TerrainTilePositioned *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord
+{
+    TerrainTilePositioned *t = nil;
+    
+    switch (direction) {
+        case North:
+        {
+            CGPoint n = ccpSub(coord, ccp(0,1));
+            if ([self isValid:n]) {
+                if ([[_workingMap objectAtIndex:n.x] objectAtIndex:n.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:n.x] objectAtIndex:n.y];
+                }
+            }
+            break;
+        }
+        case East:
+        {
+            CGPoint e = ccpAdd(coord, ccp(1,0));
+            if ([self isValid:e]) {
+                if ([[_workingMap objectAtIndex:e.x] objectAtIndex:e.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:e.x] objectAtIndex:e.y];
+                }
+            }
+            break;
+        }
+        case South:
+        {
+            CGPoint s = ccpAdd(coord, ccp(0,1));
+            if ([self isValid:s]) {
+                if ([[_workingMap objectAtIndex:s.x] objectAtIndex:s.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:s.x] objectAtIndex:s.y];
+                }
+            }
+            break;
+        }
+        case West:
+        {
+            CGPoint w = ccpSub(coord, ccp(1,0));
+            if ([self isValid:w]) {
+                if ([[_workingMap objectAtIndex:w.x] objectAtIndex:w.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:w.x] objectAtIndex:w.y];
+                }
+            }
+            break;
+        }
+    }
+    
+    return t;
+}
+
+- (CGPoint) nextPointInDirection:(CardinalDirections)direction from:(CGPoint)pt
+{
+    switch (direction) {
+        case North:
+        {
+            return ccpSub(pt, ccp(0,1));
+        }
+        case East:
+        {
+            return ccpAdd(pt, ccp(1,0));
+        }
+        case South:
+        {
+            return ccpAdd(pt, ccp(0,1));
+        }
+        case West:
+        {
+            return ccpSub(pt, ccp(1,0));
+        }
+    }
+}
+
+- (BOOL) isValid:(CGPoint)coord
+{
+    // Invalid coordinate
+    if (coord.x > _mapSize.width - 1
+        || coord.x < 0
+        || coord.y > _mapSize.height - 1
+        || coord.y < 0)
+    {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 #pragma mark -
