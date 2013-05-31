@@ -70,7 +70,12 @@
     _objectsLayer       = [map layerNamed:MAP_LAYER_OBJECTS];
     _fogLayer           = [map layerNamed:MAP_LAYER_FOG];
     
+    // DO NOT REMOVE THIS
     [self cleanTempTilesFrom:map];
+    
+    // TODO: Remove or refactor this.
+    // The default implementation is poor because it doesn't add anything
+    // to the _workingMap. It's just for show to fill gaps (which shouldn't be needed).
     [self setDefaultTerrainFor:map];
     
     [self parseTerrainTileset:map];
@@ -101,6 +106,49 @@
 #pragma mark -
 #pragma mark Building the Allowed Neighbors Map
 
+/*  The _tileDict is an NSDictionary that contains a key for every tileGID that is part of the marked terrain
+    in the tileset for the indicated layer. Here, you'll see it's the @"terrain" layer, though we may want to
+    use this approach in the fog of war manager, too. The structure is built to support tiles that can rotate,
+    but the ones in this tile set currently cannot rotate, so the additional rotations are disabled, leaving
+    only the TerrainTileRotation_0.
+ 
+    Let's say that you're interested in the tile with gID == 1. You would call the following to get the array
+    of TerrainTilePositioned objects (again, only one at this time):
+ 
+    NSArray *allTilesWithGID1 = [_tileDict objectforKey:@"1"];
+    
+    Then, to get the tile:
+ 
+    TerrainTilePositioned *theTile = [allTilesWithGID1 objectAtIndex:TerrainTileRotation_0]; //equivalent to index of 0
+    
+    The TerrainTilePositioned class is a container class for the TerrainTile class, meant to represent it in different rotations.
+ 
+    The _tileDict also stores information about the terrain types. To get the TerrainType objects, call:
+ 
+    NSArray *terrainTypes = [_tileDict objectForKey:TERRAIN_DICT_TERRAINS];
+ 
+    terrainTypes will then contain an ordered list of the TerrainType objects in the tile set, as defined in the .tsx file. The index
+    number of the TerrainType corresponds to the number that the TerrainTiles and TerrainTilePositioned objects use to refer
+    to the type of terrain that is in each corner. For example, if you called:
+ 
+    unsigned int terType = [theTile cornerNWTarget];
+ 
+    you then could use terType to retrieve the TerrainType from the _tileDict, like this:
+ 
+    TerrainType *myTerrain = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:terType];
+ 
+    When parsing the tiles, they are added to special "brush" arrays in the TerrainType objects. If you
+    are looking for a TerrainTilePositioned object that has all 4 corners of one type of terrain, then you could just call:
+ 
+    TerrainTilePositioned *mySolidTile = [[myTerrain wholeBrushes] objectAtIndex:0];
+ 
+    TerrainType objects also have halfBrushes and quarterBrushes arrays from which you can draw tiles.
+ 
+    Finally, the TerrainTilePositioned objects have a series of pass-through (to the TerrainTile) methods that
+    provide more detail about whether they contain a certain type of terrain. See the header file for more info.
+ 
+ */
+
 - (void) parseTerrainTileset:(HKTMXTiledMap *)map
 {
     NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
@@ -116,18 +164,11 @@
     
     // Testing Output
     /*
-    NSArray *tiles = [_tileDict objectForKey:@"0"];
+    NSArray *tiles = [_tileDict objectForKey:@"1"];
     
     TerrainTilePositioned *t = [tiles objectAtIndex:TerrainTileRotation_0]; // Currently, the only object in the array
     NSArray *t_northNeighbors = [t neighborsNorth];
-    
-    CCLOG(@"--------- TESTING TILE DICT -----------");
-    CCLOG(@"Test tile GID: %i rot: %i", [t tileGID], [t rotation]);
-    CCLOG(@"Test tile North Neighbors:");
-    for (TerrainTilePositioned *tp in t_northNeighbors) {
-        CCLOG(@" gid: %i", [tp tileGID]);
-    }
-    CCLOG(@"--------- END TESTING TILE DICT -----------");
+
      */
     
     CCLOG(@"Tileset parsed");
