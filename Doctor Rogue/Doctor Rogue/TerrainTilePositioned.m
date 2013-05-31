@@ -344,4 +344,34 @@
     }
 }
 
+#pragma mark -
+#pragma mark Pass through methods called on the tile
+
+- (TerrainBrushTypes) brushType
+{
+    return [_terrainTile brushType];
+}
+
+- (NSArray *)terrainTypes
+{
+    return [_terrainTile terrainTypes];
+}
+
+- (BOOL) hasTerrainType:(unsigned int)type
+{
+    return [_terrainTile hasTerrainType:type];
+}
+
+// Only call this if the tile is a "half brush"
+- (CardinalDirections) sideWithTerrainType:(unsigned int)type
+{
+    return [_terrainTile sideWithTerrainType:type];
+}
+
+// Only call this if the tile is a "quarter brush"
+- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type
+{
+    return [_terrainTile cornerWithTerrainType:type];
+}
+
 @end

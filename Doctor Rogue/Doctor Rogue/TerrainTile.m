@@ -108,4 +108,83 @@
     return nil;
 }
 
+- (void) establishBrushType
+{
+    unsigned int type1;
+    type1 = _cornerNETarget;
+    int type1Count = 1;
+    
+    if (_cornerNWTarget == type1) {
+        type1Count += 1;
+    }
+    
+    if (_cornerSETarget == type1) {
+        type1Count += 1;
+    }
+    
+    if (_cornerSWTarget == type1) {
+        type1Count += 1;
+    }
+    
+    if (type1Count == 4) {
+        _brushType = TerrainBrush_Whole;
+    } else if (type1Count == 2) {
+        _brushType = TerrainBrush_Half;
+    } else {
+        _brushType = TerrainBrush_Quarter;
+    }
+}
+
+- (NSArray *)terrainTypes
+{
+    return [NSArray arrayWithObjects:
+            [NSNumber numberWithUnsignedInt:_cornerNWTarget],
+            [NSNumber numberWithUnsignedInt:_cornerNETarget],
+            [NSNumber numberWithUnsignedInt:_cornerSWTarget],
+            [NSNumber numberWithUnsignedInt:_cornerSETarget],
+            nil];
+}
+- (BOOL) hasTerrainType:(unsigned int)type
+{
+    if (   type == _cornerNETarget
+        || type == _cornerNWTarget
+        || type == _cornerSETarget
+        || type == _cornerSWTarget) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+// Only call this if the tile is a "half brush"
+- (CardinalDirections) sideWithTerrainType:(unsigned int)type
+{
+    if ([self brushType] != TerrainBrush_Half) {
+        return nil; // Should this be NULL? Hmm...
+    }
+    
+    if (_cornerNWTarget == type) {
+        if (_cornerNETarget == type) {
+            return North;
+        } else {
+            return West;
+        }
+    } else if (_cornerNETarget == type) {
+        return East;
+    } else {
+        return South;
+    }
+}
+
+// Only call this if the tile is a "quarter brush"
+- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type
+{
+    for (int i = 0; i < [self terrainTypes].count; i++) {
+        if ([[[self terrainTypes] objectAtIndex:i] unsignedIntValue] == type) {
+            return i;
+        }
+    }
+    return nil;
+}
+
 @end

@@ -12,6 +12,7 @@
 #import "TSXTerrainSetParser.h"
 #import "TerrainTile.h"
 #import "TerrainTilePositioned.h"
+#import "TerrainType.h"
 
 @implementation RandomMapGenerator
 
@@ -49,6 +50,10 @@
 
 - (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map
 {
+    // TODO: Reseed with srand() using the value in the AdventureLocation
+    // this will create a consistent randomization experience, me thinks,
+    // meaning that the same map will randomize the same way for the same seed each time
+    
     // Check for map property test_map with a value of YES
     
     BOOL isTest = [[map propertyNamed:@"test_map"] boolValue];
@@ -80,8 +85,7 @@
     
     for (int i = 0; i < _mapSize.width; i++) {
         NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
-        
-        // TODO: Optimize this with normal c arrays instead of creating the world with [NSNull null] defaults
+
         for (int i = 0; i < _mapSize.height; i++) {
             [nested addObject:[NSNull null]];
         }
@@ -101,7 +105,7 @@
 {
     NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
     _tileDict             = [TSXTerrainSetParser parseTileset:tilesetName];
-    _tileDictKeyArray     = [[NSMutableArray alloc] init];
+    _tileDictKeyArray     = [[NSMutableArray alloc] init]; // Not used at the moment.
     
     for (NSString *key in _tileDict) {
         if ([key isEqualToString:TERRAIN_DICT_TERRAINS]) {
@@ -134,6 +138,286 @@
 
 - (void) testRandomizeOutdoorMap:(HKTMXTiledMap *)map
 {
+    // Randomize here, into _workingMap
+    
+  
+    
+    
+    
+    // Finished setting up the Working map -- now use it to set tiles
+    for (int i = 0; i < _mapSize.width; i++) {
+        for (int j = 0; j < _mapSize.height; j++) {
+            if ([[_workingMap objectAtIndex:i] objectAtIndex:j] != [NSNull null]) {
+                TerrainTilePositioned * tile = [[_workingMap objectAtIndex:i] objectAtIndex:j];
+                [_terrainLayer setTileGID:[tile tileGID] at:ccp(i,j)];
+            }
+        }
+    }
+     
+    CCLOG(@"Map randomization complete");
+}
+
+- (void) putNeighborsOf:(CGPoint)coord intoQueue:(NSMutableArray *)queue
+{
+    CGPoint n = [self nextPointInDirection:North from:coord];
+    CGPoint e = [self nextPointInDirection:East from:coord];
+    CGPoint s = [self nextPointInDirection:South from:coord];
+    CGPoint w = [self nextPointInDirection:West from:coord];
+    CGPoint ne = [self nextPointInDirection:Northeast from:coord];
+    CGPoint nw = [self nextPointInDirection:Northwest from:coord];
+    CGPoint se = [self nextPointInDirection:Southeast from:coord];
+    CGPoint sw = [self nextPointInDirection:Southwest from:coord];
+    
+    if ([self isValid:n]) {
+        [queue addObject:[NSValue valueWithCGPoint:n]];
+    }
+    
+    if ([self isValid:e]) {
+        [queue addObject:[NSValue valueWithCGPoint:e]];
+    }
+    
+    if ([self isValid:s]) {
+        [queue addObject:[NSValue valueWithCGPoint:s]];
+    }
+    
+    if ([self isValid:w]) {
+        [queue addObject:[NSValue valueWithCGPoint:w]];
+    }
+    
+    if ([self isValid:ne]) {
+        [queue addObject:[NSValue valueWithCGPoint:ne]];
+    }
+    
+    if ([self isValid:nw]) {
+        [queue addObject:[NSValue valueWithCGPoint:nw]];
+    }
+    
+    if ([self isValid:se]) {
+        [queue addObject:[NSValue valueWithCGPoint:se]];
+    }
+    
+    if ([self isValid:sw]) {
+        [queue addObject:[NSValue valueWithCGPoint:n]];
+    }
+}
+
+- (TerrainTilePositioned *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord
+{
+    TerrainTilePositioned *t = nil;
+    
+    switch (direction) {
+        case North:
+        {
+            CGPoint n = ccpSub(coord, ccp(0,1));
+            if ([self isValid:n]) {
+                if ([[_workingMap objectAtIndex:n.x] objectAtIndex:n.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:n.x] objectAtIndex:n.y];
+                }
+            }
+            break;
+        }
+        case East:
+        {
+            CGPoint e = ccpAdd(coord, ccp(1,0));
+            if ([self isValid:e]) {
+                if ([[_workingMap objectAtIndex:e.x] objectAtIndex:e.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:e.x] objectAtIndex:e.y];
+                }
+            }
+            break;
+        }
+        case South:
+        {
+            CGPoint s = ccpAdd(coord, ccp(0,1));
+            if ([self isValid:s]) {
+                if ([[_workingMap objectAtIndex:s.x] objectAtIndex:s.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:s.x] objectAtIndex:s.y];
+                }
+            }
+            break;
+        }
+        case West:
+        {
+            CGPoint w = ccpSub(coord, ccp(1,0));
+            if ([self isValid:w]) {
+                if ([[_workingMap objectAtIndex:w.x] objectAtIndex:w.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:w.x] objectAtIndex:w.y];
+                }
+            }
+            break;
+        }
+        case Northeast:
+        {
+            CGPoint ne = ccpAdd(coord, ccp(1,-1));
+            if ([self isValid:ne]) {
+                if ([[_workingMap objectAtIndex:ne.x] objectAtIndex:ne.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:ne.x] objectAtIndex:ne.y];
+                }
+            }
+            break;
+        }
+        case Northwest:
+        {
+            CGPoint nw = ccpSub(coord, ccp(1,1));
+            if ([self isValid:nw]) {
+                if ([[_workingMap objectAtIndex:nw.x] objectAtIndex:nw.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:nw.x] objectAtIndex:nw.y];
+                }
+            }
+            break;
+        }
+        case Southeast:
+        {
+            CGPoint se = ccpAdd(coord, ccp(1,1));
+            if ([self isValid:se]) {
+                if ([[_workingMap objectAtIndex:se.x] objectAtIndex:se.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:se.x] objectAtIndex:se.y];
+                }
+            }
+            break;
+        }
+        case Southwest:
+        {
+            CGPoint sw = ccpAdd(coord, ccp(-1,1));
+            if ([self isValid:sw]) {
+                if ([[_workingMap objectAtIndex:sw.x] objectAtIndex:sw.y] == [NSNull null]) {
+                    t = nil;
+                } else {
+                    t = [[_workingMap objectAtIndex:sw.x] objectAtIndex:sw.y];
+                }
+            }
+            break;
+        }
+    }
+    
+    return t;
+}
+
+- (CGPoint) nextPointInDirection:(CardinalDirections)direction from:(CGPoint)pt
+{
+    switch (direction) {
+        case North:
+        {
+            return ccpSub(pt, ccp(0,1));
+        }
+        case East:
+        {
+            return ccpAdd(pt, ccp(1,0));
+        }
+        case South:
+        {
+            return ccpAdd(pt, ccp(0,1));
+        }
+        case West:
+        {
+            return ccpSub(pt, ccp(1,0));
+        }
+        case Northwest:
+        {
+            return ccpSub(pt, ccp(1,1));
+        }
+        case Northeast:
+        {
+            return ccpAdd(pt, ccp(1,-1));
+        }
+        case Southwest:
+        {
+            return ccpAdd(pt, ccp(-1,1));
+        }
+        case Southeast:
+        {
+            return ccpAdd(pt, ccp(1,1));
+        }
+    }
+}
+
+- (BOOL) isValid:(CGPoint)coord
+{
+    // Invalid coordinate
+    if (coord.x > _mapSize.width - 1
+        || coord.x < 0
+        || coord.y > _mapSize.height - 1
+        || coord.y < 0)
+    {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+#pragma mark -
+#pragma mark Cleaning templates
+
+- (void) cleanTempTilesFrom:(HKTMXTiledMap *)map
+{
+    
+    [_terrainLayer    setTileGID:0 at:ccp(0,0)];
+    [_collisionsLayer setTileGID:0 at:ccp(0,0)];
+    [_objectsLayer    setTileGID:0 at:ccp(0,0)];
+    [_fogLayer        setTileGID:0 at:ccp(0,0)];
+}
+
+- (void) setDefaultTerrainFor:(HKTMXTiledMap *)map
+{
+    BOOL defaultLocated = NO;
+    
+    unsigned int defaultTileID = 0;
+    
+    unsigned int counter = 0;
+    
+    // Figure out what the default tile is
+    while (!defaultLocated) {
+        counter += 1;
+        
+        NSString *default_tile = [[map propertiesForGID:counter] objectForKey:@"default_tile"];
+        
+        if ([default_tile isEqualToString:@"YES"]) {
+            // Found the default
+            defaultTileID  = counter;
+            defaultLocated = YES;
+        }
+    }
+    
+    // Fill the terrain layer with the default tile
+    [self fillLayer:_terrainLayer onMap:map withTileID:defaultTileID];
+}
+
+
+#pragma mark -
+#pragma mark Utility Methods
+
+- (void) fillLayer:(HKTMXLayer *)layer onMap:(HKTMXTiledMap *)map withTileID:(unsigned short)tileID
+{
+    unsigned short mw = map.mapSize.width;
+    unsigned short mh = map.mapSize.height;
+    
+    for (int i = 0; i < mw; i++) {
+        for (int j=0; j < mh; j++) {
+            [layer setTileGID:tileID at:ccp(i,j)];
+        }
+    }
+}
+
+@end
+
+/* Old and broken-ish testing method
+
+- (void) testRandomizeOutdoorMap:(HKTMXTiledMap *)map
+{
     
     // Start at (0,0) and walk the map
     
@@ -155,7 +439,7 @@
     
     // Place the seed tile on the working map
     [[_workingMap objectAtIndex:0] setObject:seedTile atIndex:0];
-
+    
     while ([queueToProcess count] > 0) {
         
         CGPoint thisCoord = [[queueToProcess objectAtIndex:0] CGPointValue];
@@ -256,152 +540,4 @@
     }
     
 }
-
-- (TerrainTilePositioned *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord
-{
-    TerrainTilePositioned *t = nil;
-    
-    switch (direction) {
-        case North:
-        {
-            CGPoint n = ccpSub(coord, ccp(0,1));
-            if ([self isValid:n]) {
-                if ([[_workingMap objectAtIndex:n.x] objectAtIndex:n.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:n.x] objectAtIndex:n.y];
-                }
-            }
-            break;
-        }
-        case East:
-        {
-            CGPoint e = ccpAdd(coord, ccp(1,0));
-            if ([self isValid:e]) {
-                if ([[_workingMap objectAtIndex:e.x] objectAtIndex:e.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:e.x] objectAtIndex:e.y];
-                }
-            }
-            break;
-        }
-        case South:
-        {
-            CGPoint s = ccpAdd(coord, ccp(0,1));
-            if ([self isValid:s]) {
-                if ([[_workingMap objectAtIndex:s.x] objectAtIndex:s.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:s.x] objectAtIndex:s.y];
-                }
-            }
-            break;
-        }
-        case West:
-        {
-            CGPoint w = ccpSub(coord, ccp(1,0));
-            if ([self isValid:w]) {
-                if ([[_workingMap objectAtIndex:w.x] objectAtIndex:w.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:w.x] objectAtIndex:w.y];
-                }
-            }
-            break;
-        }
-    }
-    
-    return t;
-}
-
-- (CGPoint) nextPointInDirection:(CardinalDirections)direction from:(CGPoint)pt
-{
-    switch (direction) {
-        case North:
-        {
-            return ccpSub(pt, ccp(0,1));
-        }
-        case East:
-        {
-            return ccpAdd(pt, ccp(1,0));
-        }
-        case South:
-        {
-            return ccpAdd(pt, ccp(0,1));
-        }
-        case West:
-        {
-            return ccpSub(pt, ccp(1,0));
-        }
-    }
-}
-
-- (BOOL) isValid:(CGPoint)coord
-{
-    // Invalid coordinate
-    if (coord.x > _mapSize.width - 1
-        || coord.x < 0
-        || coord.y > _mapSize.height - 1
-        || coord.y < 0)
-    {
-        return NO;
-    } else {
-        return YES;
-    }
-}
-
-#pragma mark -
-#pragma mark Cleaning templates
-
-- (void) cleanTempTilesFrom:(HKTMXTiledMap *)map
-{
-    
-    [_terrainLayer    setTileGID:0 at:ccp(0,0)];
-    [_collisionsLayer setTileGID:0 at:ccp(0,0)];
-    [_objectsLayer    setTileGID:0 at:ccp(0,0)];
-    [_fogLayer        setTileGID:0 at:ccp(0,0)];
-}
-
-- (void) setDefaultTerrainFor:(HKTMXTiledMap *)map
-{
-    BOOL defaultLocated = NO;
-    
-    unsigned int defaultTileID = 0;
-    
-    unsigned int counter = 0;
-    
-    // Figure out what the default tile is
-    while (!defaultLocated) {
-        counter += 1;
-        
-        NSString *default_tile = [[map propertiesForGID:counter] objectForKey:@"default_tile"];
-        
-        if ([default_tile isEqualToString:@"YES"]) {
-            // Found the default
-            defaultTileID  = counter;
-            defaultLocated = YES;
-        }
-    }
-    
-    // Fill the terrain layer with the default tile
-    [self fillLayer:_terrainLayer onMap:map withTileID:defaultTileID];
-}
-
-
-#pragma mark -
-#pragma mark Utility Methods
-
-- (void) fillLayer:(HKTMXLayer *)layer onMap:(HKTMXTiledMap *)map withTileID:(unsigned short)tileID
-{
-    unsigned short mw = map.mapSize.width;
-    unsigned short mh = map.mapSize.height;
-    
-    for (int i = 0; i < mw; i++) {
-        for (int j=0; j < mh; j++) {
-            [layer setTileGID:tileID at:ccp(i,j)];
-        }
-    }
-}
-
-@end
+*/

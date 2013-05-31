@@ -11,6 +11,8 @@
 
 @interface TerrainTilePositioned : NSObject
 
+// This probably should be a subclass of TerrainTile, but it isn't. :)
+
 @property (retain, readwrite) TerrainTile        *terrainTile;
 @property (assign, readwrite) TerrainTileRotation rotation;
 
@@ -39,5 +41,14 @@
 
 - (void) assignNeighborsFrom:(NSMutableArray *)possibleNeighbors;
 
+- (TerrainBrushTypes) brushType;
+- (NSArray *)terrainTypes;
+- (BOOL) hasTerrainType:(unsigned int)type;
+
+// Only call this if the tile is a "half brush"
+- (CardinalDirections) sideWithTerrainType:(unsigned int)type;
+
+// Only call this if the tile is a "quarter brush"
+- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type;
 
 @end

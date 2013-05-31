@@ -20,6 +20,8 @@
 @property (assign, readwrite) unsigned int cornerSETarget;
 @property (assign, readwrite) unsigned int cornerSWTarget;
 
+@property (assign, readwrite) TerrainBrushTypes brushType;
+
 - (unsigned int) northTarget;
 - (unsigned int) eastTarget;
 - (unsigned int) southTarget;
@@ -28,5 +30,16 @@
 // Please do not call this method now. It doesn't work with our tile sets. Maybe it should be removed.
 // It would be ok to use if we supported rotated tiles.
 - (TerrainTilePositioned *) tileToMatch:(unsigned int)signature forSide:(TerrainTileSide)tileSide;
+
+- (void) establishBrushType;
+
+- (NSArray *)terrainTypes;
+- (BOOL) hasTerrainType:(unsigned int)type;
+
+// Only call this if the tile is a "half brush"
+- (CardinalDirections) sideWithTerrainType:(unsigned int)type;
+
+// Only call this if the tile is a "quarter brush"
+- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type;
 
 @end

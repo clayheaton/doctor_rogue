@@ -104,10 +104,29 @@ typedef enum
 
 typedef enum
 {
+	TerrainTile_NWCorner = 0,
+    TerrainTile_NECorner = 1,
+    TerrainTile_SWCorner = 2,
+    TerrainTile_SECorner = 3
+} TerrainTileCorners;
+
+typedef enum
+{
+	TerrainBrush_Quarter,
+    TerrainBrush_Half,
+    TerrainBrush_Whole
+} TerrainBrushTypes;
+
+typedef enum
+{
 	North,
     East,
     South,
-    West
+    West,
+    Northwest,
+    Northeast,
+    Southwest,
+    Southeast
 } CardinalDirections;
 
 typedef enum

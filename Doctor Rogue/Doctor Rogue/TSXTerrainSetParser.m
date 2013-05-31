@@ -9,6 +9,7 @@
 #import "Constants.h"
 #import "TerrainTile.h"
 #import "TerrainTilePositioned.h"
+#import "TerrainType.h"
 
 @implementation TSXTerrainSetParser
 
@@ -42,9 +43,18 @@
     // Extract the string value for the name of the terrain types
     for (int i = 0; i < terrainTypes.count; i++) {
         GDataXMLElement *type = (GDataXMLElement *)[terrainTypes objectAtIndex:i];
-        [orderedTerrainTypes addObject:[[[type attributes] objectAtIndex:0] stringValue]];
+        
+        // We use the TerrainType class here so that we can use its arrays as buckets
+        // for tiles, to support 'brush' painting of the terrain
+        
+        TerrainType *terType = [[TerrainType alloc] init];
+        [terType setTerrainNumber:i];
+        [terType setName:[[[type attributes] objectAtIndex:0] stringValue]];
+        
+        [orderedTerrainTypes addObject:terType];
     }
     
+    // You can extract these from the array using the number of the terrain as the index
     [tileDictionary setObject:[NSArray arrayWithArray:orderedTerrainTypes] forKey:TERRAIN_DICT_TERRAINS];
     
     orderedTerrainTypes = nil;
@@ -100,6 +110,8 @@
         [t setCornerSWTarget:[[cornerMarkers objectAtIndex:2] unsignedIntValue]];
         [t setCornerSETarget:[[cornerMarkers objectAtIndex:3] unsignedIntValue]];
         
+        [t establishBrushType];
+        
         TerrainTilePositioned *tp1 = [[TerrainTilePositioned alloc] initWithTerrainTile:t andRotation:TerrainTileRotation_0];
         
         // Current tile set does not support rotated tiles.
@@ -124,6 +136,44 @@
         // HOWEVER!!  The current tile set has directional tiles. They should not be rotated.
         
     }
+    
+    // Add the tiles as brushes to the terrain types
+    
+    for (TerrainTilePositioned *ttp in positionedTiles) {
+        NSArray *terrains = [ttp terrainTypes];
+        for (NSNumber *num in terrains) {
+            TerrainType *terType = [[tileDictionary objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:[num unsignedShortValue]];
+            switch ([ttp brushType]) {
+                case TerrainBrush_Whole:
+                {
+                    if (![[terType wholeBrushes] containsObject:ttp]) {
+                        [[terType wholeBrushes]  addObject:ttp];
+                    }
+                    break;
+                }
+                    
+                case TerrainBrush_Half:
+                {
+                    if (![[terType halfBrushes] containsObject:ttp]) {
+                        [[terType halfBrushes]  addObject:ttp];
+                    }
+                    break;
+                }
+                    
+                case TerrainBrush_Quarter:
+                {
+                    if (![[terType quarterBrushes] containsObject:ttp]) {
+                        [[terType quarterBrushes]  addObject:ttp];
+                    }
+                    break;
+                }
+                    
+                default:
+                    break;
+            }
+        }
+    }
+    
     
     // Now that we have possible tile positions set in the dictionary, we will build the list of allowed neighbors for each position
     // by iterating through the array created in the loop above and the keys in the dictionary.
