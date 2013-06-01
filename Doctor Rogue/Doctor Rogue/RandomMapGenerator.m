@@ -142,7 +142,13 @@
  
     TerrainTilePositioned *mySolidTile = [[myTerrain wholeBrushes] objectAtIndex:0];
  
-    TerrainType objects also have halfBrushes and quarterBrushes arrays from which you can draw tiles.
+    TerrainType objects also have halfBrushes and quarterBrushes arrays from which you can draw tiles. The purpose of brushes
+    is not to simply be tiles in an array. Eventually, there should be a TerrainBrush class that paints terrain in a manner
+    similar to how it is done in Tiled. Take a look here, around line 260, to see how it is implemented in Tiled:
+    https://github.com/bjorn/tiled/blob/master/src/tiled/terrainbrush.cpp
+ 
+    What we probably need to do is to simply place down the whole tile for the desired brush, and then perform a tree search,
+    maybe a breadth-first search, to look for tiles that will match as closely as possible with the surrounding terrain.
  
     Finally, the TerrainTilePositioned objects have a series of pass-through (to the TerrainTile) methods that
     provide more detail about whether they contain a certain type of terrain. See the header file for more info.
