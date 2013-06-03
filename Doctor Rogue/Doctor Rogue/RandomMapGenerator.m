@@ -73,26 +73,23 @@
     // DO NOT REMOVE THIS
     [self cleanTempTilesFrom:map];
     
-    // TODO: Remove or refactor this.
-    // The default implementation is poor because it doesn't add anything
-    // to the _workingMap. It's just for show to fill gaps (which shouldn't be needed).
-    [self setDefaultTerrainFor:map];
-    
     [self parseTerrainTileset:map];
     
     NSAssert(_tileDict != nil, @"The tileDict is nil so the map cannot be randomized.");
     
     // Create a 2D array in memory to represent the map. We'll randomize and check this, and then
     // use the final result of it to set the actual map tiles.
-    _mapSize = [map mapSize];
+    _mapSize    = [map mapSize];
     
     _workingMap = [[NSMutableArray alloc] initWithCapacity:_mapSize.width];
+    
+    TerrainTilePositioned *defaultTile = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
     
     for (int i = 0; i < _mapSize.width; i++) {
         NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
 
         for (int i = 0; i < _mapSize.height; i++) {
-            [nested addObject:[NSNull null]];
+            [nested addObject:defaultTile];
         }
         
         [_workingMap addObject:nested];
@@ -204,12 +201,27 @@
     CCLOG(@"Map randomization complete");
 }
 
+#pragma mark -
+#pragma mark Utility Methods
+
+- (void) fillLayer:(HKTMXLayer *)layer onMap:(HKTMXTiledMap *)map withTileID:(unsigned short)tileID
+{
+    unsigned short mw = map.mapSize.width;
+    unsigned short mh = map.mapSize.height;
+    
+    for (int i = 0; i < mw; i++) {
+        for (int j=0; j < mh; j++) {
+            [layer setTileGID:tileID at:ccp(i,j)];
+        }
+    }
+}
+
 - (void) putNeighborsOf:(CGPoint)coord intoQueue:(NSMutableArray *)queue
 {
-    CGPoint n = [self nextPointInDirection:North from:coord];
-    CGPoint e = [self nextPointInDirection:East from:coord];
-    CGPoint s = [self nextPointInDirection:South from:coord];
-    CGPoint w = [self nextPointInDirection:West from:coord];
+    CGPoint n  = [self nextPointInDirection:North     from:coord];
+    CGPoint e  = [self nextPointInDirection:East      from:coord];
+    CGPoint s  = [self nextPointInDirection:South     from:coord];
+    CGPoint w  = [self nextPointInDirection:West      from:coord];
     CGPoint ne = [self nextPointInDirection:Northeast from:coord];
     CGPoint nw = [self nextPointInDirection:Northwest from:coord];
     CGPoint se = [self nextPointInDirection:Southeast from:coord];
@@ -255,97 +267,65 @@
     switch (direction) {
         case North:
         {
-            CGPoint n = ccpSub(coord, ccp(0,1));
+            CGPoint n = [self nextPointInDirection:North from:coord];
             if ([self isValid:n]) {
-                if ([[_workingMap objectAtIndex:n.x] objectAtIndex:n.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:n.x] objectAtIndex:n.y];
-                }
+                t = [[_workingMap objectAtIndex:n.x] objectAtIndex:n.y];
             }
             break;
         }
         case East:
         {
-            CGPoint e = ccpAdd(coord, ccp(1,0));
+            CGPoint e = [self nextPointInDirection:East from:coord];
             if ([self isValid:e]) {
-                if ([[_workingMap objectAtIndex:e.x] objectAtIndex:e.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:e.x] objectAtIndex:e.y];
-                }
+                t = [[_workingMap objectAtIndex:e.x] objectAtIndex:e.y];
             }
             break;
         }
         case South:
         {
-            CGPoint s = ccpAdd(coord, ccp(0,1));
+            CGPoint s = [self nextPointInDirection:South from:coord];
             if ([self isValid:s]) {
-                if ([[_workingMap objectAtIndex:s.x] objectAtIndex:s.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:s.x] objectAtIndex:s.y];
-                }
+                t = [[_workingMap objectAtIndex:s.x] objectAtIndex:s.y];
             }
             break;
         }
         case West:
         {
-            CGPoint w = ccpSub(coord, ccp(1,0));
+            CGPoint w = [self nextPointInDirection:West from:coord];
             if ([self isValid:w]) {
-                if ([[_workingMap objectAtIndex:w.x] objectAtIndex:w.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:w.x] objectAtIndex:w.y];
-                }
+                t = [[_workingMap objectAtIndex:w.x] objectAtIndex:w.y];
             }
             break;
         }
         case Northeast:
         {
-            CGPoint ne = ccpAdd(coord, ccp(1,-1));
+            CGPoint ne = [self nextPointInDirection:Northeast from:coord];
             if ([self isValid:ne]) {
-                if ([[_workingMap objectAtIndex:ne.x] objectAtIndex:ne.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:ne.x] objectAtIndex:ne.y];
-                }
+                t = [[_workingMap objectAtIndex:ne.x] objectAtIndex:ne.y];
             }
             break;
         }
         case Northwest:
         {
-            CGPoint nw = ccpSub(coord, ccp(1,1));
+            CGPoint nw = [self nextPointInDirection:Northwest from:coord];
             if ([self isValid:nw]) {
-                if ([[_workingMap objectAtIndex:nw.x] objectAtIndex:nw.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:nw.x] objectAtIndex:nw.y];
-                }
+                t = [[_workingMap objectAtIndex:nw.x] objectAtIndex:nw.y];
             }
             break;
         }
         case Southeast:
         {
-            CGPoint se = ccpAdd(coord, ccp(1,1));
+            CGPoint se = [self nextPointInDirection:Southeast from:coord];
             if ([self isValid:se]) {
-                if ([[_workingMap objectAtIndex:se.x] objectAtIndex:se.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:se.x] objectAtIndex:se.y];
-                }
+                t = [[_workingMap objectAtIndex:se.x] objectAtIndex:se.y];
             }
             break;
         }
         case Southwest:
         {
-            CGPoint sw = ccpAdd(coord, ccp(-1,1));
+            CGPoint sw = [self nextPointInDirection:Southwest from:coord];
             if ([self isValid:sw]) {
-                if ([[_workingMap objectAtIndex:sw.x] objectAtIndex:sw.y] == [NSNull null]) {
-                    t = nil;
-                } else {
-                    t = [[_workingMap objectAtIndex:sw.x] objectAtIndex:sw.y];
-                }
+                t = [[_workingMap objectAtIndex:sw.x] objectAtIndex:sw.y];
             }
             break;
         }
@@ -418,6 +398,12 @@
     [_fogLayer        setTileGID:0 at:ccp(0,0)];
 }
 
+
+// This isn't a great method because it changes the map without
+// changing the _workingMap, so the tiles that are here go
+// undetected by the _workingMap. It is useful, however, to
+// fill the map so that there are no blank tiles.
+// It probably should be removed.
 - (void) setDefaultTerrainFor:(HKTMXTiledMap *)map
 {
     BOOL defaultLocated = NO;
@@ -444,147 +430,4 @@
 }
 
 
-#pragma mark -
-#pragma mark Utility Methods
-
-- (void) fillLayer:(HKTMXLayer *)layer onMap:(HKTMXTiledMap *)map withTileID:(unsigned short)tileID
-{
-    unsigned short mw = map.mapSize.width;
-    unsigned short mh = map.mapSize.height;
-    
-    for (int i = 0; i < mw; i++) {
-        for (int j=0; j < mh; j++) {
-            [layer setTileGID:tileID at:ccp(i,j)];
-        }
-    }
-}
-
 @end
-
-/* Old and broken-ish testing method
-
-- (void) testRandomizeOutdoorMap:(HKTMXTiledMap *)map
-{
-    
-    // Start at (0,0) and walk the map
-    
-    // Queue up the coordinates
-    NSMutableArray *queueToProcess = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < _mapSize.height; i++) {
-        for (int j = 0; j < _mapSize.width; j++) {
-            if (i == 0 && j == 0) {
-                continue;
-            }
-            [queueToProcess addObject:[NSValue valueWithCGPoint:ccp(j,i)]];
-        }
-    }
-    
-    // Place the (0,0) tile
-    TerrainTilePositioned *seedTile = [[_tileDict objectForKey:@"1"] objectAtIndex:0];
-    [seedTile setLockedOnMap:YES];
-    
-    // Place the seed tile on the working map
-    [[_workingMap objectAtIndex:0] setObject:seedTile atIndex:0];
-    
-    while ([queueToProcess count] > 0) {
-        
-        CGPoint thisCoord = [[queueToProcess objectAtIndex:0] CGPointValue];
-        [queueToProcess removeObjectAtIndex:0];
-        
-        NSMutableSet *possibleTilesForCoord = [[NSMutableSet alloc] init];
-        NSSet *tilesNorth = nil;
-        NSSet *tilesEast  = nil;
-        NSSet *tilesSouth = nil;
-        NSSet *tilesWest  = nil;
-        
-        TerrainTilePositioned *t;
-        
-        t = [self tileTo:South ofTileAt:thisCoord];
-        
-        if (t) {
-            NSArray *neighbors = [t neighborsNorth];
-            tilesNorth = [NSSet setWithArray:neighbors];
-        }
-        
-        t = [self tileTo:North ofTileAt:thisCoord];
-        
-        if (t) {
-            NSArray *neighbors = [t neighborsSouth];
-            tilesSouth = [NSSet setWithArray:neighbors];
-        }
-        
-        t = [self tileTo:East ofTileAt:thisCoord];
-        
-        if (t) {
-            NSArray *neighbors = [t neighborsWest];
-            tilesWest = [NSSet setWithArray:neighbors];
-        }
-        
-        t = [self tileTo:West ofTileAt:thisCoord];
-        
-        if (t) {
-            NSArray *neighbors = [t neighborsEast];
-            tilesEast = [NSSet setWithArray:neighbors];
-        }
-        
-        // Initialize the mutable set that we will interset the other sets with
-        if (tilesNorth && tilesNorth.count > 0) {
-            [possibleTilesForCoord unionSet:tilesNorth];
-        } else if (tilesEast && tilesEast.count > 0) {
-            [possibleTilesForCoord unionSet:tilesEast];
-        } else if (tilesSouth && tilesSouth.count > 0){
-            [possibleTilesForCoord unionSet:tilesSouth];
-        } else if (tilesWest && tilesWest.count > 0) {
-            [possibleTilesForCoord unionSet:tilesWest];
-        } else {
-            // NSAssert([possibleTilesForCoord count] != 0, @"Unable to initialize possible tiles set");
-        }
-        
-        // Intersect the sets
-        if (tilesNorth.count > 0) {
-            [possibleTilesForCoord intersectSet:tilesNorth];
-        }
-        
-        if (tilesEast.count > 0) {
-            [possibleTilesForCoord intersectSet:tilesEast];
-        }
-        
-        if (tilesSouth.count > 0) {
-            [possibleTilesForCoord intersectSet:tilesSouth];
-        }
-        
-        if (tilesWest.count > 0) {
-            [possibleTilesForCoord intersectSet:tilesWest];
-        }
-        
-        // At this point, our set includes possible tiles. Add one to the working map
-        // NSAssert([possibleTilesForCoord count] != 0, @"There are no possible tiles for this coordinate");
-        
-        if ([possibleTilesForCoord count] > 0) {
-            NSArray *arrayOfPossibleTiles = [possibleTilesForCoord allObjects];
-            
-            TerrainTilePositioned *chosenTile = [arrayOfPossibleTiles objectAtIndex:rand() % arrayOfPossibleTiles.count];
-            [chosenTile setLockedOnMap:YES];
-            
-            [[_workingMap objectAtIndex:thisCoord.x] setObject:chosenTile atIndex:thisCoord.y];
-        } else {
-            [_terrainLayer setTileGID:0 at:thisCoord];
-        }
-        
-    }
-    
-    CCLOG(@"Map randomization complete");
-    // CCLOG(@"_workingMap: %@", _workingMap);
-    
-    for (int i = 0; i < _mapSize.width; i++) {
-        for (int j = 0; j < _mapSize.height; j++) {
-            if ([[_workingMap objectAtIndex:i] objectAtIndex:j] != [NSNull null]) {
-                TerrainTilePositioned * tile = [[_workingMap objectAtIndex:i] objectAtIndex:j];
-                [_terrainLayer setTileGID:[tile tileGID] at:ccp(i,j)];
-            }
-        }
-    }
-    
-}
-*/

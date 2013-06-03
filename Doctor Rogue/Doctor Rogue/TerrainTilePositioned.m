@@ -22,7 +22,6 @@
     if (self) {
         _terrainTile = tile;
         _rotation    = rot;
-        _lockedOnMap = NO;
     }
     return self;
 }

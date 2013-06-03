@@ -32,6 +32,7 @@
 
 // Terrain Dictionary
 #define TERRAIN_DICT_TERRAINS           @"TerrainsOrderedByName"
+#define TERRAIN_DICT_DEFAULT            @"DefaultTerrain"
 
 // Higher scrollRate is slower; default is 9
 // Default scrollDamping is 0.85f;

@@ -16,9 +16,6 @@
 @property (retain, readwrite) TerrainTile        *terrainTile;
 @property (assign, readwrite) TerrainTileRotation rotation;
 
-// When building the map, use this to "lock" a tile so that it cannot be changed
-@property (assign, readwrite) BOOL lockedOnMap;
-
 @property (retain, readwrite) NSArray *neighborsNorth;
 @property (retain, readwrite) NSArray *neighborsEast;
 @property (retain, readwrite) NSArray *neighborsSouth;

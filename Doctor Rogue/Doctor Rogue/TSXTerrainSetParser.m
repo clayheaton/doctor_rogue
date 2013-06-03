@@ -88,6 +88,8 @@
     
     NSMutableArray *positionedTiles = [[NSMutableArray alloc] initWithCapacity:[theTiles count] * 4];
     
+    BOOL findDefault   = YES;
+    
     for (int i = 0; i < theTiles.count; i++) {
         GDataXMLElement *tile          = (GDataXMLElement *)[theTiles objectAtIndex:i];
         
@@ -109,7 +111,7 @@
         [t setCornerNETarget:[[cornerMarkers objectAtIndex:1] unsignedIntValue]];
         [t setCornerSWTarget:[[cornerMarkers objectAtIndex:2] unsignedIntValue]];
         [t setCornerSETarget:[[cornerMarkers objectAtIndex:3] unsignedIntValue]];
-        
+         
         [t establishBrushType];
         
         TerrainTilePositioned *tp1 = [[TerrainTilePositioned alloc] initWithTerrainTile:t andRotation:TerrainTileRotation_0];
@@ -131,15 +133,29 @@
         // [positionedTiles addObject:tp4];
         
         // You'll be able to reference the positioned tiles in the array using TerrainTileRotation_x as the index
+        // HOWEVER!!  The current tile set lacks directional tiles. They should not be rotated.
         [tileDictionary setObject:[NSArray arrayWithObject:tp1] forKey:[NSString stringWithFormat:@"%i", tileGID]];
         
-        // HOWEVER!!  The current tile set has directional tiles. They should not be rotated.
-        
+        // Determine if this is the default tile type for the tileset.
+        // It can be used to fill the _workingMap in the RandomMapGenerator
+        if (findDefault) {
+            NSArray *properties = [[[tile children] objectAtIndex:0] children];
+            for (GDataXMLElement *property in properties) {
+                if ([[[property attributeForName:@"name"] stringValue] isEqualToString:@"default_tile"]) {
+                    if ([[[property attributeForName:@"value"] stringValue] isEqualToString:@"YES"]) {
+                        [tileDictionary setObject:tp1 forKey:TERRAIN_DICT_DEFAULT];
+                        findDefault   = NO;
+                        break;
+                    }
+                }
+            }
+        }
+
     }
     
     // Add the tiles as brushes to the terrain types
-    
     for (TerrainTilePositioned *ttp in positionedTiles) {
+        
         NSArray *terrains = [ttp terrainTypes];
         for (NSNumber *num in terrains) {
             TerrainType *terType = [[tileDictionary objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:[num unsignedShortValue]];
@@ -179,7 +195,7 @@
     // by iterating through the array created in the loop above and the keys in the dictionary.
     
     for (NSString *key in tileDictionary) {
-        if ([key isEqualToString:TERRAIN_DICT_TERRAINS]) {
+        if ([key isEqualToString:TERRAIN_DICT_TERRAINS] || [key isEqualToString:TERRAIN_DICT_DEFAULT]) {
             continue;
         }
         
