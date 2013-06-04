@@ -417,4 +417,9 @@
     return [[self neighbors:direction] containsObject:otherTile];
 }
 
+- (int) wholeBrushType
+{
+    return [_terrainTile wholeBrushType];
+}
+
 @end

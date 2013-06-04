@@ -120,16 +120,28 @@ typedef enum
 
 typedef enum
 {
-	North = 1,
-    East  = 2,
-    South = 3,
-    West  = 4,
-    Northwest = 5,
-    Northeast = 6,
-    Southwest = 7,
-    Southeast = 8,
-    InvalidDirection = 9
+	North = 0,
+    East  = 1,
+    South = 2,
+    West  = 3,
+    Northwest = 4,
+    Northeast = 5,
+    Southwest = 6,
+    Southeast = 7,
+    InvalidDirection = 8
 } CardinalDirections;
+
+typedef enum
+{
+	EdgeCase_None,
+    EdgeCase_1,
+    EdgeCase_2,
+    EdgeCase_3,
+    EdgeCase_4,
+    EdgeCase_5,
+    EdgeCase_6,
+    EdgeCase_MAX
+} EdgeCaseType;
 
 typedef enum
 {

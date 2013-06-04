@@ -128,6 +128,7 @@
     
     if (type1Count == 4) {
         _brushType = TerrainBrush_Whole;
+        _wholeBrushTerrainType = type1;
     } else if (type1Count == 2) {
         _brushType = TerrainBrush_Half;
     } else {
@@ -288,6 +289,15 @@
         NSLog(@"Unable to determine quarterBrushTerrainType");
         _quarterBrushAlt = 9999;
         _quarterBrushType = 9999;
+    }
+}
+
+- (int) wholeBrushType
+{
+    if (_brushType == TerrainBrush_Whole) {
+        return _wholeBrushTerrainType;
+    } else {
+        return -1;
     }
 }
 

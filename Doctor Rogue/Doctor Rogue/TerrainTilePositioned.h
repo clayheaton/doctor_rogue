@@ -59,4 +59,6 @@
 
 - (BOOL) accepts:(TerrainTilePositioned *)otherTile asValidNeighborToThe:(CardinalDirections)direction;
 
+- (int) wholeBrushType;
+
 @end

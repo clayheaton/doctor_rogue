@@ -158,10 +158,6 @@
     // Add the tiles as brushes to the terrain types
     for (TerrainTilePositioned *ttp in positionedTiles) {
         
-        if ([ttp tileGID] == 27) {
-            NSLog(@"tile 27");
-        }
-        
         NSArray *terrains = [ttp terrainTypes];
         for (NSNumber *num in terrains) {
             TerrainType *terType = [[tileDictionary objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:[num unsignedShortValue]];

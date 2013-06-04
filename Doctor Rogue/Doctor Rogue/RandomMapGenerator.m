@@ -24,7 +24,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     self = [super init];
     if (self) {
         // Set up whatever parameters...
-        _edges = [[NSMutableArray alloc] init];
+        _edges = [[NSMutableSet alloc] init];
+        _protectedTiles = [[NSMutableSet alloc] init];
     }
     return self;
 }
@@ -186,17 +187,14 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // Use this to determine the landing pad orientation
     int direction = 0; //rand() % 4;
     
-    NSArray *coordsToIgnore = nil;
+    NSSet *coordsToIgnore = nil;
     CGPoint extraTile;
-    
-    // Used to place the inverted corner tiles; those tracked in invertedCorners
-    CardinalDirections specialDir1, specialDir2;
     
     switch (direction) {
         case 0:
         {
             extraTile      = ccpAdd(start, ccp(2,1));
-            coordsToIgnore = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSSet setWithObjects:
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))],
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))]
                               , nil];
@@ -206,7 +204,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         case 1:
         {
             extraTile      = ccpAdd(start, ccp(1,2));
-            coordsToIgnore = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSSet setWithObjects:
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))],
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))]
                               , nil];
@@ -216,7 +214,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         case 2:
         {
             extraTile      = ccpAdd(start, ccp(0,1));
-            coordsToIgnore = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSSet setWithObjects:
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))],
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))]
                               , nil];
@@ -225,7 +223,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         case 3:
         {
             extraTile      = ccpAdd(start, ccp(1,0));
-            coordsToIgnore = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSSet setWithObjects:
                            [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))],
                            [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))]
                            , nil];
@@ -234,93 +232,238 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
     
     // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
-    TerrainTilePositioned *dirt = [[[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:_landingStripTerrain] wholeBrushes] objectAtIndex:0];
+    TerrainTilePositioned *dirt  = [[[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:3] wholeBrushes] objectAtIndex:0]; //_landingStripTerrain
+    TerrainTilePositioned *grass = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
     
-    // Test with one tile
-    [self addTile:dirt toWorkingMapAtPoint:ccp(4,4)];
-    [self checkAndFixNeighbors:[NSValue valueWithCGPoint:ccp(4,4)]];
-    
-    /*
     // Paint the solid tiles onto the map
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             CGPoint pt = ccpAdd(start, ccp(j,i));
-            [self addTile:dirt toWorkingMapAtPoint:pt];
-            
-            NSValue *ptVal = [NSValue valueWithCGPoint:pt];
-            [self checkAndFixNeighbors:ptVal];
+            [self paintTile:dirt atPoint:pt];
+            [_protectedTiles addObject:[NSValue valueWithCGPoint:pt]];
         }
     }
-     */
+    
+    CCLOG(@"Protected: %@", _protectedTiles);
+    
+    [self processEdges];
+    
+    // Only protect tile for this operation
+    [_protectedTiles removeAllObjects];
+    
+    // [self paintTile:grass atPoint:ccp(6, 2)];
+    // [self processEdges];
+    
+    // Problem here is that it only detects solid tiles as a base for painting.
+    // Need to be able to look up the required match instead of just looking for
+    // the terrain type that covers the entire tile.
+    
     
 }
 
-
-- (void)checkAndFixNeighbors:(NSValue *)coordAsValue
+- (void) paintTile:(TerrainTilePositioned *)tile atPoint:(CGPoint)target
 {
-    TerrainTilePositioned *anchorTile = [self workingTileAtValuePt:coordAsValue];
-    CGPoint anchorCoord = [coordAsValue CGPointValue];
+    // the single specified tile
+    [self addTile:tile toWorkingMapAtPoint:target];
     
-    // Fixes neighbors of painted tiles
-    for (int direction = North; direction < InvalidDirection; direction++) {
-        
-        CGPoint    neighborCoord = [self nextPointInDirection:direction from:anchorCoord];
-        TerrainTilePositioned *t = [self tileTo:direction ofTileAt:anchorCoord];
-        if (!t) continue;
-        
-
-        if (direction >= Northwest) {
-            // Must check all for primary directions for a match
-            // Most important are those tied to the anchor
-            
-            
+    // The surrounding tiles -- need edges
+    NSMutableArray *neighbors = [[NSMutableArray alloc] init];
+    [self putNeighborsOf:target intoQueue:neighbors primaryDirectionsOnly:NO];
+    
+    for (int i = 0; i < neighbors.count; i++) {
+        if ([_protectedTiles member:[neighbors objectAtIndex:i]]) {
             continue;
-        } else {        
-            
-            TerrainTilePositioned *oppositeAnchor = [self tileTo:North ofTileAt:neighborCoord];
-            
-            // Check if the tile works with the tile just placed
-            BOOL okWithAnchor   = [anchorTile accepts:t asValidNeighborToThe:direction];
-            BOOL okWithOpposite = [oppositeAnchor accepts:t asValidNeighborToThe:[self directionOpposite:direction]];
-            
-            if (okWithAnchor && okWithOpposite) {
-                CCLOG(@"Neighbor at %@ is ok. Continuing.", NSStringFromCGPoint(neighborCoord));
-            } else {
-                // Need to find a new tile.
-                CCLOG(@"Neighbor to %@ of anchor %@ is okWithAnchor: %@ okWithOpposite: %@", [self stringForDirection:direction], NSStringFromCGPoint(anchorCoord), okWithAnchor ? @"YES" : @"NO", okWithOpposite ? @"YES" : @"NO");
-                TerrainTilePositioned *newTile = [self findNewTileFor:direction ofCoord:anchorCoord];
-                [self addTile:newTile toWorkingMapAtPoint:neighborCoord];
-            }
+        }
+        [self addTile:tile toWorkingMapAtPoint:[[neighbors objectAtIndex:i] CGPointValue]];
+    }
+
+    // Track the edes
+    [_edges addObjectsFromArray:neighbors];
+}
+
+- (void) processEdges
+{
+    // http://stackoverflow.com/questions/8901987/map-tiling-algorithm?rq=1
+    
+    NSMutableArray *tileQueue = [[NSMutableArray alloc] init];
+    NSMutableArray *pointQueue = [[NSMutableArray alloc] init];
+    
+    while (_edges.count > 0) {
+        NSValue *edgeVal = [_edges anyObject];
+        [_edges removeObject:edgeVal];
+        
+        CGPoint edgePt = [edgeVal CGPointValue];
+        TerrainTilePositioned *edgeTile = [self edgeCaseTypeForPoint:edgePt];
+        
+        if (!edgeTile) {
+            // It's not an edge tile, so we can continue
+            continue;
+        }
+        
+        // It is an edge tile. Add it to the change queue
+        [tileQueue addObject:edgeTile];
+        [pointQueue addObject:edgeVal];
+        
+    }
+    
+    // Process the change queue
+    for (int i = 0; i < tileQueue.count; i++) {
+        [self addTile:[tileQueue objectAtIndex:i] toWorkingMapAtPoint:[[pointQueue objectAtIndex:i] CGPointValue]];
+    }
+}
+
+- (TerrainTilePositioned *)edgeCaseTypeForPoint:(CGPoint)edgePt
+{
+    int tileType = [[self workingTileAt:edgePt] wholeBrushType];
+    
+    NSMutableSet   *nonEdgeCheck       = [[NSMutableSet alloc] init];
+    NSMutableArray *neighborMatchArray = [[NSMutableArray alloc] init];
+    
+    [nonEdgeCheck addObject:[NSNumber numberWithInt:tileType]];
+
+    
+    for (int direction = North; direction < InvalidDirection; direction++) {
+        CGPoint dir = [self nextPointInDirection:direction from:edgePt];
+        if ([self isValid:dir]) {
+            int thisType = [[self workingTileAt:dir] wholeBrushType];
+            [neighborMatchArray addObject:[NSNumber numberWithInt:thisType]];
+            [nonEdgeCheck addObject:[NSNumber numberWithInt:thisType]];
+        } else {
+            // Invalid (off map) tiles get the same number as the main edge tile
+            [neighborMatchArray addObject:[NSNumber numberWithInt:tileType]];
         }
     }
-}
-
-- (TerrainTilePositioned *) findNewTileFor:(CardinalDirections)direction ofCoord:(CGPoint)anchorCoord
-{
-    CGPoint newTilePoint = [self nextPointInDirection:direction from:anchorCoord];
     
-    TerrainTilePositioned *anchorTile   = [self workingTileAt:anchorCoord];
-    TerrainTilePositioned *oppositeTile = [self tileTo:direction ofTileAt:newTilePoint];
-    
-    NSArray *worksWithAnchor = [anchorTile   neighbors:direction];
-    NSArray *worksOpposite   = [oppositeTile neighbors:[self directionOpposite:direction]];
-    
-    NSMutableSet *anchor = [NSMutableSet setWithArray:worksWithAnchor];
-    NSSet *opposite = [NSSet setWithArray:worksOpposite];
-    
-    [anchor intersectSet:opposite];
-    
-    if (anchor.count > 0) {
-        // Prefer half tiles for primary directions, corner tiles for others
-        return [anchor anyObject];
-    } else {
-        // Can't find a match... return something that works with the anchor
-        return [worksWithAnchor objectAtIndex:0];
+    // Non edges will only have a single value in this set
+    if (nonEdgeCheck.count == 1) {
+        nonEdgeCheck = nil;
+        return nil;
     }
     
+    //CCLOG(@"---");
+    //CCLOG(@"Processing edge at %@", NSStringFromCGPoint(edgePt));
+    
+    EdgeCaseType       caseType = EdgeCase_None;
+    CardinalDirections brushDirection;
+    
+    int matchingTerrain = tileType;
+    int otherTerrain    = -1; // default
+    
+    // Case 1
+    if ([[neighborMatchArray objectAtIndex:East] intValue] == [[neighborMatchArray objectAtIndex:West] intValue] &&
+        [[neighborMatchArray objectAtIndex:East] intValue] == tileType) {
+        
+        if ([[neighborMatchArray objectAtIndex:North] intValue] == tileType) {
+            otherTerrain   = [[neighborMatchArray objectAtIndex:South] intValue];
+            brushDirection = North;
+        } else {
+            otherTerrain = [[neighborMatchArray objectAtIndex:North] intValue];
+            brushDirection = South;
+        }
+        
+        caseType = EdgeCase_1;
+    }
+    
+    if (caseType == EdgeCase_None) {
+        // Case 2
+        if ([[neighborMatchArray objectAtIndex:North] intValue] == [[neighborMatchArray objectAtIndex:South] intValue] &&
+            [[neighborMatchArray objectAtIndex:North] intValue] == tileType) {
+            
+            if ([[neighborMatchArray objectAtIndex:East] intValue] == tileType) {
+                otherTerrain = [[neighborMatchArray objectAtIndex:West] intValue];
+                brushDirection = East;
+            } else {
+                otherTerrain = [[neighborMatchArray objectAtIndex:East] intValue];
+                brushDirection = West;
+            }
+            
+            caseType = EdgeCase_2;
+        }
+    }
+    
+    if (caseType == EdgeCase_None) {
+        // Case 3
+        if ([[neighborMatchArray objectAtIndex:South] intValue] == [[neighborMatchArray objectAtIndex:East] intValue] &&
+            [[neighborMatchArray objectAtIndex:South] intValue] == tileType) {
+            
+            if ([[neighborMatchArray objectAtIndex:Southeast] intValue] == tileType) {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Northwest] intValue];
+                brushDirection = Southeast;
+            } else {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Southeast] intValue];
+                brushDirection = Northwest;
+            }
+            
+            caseType = EdgeCase_3;
+        }
+    }
+    
+    if (caseType == EdgeCase_None) {
+        // Case 4
+        if ([[neighborMatchArray objectAtIndex:West] intValue] == [[neighborMatchArray objectAtIndex:South] intValue] &&
+            [[neighborMatchArray objectAtIndex:West] intValue] == tileType) {
+            
+            if ([[neighborMatchArray objectAtIndex:Southwest] intValue] == tileType) {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Northeast] intValue];
+                brushDirection = Southwest;
+            } else {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Southwest] intValue];
+                brushDirection = Northeast;
+            }
+            
+            caseType = EdgeCase_4;
+        }
+    }
+    
+    if (caseType == EdgeCase_None) {
+        // Case 5
+        if ([[neighborMatchArray objectAtIndex:North] intValue] == [[neighborMatchArray objectAtIndex:East] intValue] &&
+            [[neighborMatchArray objectAtIndex:North] intValue] == tileType) {
+            
+            if ([[neighborMatchArray objectAtIndex:Northeast] intValue] == tileType) {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Southwest] intValue];
+                brushDirection = Northeast;
+            } else {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Northeast] intValue];
+                brushDirection = Southwest;
+            }
+            
+            caseType = EdgeCase_5;
+        }
+    }
+    
+    if (caseType == EdgeCase_None) {
+        // Case 6
+        if ([[neighborMatchArray objectAtIndex:North] intValue] == [[neighborMatchArray objectAtIndex:West] intValue] &&
+            [[neighborMatchArray objectAtIndex:North] intValue] == tileType) {
+            
+            if ([[neighborMatchArray objectAtIndex:Northwest] intValue] == tileType) {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Southeast] intValue];
+                brushDirection = Northwest;
+            } else {
+                otherTerrain = [[neighborMatchArray objectAtIndex:Northwest] intValue];
+                brushDirection = Southeast;
+            }
+            
+            caseType = EdgeCase_6;
+        }
+    }
+    
+    
+    if (otherTerrain == -1) {
+        return nil;
+    }
+    
+    
+    //CCLOG(@"caseType: %i", caseType);
+    //CCLOG(@"     brush matching terrain: %i other terrain: %i direction: %@", matchingTerrain, otherTerrain, [self stringForDirection:brushDirection]);
+    
+    // Now, we know the terrain types we need to use to call for a tile
+    TerrainTilePositioned *terrainTile = [self brushForTerrain:matchingTerrain andOtherTerrain:otherTerrain andDirection:brushDirection];
+    return terrainTile;
+    
+    // TODO: handle cases where there is no match by adding them to a temp edge set that is folded back into the main set after assignment
 }
-
-
 
 
 - (TerrainTilePositioned *)brushForTerrain:(unsigned int)matchingTerrain
@@ -473,49 +616,19 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 
 - (void) putNeighborsOf:(CGPoint)coord intoQueue:(NSMutableArray *)queue primaryDirectionsOnly:(BOOL)primary
 {
-    CGPoint n  = [self nextPointInDirection:North     from:coord];
-    CGPoint e  = [self nextPointInDirection:East      from:coord];
-    CGPoint s  = [self nextPointInDirection:South     from:coord];
-    CGPoint w  = [self nextPointInDirection:West      from:coord];
-    CGPoint ne = [self nextPointInDirection:Northeast from:coord];
-    CGPoint nw = [self nextPointInDirection:Northwest from:coord];
-    CGPoint se = [self nextPointInDirection:Southeast from:coord];
-    CGPoint sw = [self nextPointInDirection:Southwest from:coord];
-    
-    if ([self isValid:n]) {
-        [queue addObject:[NSValue valueWithCGPoint:n]];
-    }
-    
-    if ([self isValid:e]) {
-        [queue addObject:[NSValue valueWithCGPoint:e]];
-    }
-    
-    if ([self isValid:s]) {
-        [queue addObject:[NSValue valueWithCGPoint:s]];
-    }
-    
-    if ([self isValid:w]) {
-        [queue addObject:[NSValue valueWithCGPoint:w]];
-    }
-    
+    int max;
     if (!primary) {
-        if ([self isValid:ne]) {
-            [queue addObject:[NSValue valueWithCGPoint:ne]];
-        }
-        
-        if ([self isValid:nw]) {
-            [queue addObject:[NSValue valueWithCGPoint:nw]];
-        }
-        
-        if ([self isValid:se]) {
-            [queue addObject:[NSValue valueWithCGPoint:se]];
-        }
-        
-        if ([self isValid:sw]) {
-            [queue addObject:[NSValue valueWithCGPoint:sw]];
+        max = InvalidDirection;
+    } else {
+        max = Northwest;
+    }
+    
+    for (int direction = North; direction < max; direction++) {
+        CGPoint dir = [self nextPointInDirection:direction from:coord];
+        if ([self isValid:dir]) {
+            [queue addObject:[NSValue valueWithCGPoint:dir]];
         }
     }
-
 }
 
 - (TerrainTilePositioned *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord

@@ -24,6 +24,8 @@
 @property (assign, readwrite) unsigned int quarterBrushType;
 @property (assign, readwrite) unsigned int quarterBrushAlt;
 
+@property (assign, readwrite) unsigned int wholeBrushTerrainType;
+
 - (unsigned int) northTarget;
 - (unsigned int) eastTarget;
 - (unsigned int) southTarget;
@@ -37,6 +39,8 @@
 
 - (NSArray *)terrainTypes;
 - (BOOL) hasTerrainType:(unsigned int)type;
+
+- (int) wholeBrushType;
 
 // Only call this if the tile is a "half brush"
 - (CardinalDirections) sideWithTerrainType:(unsigned int)type;
