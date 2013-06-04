@@ -22,6 +22,7 @@
 
 @property (retain, readwrite) NSDictionary   *tileDict;
 @property (retain, readwrite) NSMutableArray *workingMap;
+@property (retain, readwrite) NSMutableArray *edges;
 
 @property (retain, readwrite) NSMutableSet *processedTiles;
 

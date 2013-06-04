@@ -57,4 +57,6 @@
 - (unsigned int)quarterBrushTerrainType;
 - (unsigned int)quarterBrushTerrainAlt;
 
+- (BOOL) accepts:(TerrainTilePositioned *)otherTile asValidNeighborToThe:(CardinalDirections)direction;
+
 @end

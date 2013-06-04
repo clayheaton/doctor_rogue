@@ -412,4 +412,9 @@
     return [_terrainTile quarterBrushAlt];
 }
 
+- (BOOL) accepts:(TerrainTilePositioned *)otherTile asValidNeighborToThe:(CardinalDirections)direction
+{
+    return [[self neighbors:direction] containsObject:otherTile];
+}
+
 @end

@@ -14,6 +14,8 @@
 #import "TerrainTilePositioned.h"
 #import "TerrainType.h"
 
+const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
+
 @implementation RandomMapGenerator
 
 
@@ -22,7 +24,7 @@
     self = [super init];
     if (self) {
         // Set up whatever parameters...
-
+        _edges = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -184,9 +186,8 @@
     // Use this to determine the landing pad orientation
     int direction = 0; //rand() % 4;
     
-    NSArray *invertedCorners = nil;
-    NSArray *invertedDirections = nil;
-    CGPoint extraTile; // Will skip in first pass of transitions
+    NSArray *coordsToIgnore = nil;
+    CGPoint extraTile;
     
     // Used to place the inverted corner tiles; those tracked in invertedCorners
     CardinalDirections specialDir1, specialDir2;
@@ -195,9 +196,7 @@
         case 0:
         {
             extraTile      = ccpAdd(start, ccp(2,1));
-            specialDir1    = Northeast;
-            specialDir2    = Southeast;
-            invertedCorners = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSArray arrayWithObjects:
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))],
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))]
                               , nil];
@@ -207,9 +206,7 @@
         case 1:
         {
             extraTile      = ccpAdd(start, ccp(1,2));
-            specialDir1    = Southeast;
-            specialDir2    = Southwest;
-            invertedCorners = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSArray arrayWithObjects:
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))],
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))]
                               , nil];
@@ -219,9 +216,7 @@
         case 2:
         {
             extraTile      = ccpAdd(start, ccp(0,1));
-            specialDir1    = Southwest;
-            specialDir2    = Northwest;
-            invertedCorners = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSArray arrayWithObjects:
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))],
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))]
                               , nil];
@@ -230,9 +225,7 @@
         case 3:
         {
             extraTile      = ccpAdd(start, ccp(1,0));
-            specialDir1    = Northwest;
-            specialDir2    = Northeast;
-            invertedCorners = [NSArray arrayWithObjects:
+            coordsToIgnore = [NSArray arrayWithObjects:
                            [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))],
                            [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))]
                            , nil];
@@ -240,73 +233,96 @@
         }
     }
     
-    invertedDirections = [NSArray arrayWithObjects:[NSNumber numberWithInt:specialDir1], [NSNumber numberWithInt:specialDir2], nil];
-    
-    NSSet *coordsToIgnore = [NSSet setWithArray:invertedCorners];
-    
     // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
     TerrainTilePositioned *dirt = [[[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:_landingStripTerrain] wholeBrushes] objectAtIndex:0];
     
+    // Test with one tile
+    [self addTile:dirt toWorkingMapAtPoint:ccp(4,4)];
+    [self checkAndFixNeighbors:[NSValue valueWithCGPoint:ccp(4,4)]];
+    
+    /*
+    // Paint the solid tiles onto the map
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             CGPoint pt = ccpAdd(start, ccp(j,i));
-            NSValue *ptVal = [NSValue valueWithCGPoint:pt];
+            [self addTile:dirt toWorkingMapAtPoint:pt];
             
-            if ([coordsToIgnore member:ptVal]) {
-                continue;
-            } else {
-                [self addTile:dirt toWorkingMapAtPoint:pt];
-                // Should prevent these from being altered later
-                [lockedCoordinates addObject:ptVal];
-            }
+            NSValue *ptVal = [NSValue valueWithCGPoint:pt];
+            [self checkAndFixNeighbors:ptVal];
         }
     }
+     */
     
-    // Look in primary direction for all locked coordinates
-    // Set appropriate tile, then lock those set.
-    // Loop through again and look in secondary directions
-    
-    unsigned int defaultTerrain = [[_tileDict objectForKey:TERRAIN_DICT_DEFAULT] defaultTileTerrainType];
-    
-    for (int i = 0; i < invertedCorners.count; i++) {
-        TerrainTilePositioned *t = [self brushForTerrain:defaultTerrain andOtherTerrain:_landingStripTerrain andDirection:[[invertedDirections objectAtIndex:i] intValue]];
-        CGPoint pt = [[invertedCorners objectAtIndex:i] CGPointValue];
-        [self addTile:t toWorkingMapAtPoint:pt];
-        // [lockedCoordinates addObject:[NSValue valueWithCGPoint:pt]];
-    }
-    
-    
-    for (NSValue *aCoord in lockedCoordinates) {
-        // Skip the extra tile for now
-        if (CGPointEqualToPoint([aCoord CGPointValue], extraTile)) {
-            continue;
-        }
-    
-        // Want a 'half' brush for each of these
-        CGPoint nCoord = [self nextPointInDirection:North from:[aCoord CGPointValue]];
-        if ([lockedCoordinates member:[NSValue valueWithCGPoint:nCoord]]) {
-            // do nothing
-        } else {
-            TerrainTilePositioned *t = [self brushForTerrain:defaultTerrain andOtherTerrain:_landingStripTerrain andDirection:North];
-            [self addTile:t toWorkingMapAtPoint:nCoord];
-        }
-        
-        CGPoint sCoord = [self nextPointInDirection:South from:[aCoord CGPointValue]];
-        if ([lockedCoordinates member:[NSValue valueWithCGPoint:sCoord]]) {
-            // do nothing
-        } else {
-            TerrainTilePositioned *t = [self brushForTerrain:defaultTerrain andOtherTerrain:_landingStripTerrain andDirection:South];
-            [self addTile:t toWorkingMapAtPoint:sCoord];
-        }
-        
-        // Problem here is the potential to overwrite the inverted corners
-        
-    }
-
 }
 
 
-// 
+- (void)checkAndFixNeighbors:(NSValue *)coordAsValue
+{
+    TerrainTilePositioned *anchorTile = [self workingTileAtValuePt:coordAsValue];
+    CGPoint anchorCoord = [coordAsValue CGPointValue];
+    
+    // Fixes neighbors of painted tiles
+    for (int direction = North; direction < InvalidDirection; direction++) {
+        
+        CGPoint    neighborCoord = [self nextPointInDirection:direction from:anchorCoord];
+        TerrainTilePositioned *t = [self tileTo:direction ofTileAt:anchorCoord];
+        if (!t) continue;
+        
+
+        if (direction >= Northwest) {
+            // Must check all for primary directions for a match
+            // Most important are those tied to the anchor
+            
+            
+            continue;
+        } else {        
+            
+            TerrainTilePositioned *oppositeAnchor = [self tileTo:North ofTileAt:neighborCoord];
+            
+            // Check if the tile works with the tile just placed
+            BOOL okWithAnchor   = [anchorTile accepts:t asValidNeighborToThe:direction];
+            BOOL okWithOpposite = [oppositeAnchor accepts:t asValidNeighborToThe:[self directionOpposite:direction]];
+            
+            if (okWithAnchor && okWithOpposite) {
+                CCLOG(@"Neighbor at %@ is ok. Continuing.", NSStringFromCGPoint(neighborCoord));
+            } else {
+                // Need to find a new tile.
+                CCLOG(@"Neighbor to %@ of anchor %@ is okWithAnchor: %@ okWithOpposite: %@", [self stringForDirection:direction], NSStringFromCGPoint(anchorCoord), okWithAnchor ? @"YES" : @"NO", okWithOpposite ? @"YES" : @"NO");
+                TerrainTilePositioned *newTile = [self findNewTileFor:direction ofCoord:anchorCoord];
+                [self addTile:newTile toWorkingMapAtPoint:neighborCoord];
+            }
+        }
+    }
+}
+
+- (TerrainTilePositioned *) findNewTileFor:(CardinalDirections)direction ofCoord:(CGPoint)anchorCoord
+{
+    CGPoint newTilePoint = [self nextPointInDirection:direction from:anchorCoord];
+    
+    TerrainTilePositioned *anchorTile   = [self workingTileAt:anchorCoord];
+    TerrainTilePositioned *oppositeTile = [self tileTo:direction ofTileAt:newTilePoint];
+    
+    NSArray *worksWithAnchor = [anchorTile   neighbors:direction];
+    NSArray *worksOpposite   = [oppositeTile neighbors:[self directionOpposite:direction]];
+    
+    NSMutableSet *anchor = [NSMutableSet setWithArray:worksWithAnchor];
+    NSSet *opposite = [NSSet setWithArray:worksOpposite];
+    
+    [anchor intersectSet:opposite];
+    
+    if (anchor.count > 0) {
+        // Prefer half tiles for primary directions, corner tiles for others
+        return [anchor anyObject];
+    } else {
+        // Can't find a match... return something that works with the anchor
+        return [worksWithAnchor objectAtIndex:0];
+    }
+    
+}
+
+
+
+
 - (TerrainTilePositioned *)brushForTerrain:(unsigned int)matchingTerrain
                            andOtherTerrain:(unsigned int)otherTerrain
                               andDirection:(CardinalDirections)direction
@@ -356,6 +372,49 @@
 
 #pragma mark -
 #pragma mark Utility Methods
+
+// Useful for debugging
+- (NSString *)stringForDirection:(CardinalDirections)direction
+{
+    switch (direction) {
+        case North:
+        {
+            return @"north";
+        }
+        case East:
+        {
+            return @"east";
+        }
+        case South:
+        {
+            return @"south";
+        }
+        case West:
+        {
+            return @"west";
+        }
+        case Northwest:
+        {
+            return @"northwest";
+        }
+        case Northeast:
+        {
+            return @"northeast";
+        }
+        case Southwest:
+        {
+            return @"southwest";
+        }
+        case Southeast:
+        {
+            return @"southeast";
+        }
+        case InvalidDirection:
+        {
+            return @"invalid direction";
+        }
+    }
+}
 
 - (void) createLayerReferencesFrom:(HKTMXTiledMap *)map
 {
@@ -528,6 +587,11 @@
             }
             break;
         }
+        case InvalidDirection:
+        {
+            t = nil;
+            break;
+        }
     }
     
     return t;
@@ -567,6 +631,10 @@
         case Southeast:
         {
             return ccpAdd(pt, ccp(1,1));
+        }
+        case InvalidDirection:
+        {
+            return CGPointNull;
         }
     }
 }
