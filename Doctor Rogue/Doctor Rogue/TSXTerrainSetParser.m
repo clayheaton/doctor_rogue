@@ -103,7 +103,7 @@
         unsigned int    tileGID        = (unsigned int)[(NSString *)[[[tile attributes] objectAtIndex:0] stringValue] intValue]; // There's probaby a more efficient way to do this, but this works.
         tileGID += 1; // 0 is blank
         NSArray         *cornerMarkers = [(NSString *)[[[tile attributes] objectAtIndex:1] stringValue] componentsSeparatedByString:@","];
-
+        
         TerrainTile *t = [[TerrainTile alloc] init];
         [t setTileGID:tileGID];
         
@@ -144,6 +144,8 @@
                 if ([[[property attributeForName:@"name"] stringValue] isEqualToString:@"default_tile"]) {
                     if ([[[property attributeForName:@"value"] stringValue] isEqualToString:@"YES"]) {
                         [tileDictionary setObject:tp1 forKey:TERRAIN_DICT_DEFAULT];
+                        [tp1 setIsDefaultTile:YES];
+                        [tp1 setDefaultTileTerrainType:[tp1 cornerNETarget]]; // all corners should be the same of the default
                         findDefault   = NO;
                         break;
                     }
@@ -155,6 +157,10 @@
     
     // Add the tiles as brushes to the terrain types
     for (TerrainTilePositioned *ttp in positionedTiles) {
+        
+        if ([ttp tileGID] == 27) {
+            NSLog(@"tile 27");
+        }
         
         NSArray *terrains = [ttp terrainTypes];
         for (NSNumber *num in terrains) {
@@ -178,8 +184,10 @@
                     
                 case TerrainBrush_Quarter:
                 {
-                    if (![[terType quarterBrushes] containsObject:ttp]) {
-                        [[terType quarterBrushes]  addObject:ttp];
+                    if ([ttp quarterBrushTerrainType] == [terType terrainNumber]) {
+                        if (![[terType quarterBrushes] containsObject:ttp]) {
+                            [[terType quarterBrushes]  addObject:ttp];
+                        }
                     }
                     break;
                 }

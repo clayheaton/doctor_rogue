@@ -64,39 +64,26 @@
     
     CCLOG(@"RandomMapGenerator is generating the map.");
     
-    // Create layer references
-    _terrainLayer       = [map layerNamed:MAP_LAYER_TERRAIN];
-    _collisionsLayer    = [map layerNamed:MAP_LAYER_COLLISIONS];
-    _objectsLayer       = [map layerNamed:MAP_LAYER_OBJECTS];
-    _fogLayer           = [map layerNamed:MAP_LAYER_FOG];
+    // TODO: Read this from a tile property instead of assigning it here.
+    _landingStripTerrain = 0;
     
-    // DO NOT REMOVE THIS
+    [self createLayerReferencesFrom:map];
+    
+    // This removes the placeholder tiles on each layer in the .tmx file.
+    // Map randomization will not work properly if you remove this line.
     [self cleanTempTilesFrom:map];
     
     [self parseTerrainTileset:map];
     
-    NSAssert(_tileDict != nil, @"The tileDict is nil so the map cannot be randomized.");
+    [self establishWorkingMapFrom:map];
     
-    // Create a 2D array in memory to represent the map. We'll randomize and check this, and then
-    // use the final result of it to set the actual map tiles.
-    _mapSize    = [map mapSize];
+    // Just for testing purposes
+    [self clayTestRandomizeOutdoorMap:map];
     
-    _workingMap = [[NSMutableArray alloc] initWithCapacity:_mapSize.width];
+    [self convertWorkingMapToRealMap];
     
-    TerrainTilePositioned *defaultTile = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
-    
-    for (int i = 0; i < _mapSize.width; i++) {
-        NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
+    CCLOG(@"Map randomization complete");
 
-        for (int i = 0; i < _mapSize.height; i++) {
-            [nested addObject:defaultTile];
-        }
-        
-        [_workingMap addObject:nested];
-    }
-    
-    [self testRandomizeOutdoorMap:map];
-    
     return map;
 }
 
@@ -156,38 +143,252 @@
 {
     NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
     _tileDict             = [TSXTerrainSetParser parseTileset:tilesetName];
-    _tileDictKeyArray     = [[NSMutableArray alloc] init]; // Not used at the moment.
     
-    for (NSString *key in _tileDict) {
-        if ([key isEqualToString:TERRAIN_DICT_TERRAINS]) {
-            continue;
-        }
-        [_tileDictKeyArray addObject:key];
-    }
-    
-    // Testing Output
-    /*
-    NSArray *tiles = [_tileDict objectForKey:@"1"];
-    
-    TerrainTilePositioned *t = [tiles objectAtIndex:TerrainTileRotation_0]; // Currently, the only object in the array
-    NSArray *t_northNeighbors = [t neighborsNorth];
-
-     */
+    NSAssert(_tileDict != nil, @"The tileDict is nil so the map cannot be randomized.");
     
     CCLOG(@"Tileset parsed");
 }
 
 # pragma mark -
-# pragma mark Testing randomization
+# pragma mark Clay's Randomization Testing
 
-- (void) testRandomizeOutdoorMap:(HKTMXTiledMap *)map
+- (void) clayTestRandomizeOutdoorMap:(HKTMXTiledMap *)map
 {
     // Randomize here, into _workingMap
     
-  
+    NSMutableSet *lockedCoordinates = [[NSMutableSet alloc] init];
+    
+    [self clayTestCreateOutdoorEntryPoint:lockedCoordinates];
+    
+    // Test by making a river from left to right and filling in the neighboring tiles
+    
+    /*
+    TerrainTilePositioned *t = [self tileWithID:23];
+    [self placeTile:t atCoord:ccp(1,1)];
+    */
     
     
     
+    
+
+}
+
+- (void)clayTestCreateOutdoorEntryPoint:(NSMutableSet *)lockedCoordinates
+{
+    // Pick a 3x3 starting area and lock it.
+    int startX = (rand() % (int)(_mapSize.width  - 12)) + 6;
+    int startY = (rand() % (int)(_mapSize.height - 12)) + 6;
+    
+    CGPoint start  = ccp(4, 4);
+    
+    // Use this to determine the landing pad orientation
+    int direction = 0; //rand() % 4;
+    
+    NSArray *invertedCorners = nil;
+    NSArray *invertedDirections = nil;
+    CGPoint extraTile; // Will skip in first pass of transitions
+    
+    // Used to place the inverted corner tiles; those tracked in invertedCorners
+    CardinalDirections specialDir1, specialDir2;
+    
+    switch (direction) {
+        case 0:
+        {
+            extraTile      = ccpAdd(start, ccp(2,1));
+            specialDir1    = Northeast;
+            specialDir2    = Southeast;
+            invertedCorners = [NSArray arrayWithObjects:
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))],
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))]
+                              , nil];
+           break; 
+        }
+            
+        case 1:
+        {
+            extraTile      = ccpAdd(start, ccp(1,2));
+            specialDir1    = Southeast;
+            specialDir2    = Southwest;
+            invertedCorners = [NSArray arrayWithObjects:
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))],
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))]
+                              , nil];
+            break;
+        }
+            
+        case 2:
+        {
+            extraTile      = ccpAdd(start, ccp(0,1));
+            specialDir1    = Southwest;
+            specialDir2    = Northwest;
+            invertedCorners = [NSArray arrayWithObjects:
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))],
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))]
+                              , nil];
+            break;
+        }
+        case 3:
+        {
+            extraTile      = ccpAdd(start, ccp(1,0));
+            specialDir1    = Northwest;
+            specialDir2    = Northeast;
+            invertedCorners = [NSArray arrayWithObjects:
+                           [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))],
+                           [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))]
+                           , nil];
+            break;
+        }
+    }
+    
+    invertedDirections = [NSArray arrayWithObjects:[NSNumber numberWithInt:specialDir1], [NSNumber numberWithInt:specialDir2], nil];
+    
+    NSSet *coordsToIgnore = [NSSet setWithArray:invertedCorners];
+    
+    // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
+    TerrainTilePositioned *dirt = [[[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:_landingStripTerrain] wholeBrushes] objectAtIndex:0];
+    
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            CGPoint pt = ccpAdd(start, ccp(j,i));
+            NSValue *ptVal = [NSValue valueWithCGPoint:pt];
+            
+            if ([coordsToIgnore member:ptVal]) {
+                continue;
+            } else {
+                [self addTile:dirt toWorkingMapAtPoint:pt];
+                // Should prevent these from being altered later
+                [lockedCoordinates addObject:ptVal];
+            }
+        }
+    }
+    
+    // Look in primary direction for all locked coordinates
+    // Set appropriate tile, then lock those set.
+    // Loop through again and look in secondary directions
+    
+    unsigned int defaultTerrain = [[_tileDict objectForKey:TERRAIN_DICT_DEFAULT] defaultTileTerrainType];
+    
+    for (int i = 0; i < invertedCorners.count; i++) {
+        TerrainTilePositioned *t = [self brushForTerrain:defaultTerrain andOtherTerrain:_landingStripTerrain andDirection:[[invertedDirections objectAtIndex:i] intValue]];
+        CGPoint pt = [[invertedCorners objectAtIndex:i] CGPointValue];
+        [self addTile:t toWorkingMapAtPoint:pt];
+        // [lockedCoordinates addObject:[NSValue valueWithCGPoint:pt]];
+    }
+    
+    
+    for (NSValue *aCoord in lockedCoordinates) {
+        // Skip the extra tile for now
+        if (CGPointEqualToPoint([aCoord CGPointValue], extraTile)) {
+            continue;
+        }
+    
+        // Want a 'half' brush for each of these
+        CGPoint nCoord = [self nextPointInDirection:North from:[aCoord CGPointValue]];
+        if ([lockedCoordinates member:[NSValue valueWithCGPoint:nCoord]]) {
+            // do nothing
+        } else {
+            TerrainTilePositioned *t = [self brushForTerrain:defaultTerrain andOtherTerrain:_landingStripTerrain andDirection:North];
+            [self addTile:t toWorkingMapAtPoint:nCoord];
+        }
+        
+        CGPoint sCoord = [self nextPointInDirection:South from:[aCoord CGPointValue]];
+        if ([lockedCoordinates member:[NSValue valueWithCGPoint:sCoord]]) {
+            // do nothing
+        } else {
+            TerrainTilePositioned *t = [self brushForTerrain:defaultTerrain andOtherTerrain:_landingStripTerrain andDirection:South];
+            [self addTile:t toWorkingMapAtPoint:sCoord];
+        }
+        
+        // Problem here is the potential to overwrite the inverted corners
+        
+    }
+
+}
+
+
+// 
+- (TerrainTilePositioned *)brushForTerrain:(unsigned int)matchingTerrain
+                           andOtherTerrain:(unsigned int)otherTerrain
+                              andDirection:(CardinalDirections)direction
+{
+    
+    TerrainType *terrain = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:matchingTerrain];
+    NSArray *brushes = nil;
+    
+    CardinalDirections oppositeDirection = [self directionOpposite:direction];
+    
+    TerrainBrushTypes brushType;
+    
+    if (   direction == North
+        || direction == South
+        || direction == East
+        || direction == West) {
+        brushType = TerrainBrush_Half;
+        brushes   = [terrain halfBrushes];
+    } else {
+        brushType = TerrainBrush_Quarter;
+        brushes   = [terrain quarterBrushes];
+        
+        // NSAssert(direction != InvalidDirection, @"Invalid Direction");
+    }
+    
+    TerrainTilePositioned *theBrush = nil;
+    
+    for (TerrainTilePositioned *brush in brushes) {
+        
+        if (brushType == TerrainBrush_Half) {
+            if ([brush sideOn:oppositeDirection isOfTerrainType:otherTerrain] && [brush sideOn:direction isOfTerrainType:matchingTerrain]) {
+                theBrush = brush;
+                return theBrush;
+            }
+        } else if (brushType == TerrainBrush_Quarter) {
+            
+            if ([brush cornerWithTerrainType:matchingTerrain] == direction && [brush quarterBrushTerrainAlt] == otherTerrain) { 
+                theBrush = brush;
+                return theBrush;
+            }
+        }
+    }
+    //NSAssert(theBrush != nil, @"The brush is nil...");
+    return nil;
+}
+
+
+#pragma mark -
+#pragma mark Utility Methods
+
+- (void) createLayerReferencesFrom:(HKTMXTiledMap *)map
+{
+    // Create layer references
+    _terrainLayer       = [map layerNamed:MAP_LAYER_TERRAIN];
+    _collisionsLayer    = [map layerNamed:MAP_LAYER_COLLISIONS];
+    _objectsLayer       = [map layerNamed:MAP_LAYER_OBJECTS];
+    _fogLayer           = [map layerNamed:MAP_LAYER_FOG];
+}
+
+- (void) establishWorkingMapFrom:(HKTMXTiledMap *)map
+{
+    // Create a 2D array in memory to represent the map. We'll randomize and check this, and then
+    // use the final result of it to set the actual map tiles.
+    _mapSize    = [map mapSize];
+    
+    _workingMap = [[NSMutableArray alloc] initWithCapacity:_mapSize.width];
+    
+    TerrainTilePositioned *defaultTile = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
+    
+    for (int i = 0; i < _mapSize.width; i++) {
+        NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
+        
+        for (int i = 0; i < _mapSize.height; i++) {
+            [nested addObject:defaultTile];
+        }
+        
+        [_workingMap addObject:nested];
+    }
+}
+
+- (void) convertWorkingMapToRealMap
+{
     // Finished setting up the Working map -- now use it to set tiles
     for (int i = 0; i < _mapSize.width; i++) {
         for (int j = 0; j < _mapSize.height; j++) {
@@ -197,12 +398,7 @@
             }
         }
     }
-     
-    CCLOG(@"Map randomization complete");
 }
-
-#pragma mark -
-#pragma mark Utility Methods
 
 - (void) fillLayer:(HKTMXLayer *)layer onMap:(HKTMXTiledMap *)map withTileID:(unsigned short)tileID
 {
@@ -216,7 +412,7 @@
     }
 }
 
-- (void) putNeighborsOf:(CGPoint)coord intoQueue:(NSMutableArray *)queue
+- (void) putNeighborsOf:(CGPoint)coord intoQueue:(NSMutableArray *)queue primaryDirectionsOnly:(BOOL)primary
 {
     CGPoint n  = [self nextPointInDirection:North     from:coord];
     CGPoint e  = [self nextPointInDirection:East      from:coord];
@@ -243,21 +439,24 @@
         [queue addObject:[NSValue valueWithCGPoint:w]];
     }
     
-    if ([self isValid:ne]) {
-        [queue addObject:[NSValue valueWithCGPoint:ne]];
+    if (!primary) {
+        if ([self isValid:ne]) {
+            [queue addObject:[NSValue valueWithCGPoint:ne]];
+        }
+        
+        if ([self isValid:nw]) {
+            [queue addObject:[NSValue valueWithCGPoint:nw]];
+        }
+        
+        if ([self isValid:se]) {
+            [queue addObject:[NSValue valueWithCGPoint:se]];
+        }
+        
+        if ([self isValid:sw]) {
+            [queue addObject:[NSValue valueWithCGPoint:sw]];
+        }
     }
-    
-    if ([self isValid:nw]) {
-        [queue addObject:[NSValue valueWithCGPoint:nw]];
-    }
-    
-    if ([self isValid:se]) {
-        [queue addObject:[NSValue valueWithCGPoint:se]];
-    }
-    
-    if ([self isValid:sw]) {
-        [queue addObject:[NSValue valueWithCGPoint:n]];
-    }
+
 }
 
 - (TerrainTilePositioned *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord
@@ -384,6 +583,96 @@
     } else {
         return YES;
     }
+}
+
+- (CardinalDirections)directionOpposite:(CardinalDirections)direction
+{
+    switch (direction) {
+        case North:
+        {
+            return South;
+        }
+        case East:
+        {
+            return West;
+        }
+        case South:
+        {
+            return North;
+        }
+        case West:
+        {
+            return East;
+        }
+        case Northwest:
+        {
+            return Southeast;
+        }
+        case Northeast:
+        {
+            return Southwest;
+        }
+        case Southwest:
+        {
+            return Northeast;
+        }
+        case Southeast:
+        {
+            return Northwest;
+        }
+        default:
+            return InvalidDirection;
+    }
+}
+
+- (CardinalDirections)directionOfCoord:(CGPoint)coord relativeToCoord:(CGPoint)otherCoord
+{
+    CGPoint offset = ccpSub(coord, otherCoord);
+    
+    if (CGPointEqualToPoint(offset, ccp(0,0))) {
+        return InvalidDirection;
+    } else if (offset.x == 0  && offset.y == 1)  {
+        return South;
+    } else if (offset.x == 0  && offset.y == -1) {
+        return North;
+    } else if (offset.x == 1  && offset.y == 0)  {
+        return East;
+    } else if (offset.x == -1 && offset.y == 0)  {
+        return West;
+    } else if (offset.x == 1  && offset.y == 1)  {
+        return Southeast;
+    } else if (offset.x == 1  && offset.y == -1) {
+        return Northeast;
+    } else if (offset.x == -1 && offset.y == 1)  {
+        return Southwest;
+    } else if (offset.x == -1 && offset.y == -1) {
+        return Northwest;
+    } else {
+        return InvalidDirection;
+    }
+    
+}
+
+- (TerrainTilePositioned *)tileWithID:(unsigned int)tileID
+{
+    NSString *key = [NSString stringWithFormat:@"%i", tileID];
+    return [[_tileDict objectForKey:key] objectAtIndex:0];
+}
+
+- (TerrainTilePositioned *)workingTileAt:(CGPoint)pos
+{
+    return [[_workingMap objectAtIndex:pos.x] objectAtIndex:pos.y];
+}
+
+- (TerrainTilePositioned *)workingTileAtValuePt:(NSValue *)posAsValue
+{
+    CGPoint pt = [posAsValue CGPointValue];
+    return [[_workingMap objectAtIndex:pt.x] objectAtIndex:pt.y];
+}
+
+- (void) addTile:(TerrainTilePositioned *)tile toWorkingMapAtPoint:(CGPoint)coord
+{
+    [[_workingMap objectAtIndex:coord.x] setObject:tile atIndex:coord.y];
 }
 
 #pragma mark -

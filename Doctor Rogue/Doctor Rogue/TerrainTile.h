@@ -21,6 +21,8 @@
 @property (assign, readwrite) unsigned int cornerSWTarget;
 
 @property (assign, readwrite) TerrainBrushTypes brushType;
+@property (assign, readwrite) unsigned int quarterBrushType;
+@property (assign, readwrite) unsigned int quarterBrushAlt;
 
 - (unsigned int) northTarget;
 - (unsigned int) eastTarget;
@@ -40,6 +42,8 @@
 - (CardinalDirections) sideWithTerrainType:(unsigned int)type;
 
 // Only call this if the tile is a "quarter brush"
-- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type;
+- (CardinalDirections) cornerWithTerrainType:(unsigned int)type;
+
+- (BOOL)sideOn:(CardinalDirections)direction isOfTerrainType:(unsigned int)type;
 
 @end

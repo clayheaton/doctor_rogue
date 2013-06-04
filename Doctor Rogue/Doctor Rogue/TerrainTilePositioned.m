@@ -11,7 +11,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%i", self.tileGID];
+    return [NSString stringWithFormat:@"ID: %i, NW: %i, NE: %i, SW: %i, SE: %i", self.tileGID, [self cornerNWTarget], [self cornerNETarget], [self cornerSWTarget], [self cornerSETarget]];
 }
 
 
@@ -20,8 +20,10 @@
 {
     self = [super init];
     if (self) {
-        _terrainTile = tile;
-        _rotation    = rot;
+        _terrainTile            = tile;
+        _rotation               = rot;
+        _isDefaultTile          = NO;
+        _defaultTileTerrainType = 9999;
     }
     return self;
 }
@@ -343,6 +345,28 @@
     }
 }
 
+- (NSArray *)neighbors:(CardinalDirections)direction
+{
+    switch (direction) {
+        case North:
+            return _neighborsNorth;
+            break;
+        case East:
+            return _neighborsEast;
+            break;
+        case West:
+            return _neighborsWest;
+            break;
+        case South:
+            return _neighborsSouth;
+            break;
+            
+        default:
+            return nil;
+            break;
+    }
+}
+
 #pragma mark -
 #pragma mark Pass through methods called on the tile
 
@@ -368,9 +392,24 @@
 }
 
 // Only call this if the tile is a "quarter brush"
-- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type
+- (CardinalDirections) cornerWithTerrainType:(unsigned int)type
 {
     return [_terrainTile cornerWithTerrainType:type];
+}
+
+- (BOOL)sideOn:(CardinalDirections)direction isOfTerrainType:(unsigned int)type
+{
+    return [_terrainTile sideOn:direction isOfTerrainType:type];
+}
+
+- (unsigned int)quarterBrushTerrainType
+{
+    return [_terrainTile quarterBrushType];
+}
+
+- (unsigned int)quarterBrushTerrainAlt
+{
+    return [_terrainTile quarterBrushAlt];
 }
 
 @end

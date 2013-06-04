@@ -132,6 +132,7 @@
         _brushType = TerrainBrush_Half;
     } else {
         _brushType = TerrainBrush_Quarter;
+        [self establishQuarterBrushTerrainType];
     }
 }
 
@@ -177,14 +178,117 @@
 }
 
 // Only call this if the tile is a "quarter brush"
-- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type
+- (CardinalDirections) cornerWithTerrainType:(unsigned int)type
 {
     for (int i = 0; i < [self terrainTypes].count; i++) {
         if ([[[self terrainTypes] objectAtIndex:i] unsignedIntValue] == type) {
-            return i;
+            switch (i) {
+                case 0:
+                {
+                    return Northwest;
+                    break;
+                }
+                case 1:
+                {
+                    return Northeast;
+                    break;
+                }
+                case 2:
+                {
+                    return Southwest;
+                    break;
+                }
+                case 3:
+                {
+                    return Southeast;
+                    break;
+                }
+            }
         }
     }
     return nil;
+}
+
+- (BOOL)sideOn:(CardinalDirections)direction isOfTerrainType:(unsigned int)type
+{
+    // This tile doesn't have the specified terrain type or the direction is invalid
+    if (direction == InvalidDirection || ![self hasTerrainType:type]) {
+        return NO;
+    }
+    
+    switch (direction) {
+        case West:
+        {
+            if( _cornerNWTarget == type && _cornerSWTarget == type) { return YES; }
+            break;
+        }
+            
+        case North:
+        {
+            if (_cornerNWTarget == type && _cornerNETarget == type) { return YES; }
+            break;
+        }
+            
+        case East:
+        {
+            if (_cornerNETarget == type && _cornerSETarget == type) { return YES; }
+            break;
+        }
+            
+        case South:
+        {
+            if (_cornerSWTarget == type && _cornerSETarget == type) { return YES; }
+            break;
+        }
+
+        default:
+        {
+            return NO;
+            break;
+        }
+    }
+    return NO;
+}
+
+- (void)establishQuarterBrushTerrainType
+{
+    unsigned int type1 = _cornerNWTarget;
+    unsigned int type2 = 9999;
+    unsigned int type1Count = 1;
+    unsigned int type2Count = 0;
+    
+    if (_cornerNETarget == type1) {
+        type1Count += 1;
+    } else {
+        type2 = _cornerNETarget;
+        type2Count += 1;
+    }
+    
+    if (_cornerSETarget == type1) {
+        type1Count += 1;
+    } else {
+        type2 = _cornerSETarget;
+        type2Count += 1;
+    }
+    
+    if (_cornerSWTarget == type1) {
+        type1Count += 1;
+    } else {
+        type2 = _cornerSWTarget;
+        type2Count += 1;
+    }
+    
+    if (type1Count == 1) {
+        _quarterBrushType = type1;
+        _quarterBrushAlt  = type2;
+    } else if (type2Count == 1) {
+        _quarterBrushType = type2;
+        _quarterBrushAlt  = type1;
+    } else {
+        NSLog(@"Unable to determine quarterBrushTerrainType");
+        _quarterBrushAlt = 9999;
+        _quarterBrushType = 9999;
+    }
 }
 
 @end

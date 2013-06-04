@@ -21,6 +21,8 @@
 @property (retain, readwrite) NSArray *neighborsSouth;
 @property (retain, readwrite) NSArray *neighborsWest;
 
+@property (assign, readwrite) BOOL         isDefaultTile;
+@property (assign, readwrite) unsigned int defaultTileTerrainType; // only use for the default
 
 - (id) initWithTerrainTile:(TerrainTile *)tile andRotation:(TerrainTileRotation)rot;
 
@@ -36,6 +38,8 @@
 - (unsigned int) southTarget;
 - (unsigned int) westTarget;
 
+- (NSArray *)neighbors:(CardinalDirections)direction;
+
 - (void) assignNeighborsFrom:(NSMutableArray *)possibleNeighbors;
 
 - (TerrainBrushTypes) brushType;
@@ -46,6 +50,11 @@
 - (CardinalDirections) sideWithTerrainType:(unsigned int)type;
 
 // Only call this if the tile is a "quarter brush"
-- (TerrainTileCorners) cornerWithTerrainType:(unsigned int)type;
+- (CardinalDirections) cornerWithTerrainType:(unsigned int)type;
+
+- (BOOL)sideOn:(CardinalDirections)direction isOfTerrainType:(unsigned int)type;
+
+- (unsigned int)quarterBrushTerrainType;
+- (unsigned int)quarterBrushTerrainAlt;
 
 @end

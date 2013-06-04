@@ -21,12 +21,13 @@
 @property (retain, readwrite) HKTMXLayer *fogLayer;
 
 @property (retain, readwrite) NSDictionary   *tileDict;
-@property (retain, readwrite) NSMutableArray *tileDictKeyArray;
 @property (retain, readwrite) NSMutableArray *workingMap;
 
 @property (retain, readwrite) NSMutableSet *processedTiles;
 
 @property (assign, readwrite) CGSize mapSize;
+
+@property (assign, readwrite) unsigned int landingStripTerrain;
 
 - (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map;
 
