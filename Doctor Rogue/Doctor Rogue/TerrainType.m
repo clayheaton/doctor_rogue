@@ -13,10 +13,10 @@
 {
     self = [super init];
     if (self) {
-        // _terrainNumber  = -1;
-        _wholeBrushes   = [[NSMutableArray alloc] init];
-        _halfBrushes    = [[NSMutableArray alloc] init];
-        _quarterBrushes = [[NSMutableArray alloc] init];
+        _wholeBrushes          = [[NSMutableArray alloc] init];
+        _threeQuarterBrushes   = [[NSMutableArray alloc] init];
+        _halfBrushes           = [[NSMutableArray alloc] init];
+        _quarterBrushes        = [[NSMutableArray alloc] init];
     }
     return self;
 }

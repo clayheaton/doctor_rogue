@@ -10,8 +10,7 @@
 #import "Constants.h"
 #import "GameState.h"
 #import "TSXTerrainSetParser.h"
-#import "TerrainTile.h"
-#import "TerrainTilePositioned.h"
+#import "Tile.h"
 #import "TerrainType.h"
 
 const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
@@ -23,8 +22,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 {
     self = [super init];
     if (self) {
-        // Set up whatever parameters...
-        _edges = [[NSMutableSet alloc] init];
+        _edges          = [[NSMutableArray alloc] init];
         _protectedTiles = [[NSMutableSet alloc] init];
     }
     return self;
@@ -43,11 +41,6 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 
 // Each incoming map template will have a single tile at location (0,0) in each layer. Those tiles have to be cleared.
 // You cannot load a .tmx file if each layer does not have a tile on it.
-
-// Process, for now:
-// 1. Clear the aforementioned tiles from each layer
-// 2. Make everything grass as a default base
-
 
 // This is the entry point for map randomization
 
@@ -76,7 +69,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // Map randomization will not work properly if you remove this line.
     [self cleanTempTilesFrom:map];
     
-    [self parseTerrainTileset:map];
+    [self parseTileset:map];
     
     [self establishWorkingMapFrom:map];
     
@@ -97,25 +90,25 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     in the tileset for the indicated layer. Here, you'll see it's the @"terrain" layer, though we may want to
     use this approach in the fog of war manager, too. The structure is built to support tiles that can rotate,
     but the ones in this tile set currently cannot rotate, so the additional rotations are disabled, leaving
-    only the TerrainTileRotation_0.
+    only the TileRotation_0.
  
     Let's say that you're interested in the tile with gID == 1. You would call the following to get the array
-    of TerrainTilePositioned objects (again, only one at this time):
+    of Tile objects (again, only one at this time):
  
     NSArray *allTilesWithGID1 = [_tileDict objectforKey:@"1"];
     
     Then, to get the tile:
  
-    TerrainTilePositioned *theTile = [allTilesWithGID1 objectAtIndex:TerrainTileRotation_0]; //equivalent to index of 0
+    Tile *theTile = [allTilesWithGID1 objectAtIndex:TileRotation_0]; //equivalent to index of 0
     
-    The TerrainTilePositioned class is a container class for the TerrainTile class, meant to represent it in different rotations.
+    The Tile class is a container class for the Tile class, meant to represent it in different rotations.
  
     The _tileDict also stores information about the terrain types. To get the TerrainType objects, call:
  
     NSArray *terrainTypes = [_tileDict objectForKey:TERRAIN_DICT_TERRAINS];
  
     terrainTypes will then contain an ordered list of the TerrainType objects in the tile set, as defined in the .tsx file. The index
-    number of the TerrainType corresponds to the number that the TerrainTiles and TerrainTilePositioned objects use to refer
+    number of the TerrainType corresponds to the number that the Tiles and Tile objects use to refer
     to the type of terrain that is in each corner. For example, if you called:
  
     unsigned int terType = [theTile cornerNWTarget];
@@ -125,9 +118,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     TerrainType *myTerrain = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:terType];
  
     When parsing the tiles, they are added to special "brush" arrays in the TerrainType objects. If you
-    are looking for a TerrainTilePositioned object that has all 4 corners of one type of terrain, then you could just call:
+    are looking for a Tile object that has all 4 corners of one type of terrain, then you could just call:
  
-    TerrainTilePositioned *mySolidTile = [[myTerrain wholeBrushes] objectAtIndex:0];
+    Tile *mySolidTile = [[myTerrain wholeBrushes] objectAtIndex:0];
  
     TerrainType objects also have halfBrushes and quarterBrushes arrays from which you can draw tiles. The purpose of brushes
     is not to simply be tiles in an array. Eventually, there should be a TerrainBrush class that paints terrain in a manner
@@ -137,12 +130,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     What we probably need to do is to simply place down the whole tile for the desired brush, and then perform a tree search,
     maybe a breadth-first search, to look for tiles that will match as closely as possible with the surrounding terrain.
  
-    Finally, the TerrainTilePositioned objects have a series of pass-through (to the TerrainTile) methods that
+    Finally, the Tile objects have a series of pass-through (to the Tile) methods that
     provide more detail about whether they contain a certain type of terrain. See the header file for more info.
  
  */
 
-- (void) parseTerrainTileset:(HKTMXTiledMap *)map
+- (void) parseTileset:(HKTMXTiledMap *)map
 {
     NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
     _tileDict             = [TSXTerrainSetParser parseTileset:tilesetName];
@@ -166,7 +159,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // Test by making a river from left to right and filling in the neighboring tiles
     
     /*
-    TerrainTilePositioned *t = [self tileWithID:23];
+    Tile *t = [self tileWithID:23];
     [self placeTile:t atCoord:ccp(1,1)];
     */
     
@@ -232,9 +225,20 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
     
     // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
-    TerrainTilePositioned *dirt  = [[[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:3] wholeBrushes] objectAtIndex:0]; //_landingStripTerrain
-    TerrainTilePositioned *grass = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
+    Tile *dirt  = [[[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:3] wholeBrushes] objectAtIndex:0]; //_landingStripTerrain
+    Tile *grass = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
     
+    
+    
+    [self paintTile:dirt atPoint:ccp(4,4)];
+    [_protectedTiles addObject:[NSValue valueWithCGPoint:ccp(4,4)]];
+    
+    [self paintTile:dirt atPoint:ccp(5,5)];
+    [_protectedTiles addObject:[NSValue valueWithCGPoint:ccp(5,5)]];
+    
+    [self processEdges];
+    
+    /*
     // Paint the solid tiles onto the map
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -243,10 +247,37 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             [_protectedTiles addObject:[NSValue valueWithCGPoint:pt]];
         }
     }
+    */
     
-    CCLOG(@"Protected: %@", _protectedTiles);
     
-    [self processEdges];
+    // River test
+    /*
+    CGPoint ranStart = ccp(0,3);
+    CGPoint ranEnd   = ccp(_mapSize.width - 1, _mapSize.height - 3);
+    
+    while (!CGPointEqualToPoint(ranStart, ranEnd)) {
+        [self paintTile:dirt atPoint:ranStart];
+        [self processEdges];
+        if (ranStart.x < ranEnd.x) {
+            ranStart.x += 1;
+        } else if (ranStart.x > ranEnd.x) {
+            ranStart.x -= 1;
+        }
+        
+        if (ranStart.y < ranEnd.y) {
+            ranStart.y += 1;
+        } else if (ranStart.y > ranEnd.y) {
+            ranStart.y -= 1;
+        }
+
+    }
+     */
+
+    //[self processEdges];
+    
+    // This is a problem because of the order of processing edges; tiles have a false it on edgecase 1
+    // [self paintTile:grass atPoint:ccp(4,2)];
+    // [self processEdges];
     
     // Only protect tile for this operation
     [_protectedTiles removeAllObjects];
@@ -261,7 +292,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
 }
 
-- (void) paintTile:(TerrainTilePositioned *)tile atPoint:(CGPoint)target
+- (void) paintTile:(Tile *)tile atPoint:(CGPoint)target
 {
     // the single specified tile
     [self addTile:tile toWorkingMapAtPoint:target];
@@ -274,10 +305,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         if ([_protectedTiles member:[neighbors objectAtIndex:i]]) {
             continue;
         }
-        [self addTile:tile toWorkingMapAtPoint:[[neighbors objectAtIndex:i] CGPointValue]];
+        //[self addTile:tile toWorkingMapAtPoint:[[neighbors objectAtIndex:i] CGPointValue]];
     }
 
-    // Track the edes
+    // Track the edges
     [_edges addObjectsFromArray:neighbors];
 }
 
@@ -289,11 +320,11 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     NSMutableArray *pointQueue = [[NSMutableArray alloc] init];
     
     while (_edges.count > 0) {
-        NSValue *edgeVal = [_edges anyObject];
-        [_edges removeObject:edgeVal];
+        NSValue *edgeVal = [_edges objectAtIndex:0];
+        [_edges removeObjectAtIndex:0];
         
         CGPoint edgePt = [edgeVal CGPointValue];
-        TerrainTilePositioned *edgeTile = [self edgeCaseTypeForPoint:edgePt];
+        Tile *edgeTile = [self edgeCaseTypeForPoint:edgePt];
         
         if (!edgeTile) {
             // It's not an edge tile, so we can continue
@@ -312,7 +343,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
 }
 
-- (TerrainTilePositioned *)edgeCaseTypeForPoint:(CGPoint)edgePt
+- (Tile *)edgeCaseTypeForPoint:(CGPoint)edgePt
 {
     int tileType = [[self workingTileAt:edgePt] wholeBrushType];
     
@@ -340,8 +371,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         return nil;
     }
     
-    //CCLOG(@"---");
-    //CCLOG(@"Processing edge at %@", NSStringFromCGPoint(edgePt));
+    CCLOG(@"---");
+    CCLOG(@"Processing edge at %@", NSStringFromCGPoint(edgePt));
     
     EdgeCaseType       caseType = EdgeCase_None;
     CardinalDirections brushDirection;
@@ -455,23 +486,23 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
     
     
-    //CCLOG(@"caseType: %i", caseType);
-    //CCLOG(@"     brush matching terrain: %i other terrain: %i direction: %@", matchingTerrain, otherTerrain, [self stringForDirection:brushDirection]);
+    // CCLOG(@"caseType: %i", caseType);
+    // CCLOG(@"     brush matching terrain: %i other terrain: %i direction: %@", matchingTerrain, otherTerrain, [self stringForDirection:brushDirection]);
     
     // Now, we know the terrain types we need to use to call for a tile
-    TerrainTilePositioned *terrainTile = [self brushForTerrain:matchingTerrain andOtherTerrain:otherTerrain andDirection:brushDirection];
-    return terrainTile;
+    Tile *Tile = [self brushForTerrain:matchingTerrain andOtherTerrain:otherTerrain andDirection:brushDirection];
+    return Tile;
     
     // TODO: handle cases where there is no match by adding them to a temp edge set that is folded back into the main set after assignment
 }
 
 
-- (TerrainTilePositioned *)brushForTerrain:(unsigned int)matchingTerrain
+- (Tile *)brushForTerrain:(unsigned int)matchingTerrain
                            andOtherTerrain:(unsigned int)otherTerrain
                               andDirection:(CardinalDirections)direction
 {
     
-    TerrainType *terrain = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:matchingTerrain];
+    TerrainType *terrain = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:matchingTerrain];
     NSArray *brushes = nil;
     
     CardinalDirections oppositeDirection = [self directionOpposite:direction];
@@ -491,10 +522,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         // NSAssert(direction != InvalidDirection, @"Invalid Direction");
     }
     
-    TerrainTilePositioned *theBrush = nil;
+    Tile *theBrush = nil;
     
-    for (TerrainTilePositioned *brush in brushes) {
-        
+    for (Tile *brush in brushes) {
+        // CCLOG(@"Tile: %@", brush);
         if (brushType == TerrainBrush_Half) {
             if ([brush sideOn:oppositeDirection isOfTerrainType:otherTerrain] && [brush sideOn:direction isOfTerrainType:matchingTerrain]) {
                 theBrush = brush;
@@ -502,7 +533,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             }
         } else if (brushType == TerrainBrush_Quarter) {
             
-            if ([brush cornerWithTerrainType:matchingTerrain] == direction && [brush quarterBrushTerrainAlt] == otherTerrain) { 
+            if ([brush cornerWithTerrainType:matchingTerrain] == direction ) { // && [brush threeQuarterBrushType] == otherTerrain
                 theBrush = brush;
                 return theBrush;
             }
@@ -576,7 +607,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     _workingMap = [[NSMutableArray alloc] initWithCapacity:_mapSize.width];
     
-    TerrainTilePositioned *defaultTile = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
+    Tile *defaultTile = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
     
     for (int i = 0; i < _mapSize.width; i++) {
         NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
@@ -595,7 +626,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     for (int i = 0; i < _mapSize.width; i++) {
         for (int j = 0; j < _mapSize.height; j++) {
             if ([[_workingMap objectAtIndex:i] objectAtIndex:j] != [NSNull null]) {
-                TerrainTilePositioned * tile = [[_workingMap objectAtIndex:i] objectAtIndex:j];
+                Tile * tile = [[_workingMap objectAtIndex:i] objectAtIndex:j];
                 [_terrainLayer setTileGID:[tile tileGID] at:ccp(i,j)];
             }
         }
@@ -631,9 +662,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
 }
 
-- (TerrainTilePositioned *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord
+- (Tile *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord
 {
-    TerrainTilePositioned *t = nil;
+    Tile *t = nil;
     
     switch (direction) {
         case North:
@@ -834,24 +865,24 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
 }
 
-- (TerrainTilePositioned *)tileWithID:(unsigned int)tileID
+- (Tile *)tileWithID:(unsigned int)tileID
 {
     NSString *key = [NSString stringWithFormat:@"%i", tileID];
     return [[_tileDict objectForKey:key] objectAtIndex:0];
 }
 
-- (TerrainTilePositioned *)workingTileAt:(CGPoint)pos
+- (Tile *)workingTileAt:(CGPoint)pos
 {
     return [[_workingMap objectAtIndex:pos.x] objectAtIndex:pos.y];
 }
 
-- (TerrainTilePositioned *)workingTileAtValuePt:(NSValue *)posAsValue
+- (Tile *)workingTileAtValuePt:(NSValue *)posAsValue
 {
     CGPoint pt = [posAsValue CGPointValue];
     return [[_workingMap objectAtIndex:pt.x] objectAtIndex:pt.y];
 }
 
-- (void) addTile:(TerrainTilePositioned *)tile toWorkingMapAtPoint:(CGPoint)coord
+- (void) addTile:(Tile *)tile toWorkingMapAtPoint:(CGPoint)coord
 {
     [[_workingMap objectAtIndex:coord.x] setObject:tile atIndex:coord.y];
 }

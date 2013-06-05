@@ -14,6 +14,7 @@
 @property (assign, readwrite) unsigned int terrainNumber;
 @property (copy, readwrite)   NSString *name;
 @property (retain, readwrite) NSMutableArray *wholeBrushes;
+@property (retain, readwrite) NSMutableArray *threeQuarterBrushes;
 @property (retain, readwrite) NSMutableArray *halfBrushes;
 @property (retain, readwrite) NSMutableArray *quarterBrushes;
 

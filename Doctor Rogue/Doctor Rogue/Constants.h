@@ -31,7 +31,8 @@
 #define MAP_PREFIX_GRASSLANDS           @"grasslands"
 
 // Terrain Dictionary
-#define TERRAIN_DICT_TERRAINS           @"TerrainsOrderedByName"
+#define TERRAIN_DICT_TERRAINS_BY_NUMBER           @"TerrainsOrderedByNumber"
+#define TERRAIN_DICT_TERRAINS_BY_NAME             @"TerrainsByName"
 #define TERRAIN_DICT_DEFAULT            @"DefaultTerrain"
 
 // Higher scrollRate is slower; default is 9
@@ -103,18 +104,23 @@ typedef enum
     TerrainTileSide_West
 } TerrainTileSide;
 
+
+// This maps to the array positions
+// and may be useful for enumeration
 typedef enum
 {
-	TerrainTile_NWCorner = 0,
-    TerrainTile_NECorner = 1,
-    TerrainTile_SWCorner = 2,
-    TerrainTile_SECorner = 3
+	TileCorner_NW = 0,
+    TileCorner_NE = 1,
+    TileCorner_SW = 2,
+    TileCorner_SE = 3,
+    TileCorner_MAX
 } TerrainTileCorners;
 
 typedef enum
 {
 	TerrainBrush_Quarter,
     TerrainBrush_Half,
+    TerrainBrush_ThreeQuarter,
     TerrainBrush_Whole
 } TerrainBrushTypes;
 

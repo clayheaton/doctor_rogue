@@ -33,8 +33,6 @@
 		6F16CD82175673B5003FFC38 /* fog.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 6F16CD80175673B5003FFC38 /* fog.tsx */; };
 		6F16CD8517567998003FFC38 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F16CD8417567998003FFC38 /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6F16CD8817567AE9003FFC38 /* TSXTerrainSetParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F16CD8717567AE9003FFC38 /* TSXTerrainSetParser.m */; };
-		6F16CD8E17567F80003FFC38 /* TerrainTile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F16CD8D17567F7E003FFC38 /* TerrainTile.m */; };
-		6F16CD9117568100003FFC38 /* TerrainTilePositioned.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F16CD9017568100003FFC38 /* TerrainTilePositioned.m */; };
 		6F16CD9417582A35003FFC38 /* TerrainType.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F16CD9317582A34003FFC38 /* TerrainType.m */; };
 		6F1CEE81174522F800040A05 /* temp_dc-hd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */; };
 		6F1CEE82174522F800040A05 /* temp_dc-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1CEE80174522F800040A05 /* temp_dc-hd.png */; };
@@ -226,6 +224,7 @@
 		6FD7EDB61743E0F9001022EB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB21743E0F9001022EB /* README.md */; };
 		6FD7EDB71743E0F9001022EB /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB31743E0F9001022EB /* release_notes.md */; };
 		6FD7EDBA1743E344001022EB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FD7EDB81743E134001022EB /* libz.dylib */; };
+		6FE34663175E7E8500BD9418 /* Tile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE34662175E7E8500BD9418 /* Tile.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -259,10 +258,6 @@
 		6F16CD8417567998003FFC38 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		6F16CD8617567AE8003FFC38 /* TSXTerrainSetParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSXTerrainSetParser.h; sourceTree = "<group>"; };
 		6F16CD8717567AE9003FFC38 /* TSXTerrainSetParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSXTerrainSetParser.m; sourceTree = "<group>"; };
-		6F16CD8C17567F7E003FFC38 /* TerrainTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainTile.h; sourceTree = "<group>"; };
-		6F16CD8D17567F7E003FFC38 /* TerrainTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TerrainTile.m; sourceTree = "<group>"; };
-		6F16CD8F17568100003FFC38 /* TerrainTilePositioned.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainTilePositioned.h; sourceTree = "<group>"; };
-		6F16CD9017568100003FFC38 /* TerrainTilePositioned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TerrainTilePositioned.m; sourceTree = "<group>"; };
 		6F16CD9217582A34003FFC38 /* TerrainType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainType.h; sourceTree = "<group>"; };
 		6F16CD9317582A34003FFC38 /* TerrainType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TerrainType.m; sourceTree = "<group>"; };
 		6F1CEE7F174522F800040A05 /* temp_dc-hd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "temp_dc-hd.plist"; sourceTree = "<group>"; };
@@ -623,6 +618,8 @@
 		6FD7EDB31743E0F9001022EB /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
 		6FD7EDB41743E0F9001022EB /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		6FD7EDB81743E134001022EB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		6FE34661175E7E8400BD9418 /* Tile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tile.h; sourceTree = "<group>"; };
+		6FE34662175E7E8500BD9418 /* Tile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tile.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -666,10 +663,8 @@
 				6F16CD8717567AE9003FFC38 /* TSXTerrainSetParser.m */,
 				6F16CD9217582A34003FFC38 /* TerrainType.h */,
 				6F16CD9317582A34003FFC38 /* TerrainType.m */,
-				6F16CD8F17568100003FFC38 /* TerrainTilePositioned.h */,
-				6F16CD9017568100003FFC38 /* TerrainTilePositioned.m */,
-				6F16CD8C17567F7E003FFC38 /* TerrainTile.h */,
-				6F16CD8D17567F7E003FFC38 /* TerrainTile.m */,
+				6FE34661175E7E8400BD9418 /* Tile.h */,
+				6FE34662175E7E8500BD9418 /* Tile.m */,
 			);
 			name = "Random Map Generation";
 			sourceTree = "<group>";
@@ -1626,9 +1621,8 @@
 				6F16CD5E1754F939003FFC38 /* GameState.m in Sources */,
 				6F16CD8517567998003FFC38 /* GDataXMLNode.m in Sources */,
 				6F16CD8817567AE9003FFC38 /* TSXTerrainSetParser.m in Sources */,
-				6F16CD8E17567F80003FFC38 /* TerrainTile.m in Sources */,
-				6F16CD9117568100003FFC38 /* TerrainTilePositioned.m in Sources */,
 				6F16CD9417582A35003FFC38 /* TerrainType.m in Sources */,
+				6FE34663175E7E8500BD9418 /* Tile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

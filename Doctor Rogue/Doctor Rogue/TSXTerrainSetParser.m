@@ -7,9 +7,8 @@
 
 #import "TSXTerrainSetParser.h"
 #import "Constants.h"
-#import "TerrainTile.h"
-#import "TerrainTilePositioned.h"
 #import "TerrainType.h"
+#import "Tile.h"
 
 @implementation TSXTerrainSetParser
 
@@ -39,6 +38,7 @@
     }
     
     NSMutableArray *orderedTerrainTypes = [[NSMutableArray alloc] initWithCapacity:[terrainTypes count]];
+    NSMutableDictionary *terrainsByName = [[NSMutableDictionary alloc] initWithCapacity:[terrainTypes count]];
     
     // Extract the string value for the name of the terrain types
     for (int i = 0; i < terrainTypes.count; i++) {
@@ -49,14 +49,18 @@
         
         TerrainType *terType = [[TerrainType alloc] init];
         [terType setTerrainNumber:i];
-        [terType setName:[[[type attributes] objectAtIndex:0] stringValue]];
+        NSString *terName = [[[type attributes] objectAtIndex:0] stringValue];
+        [terType setName:terName];
         
+        [terrainsByName      setObject:terType forKey:terName];
         [orderedTerrainTypes addObject:terType];
     }
     
-    // You can extract these from the array using the number of the terrain as the index
-    [tileDictionary setObject:[NSArray arrayWithArray:orderedTerrainTypes] forKey:TERRAIN_DICT_TERRAINS];
+    // You can extract these from the array using the number of the terrain as the index or by name from the nested dictionary
+    [tileDictionary setObject:[NSArray arrayWithArray:orderedTerrainTypes] forKey:TERRAIN_DICT_TERRAINS_BY_NUMBER];
+    [tileDictionary setObject:[NSDictionary dictionaryWithDictionary:terrainsByName] forKey:TERRAIN_DICT_TERRAINS_BY_NAME];
     
+    terrainsByName      = nil;
     orderedTerrainTypes = nil;
     terrainTypes        = nil;
     
@@ -86,7 +90,7 @@
     
     NSArray *theTiles = [doc nodesForXPath:@"//tile" error:nil];
     
-    NSMutableArray *positionedTiles = [[NSMutableArray alloc] initWithCapacity:[theTiles count] * 4];
+    NSMutableArray *processedTiles = [[NSMutableArray alloc] initWithCapacity:[theTiles count]];
     
     BOOL findDefault   = YES;
     
@@ -104,37 +108,18 @@
         tileGID += 1; // 0 is blank
         NSArray         *cornerMarkers = [(NSString *)[[[tile attributes] objectAtIndex:1] stringValue] componentsSeparatedByString:@","];
         
-        TerrainTile *t = [[TerrainTile alloc] init];
+        Tile *t = [[Tile alloc] init];
         [t setTileGID:tileGID];
         
-        [t setCornerNWTarget:[[cornerMarkers objectAtIndex:0] unsignedIntValue]];
-        [t setCornerNETarget:[[cornerMarkers objectAtIndex:1] unsignedIntValue]];
-        [t setCornerSWTarget:[[cornerMarkers objectAtIndex:2] unsignedIntValue]];
-        [t setCornerSETarget:[[cornerMarkers objectAtIndex:3] unsignedIntValue]];
-         
-        [t establishBrushType];
+        [t setCornerNWTarget:[[cornerMarkers objectAtIndex:0] intValue]];
+        [t setCornerNETarget:[[cornerMarkers objectAtIndex:1] intValue]];
+        [t setCornerSWTarget:[[cornerMarkers objectAtIndex:2] intValue]];
+        [t setCornerSETarget:[[cornerMarkers objectAtIndex:3] intValue]];
+
+        [processedTiles addObject:t];
         
-        TerrainTilePositioned *tp1 = [[TerrainTilePositioned alloc] initWithTerrainTile:t andRotation:TerrainTileRotation_0];
-        
-        // Current tile set does not support rotated tiles.
-        
-        // TerrainTilePositioned *tp2 = [[TerrainTilePositioned alloc] initWithTerrainTile:t andRotation:TerrainTileRotation_90];
-        // TerrainTilePositioned *tp3 = [[TerrainTilePositioned alloc] initWithTerrainTile:t andRotation:TerrainTileRotation_180];
-        // TerrainTilePositioned *tp4 = [[TerrainTilePositioned alloc] initWithTerrainTile:t andRotation:TerrainTileRotation_270];
-        
-        // Put all possible tile positions into a large array - will will iterate through them after creating the dictionary,
-        // to set the allowed neighbor tiles
-        [positionedTiles addObject:tp1];
-        
-        // These can be used if we have a tileset that supports rotated tiles. We don't have that at the moment.
-        
-        // [positionedTiles addObject:tp2];
-        // [positionedTiles addObject:tp3];
-        // [positionedTiles addObject:tp4];
-        
-        // You'll be able to reference the positioned tiles in the array using TerrainTileRotation_x as the index
-        // HOWEVER!!  The current tile set lacks directional tiles. They should not be rotated.
-        [tileDictionary setObject:[NSArray arrayWithObject:tp1] forKey:[NSString stringWithFormat:@"%i", tileGID]];
+        // Set it in the main dictionary at a key == tileGID
+        [tileDictionary setObject:t forKey:[NSString stringWithFormat:@"%i", tileGID]];
         
         // Determine if this is the default tile type for the tileset.
         // It can be used to fill the _workingMap in the RandomMapGenerator
@@ -143,9 +128,7 @@
             for (GDataXMLElement *property in properties) {
                 if ([[[property attributeForName:@"name"] stringValue] isEqualToString:@"default_tile"]) {
                     if ([[[property attributeForName:@"value"] stringValue] isEqualToString:@"YES"]) {
-                        [tileDictionary setObject:tp1 forKey:TERRAIN_DICT_DEFAULT];
-                        [tp1 setIsDefaultTile:YES];
-                        [tp1 setDefaultTileTerrainType:[tp1 cornerNETarget]]; // all corners should be the same of the default
+                        [tileDictionary setObject:t forKey:TERRAIN_DICT_DEFAULT];
                         findDefault   = NO;
                         break;
                     }
@@ -156,35 +139,40 @@
     }
     
     // Add the tiles as brushes to the terrain types
-    for (TerrainTilePositioned *ttp in positionedTiles) {
+    for (Tile *t in processedTiles) {
         
-        NSArray *terrains = [ttp terrainTypes];
+        NSSet *terrains = [t terrainTypes];
         for (NSNumber *num in terrains) {
-            TerrainType *terType = [[tileDictionary objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:[num unsignedShortValue]];
-            switch ([ttp brushType]) {
-                case TerrainBrush_Whole:
+            TerrainType *terType = [[tileDictionary objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:[num unsignedShortValue]];
+            switch (t.terrainTypes.count) {
+                case 1:
                 {
-                    if (![[terType wholeBrushes] containsObject:ttp]) {
-                        [[terType wholeBrushes]  addObject:ttp];
+                    if (![[terType wholeBrushes] containsObject:t]) {
+                        [[terType wholeBrushes]  addObject:t];
                     }
                     break;
                 }
                     
-                case TerrainBrush_Half:
+                case 2:
                 {
-                    if (![[terType halfBrushes] containsObject:ttp]) {
-                        [[terType halfBrushes]  addObject:ttp];
-                    }
-                    break;
-                }
-                    
-                case TerrainBrush_Quarter:
-                {
-                    if ([ttp quarterBrushTerrainType] == [terType terrainNumber]) {
-                        if (![[terType quarterBrushes] containsObject:ttp]) {
-                            [[terType quarterBrushes]  addObject:ttp];
+                    // Determine whether it is quarter or three quarter for this terrain type
+                    if ([t cornersWithTerrainType:terType] == 3) {
+                        // Three quarter brush
+                        if (![[terType threeQuarterBrushes] containsObject:t]) {
+                            [[terType threeQuarterBrushes]  addObject:t];
+                        }
+                    } else if ([t cornersWithTerrainType:terType] == 2) {
+                        // Half brush
+                        if (![[terType halfBrushes] containsObject:t]) {
+                            [[terType halfBrushes]  addObject:t];
+                        }
+                    } else if ([t cornersWithTerrainType:terType] == 1) {
+                        // Quarter brush
+                        if (![[terType quarterBrushes] containsObject:t]) {
+                            [[terType quarterBrushes]  addObject:t];
                         }
                     }
+
                     break;
                 }
                     
@@ -195,20 +183,18 @@
     }
     
     
-    // Now that we have possible tile positions set in the dictionary, we will build the list of allowed neighbors for each position
+    // Now that we have possible tiles set in the dictionary, we will build the list of allowed neighbors for each 
     // by iterating through the array created in the loop above and the keys in the dictionary.
     
     for (NSString *key in tileDictionary) {
-        if ([key isEqualToString:TERRAIN_DICT_TERRAINS] || [key isEqualToString:TERRAIN_DICT_DEFAULT]) {
+        if ([key isEqualToString:TERRAIN_DICT_TERRAINS_BY_NUMBER] ||
+            [key isEqualToString:TERRAIN_DICT_TERRAINS_BY_NAME]   ||
+            [key isEqualToString:TERRAIN_DICT_DEFAULT]) {
             continue;
         }
         
-        // For each key, we have to process all four members of the array
-        NSArray *tileArray = [tileDictionary objectForKey:key];
-        
-        for (TerrainTilePositioned *tp in tileArray) {
-            [tp assignNeighborsFrom:positionedTiles];
-        }
+        Tile *t = [tileDictionary objectForKey:key];
+        [t assignNeighborsFrom:processedTiles];
         
     }
     
