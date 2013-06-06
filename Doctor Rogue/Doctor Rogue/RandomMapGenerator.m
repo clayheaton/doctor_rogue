@@ -232,16 +232,15 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     for (int i = 4; i < 9; i++) {
         for (int j = 4; j < 9; j++) {
             [self paintTile:water atPoint:ccp(j, i)];
-            [_protectedTiles addObject:[NSValue valueWithCGPoint:ccp(j,i)]];
         }
     }
     
-    [_protectedTiles removeAllObjects];
     
-    
-    [self paintTile:grass atPoint:ccp(6,6)];
-    [_protectedTiles addObject:[NSValue valueWithCGPoint:ccp(4,4)]];
-    
+    [self paintTile:grass atPoint:ccp(7,6)];
+    [self paintTile:grass atPoint:ccp(5,5)];
+    [self paintTile:grass atPoint:ccp(4,4)];
+    [self paintTile:grass atPoint:ccp(7,7)];
+    [self paintTile:grass atPoint:ccp(8,8)];
     
     /*
     [self paintTile:water atPoint:ccp(4,5)];
