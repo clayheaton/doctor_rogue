@@ -3,7 +3,6 @@
 //  Doctor Rogue
 //
 //  Created by Clay Heaton on 6/4/13.
-//  Copyright (c) 2013 The Perihelion Group. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -36,7 +35,9 @@
 
 - (BOOL) matchesTile:(Tile *)t onSide:(CardinalDirections)side;
 
-
+- (BOOL) isEqualToTile:(Tile *)t;
+- (unsigned short) numCornerMatchesWithTile:(Tile *)t;
+- (BOOL) isEqualToSignature:(NSString *)sig;
 
 - (BOOL) containsTerrainType:(TerrainType *)type;
 - (BOOL) containsTerrainTypeByNumber:(int)type;

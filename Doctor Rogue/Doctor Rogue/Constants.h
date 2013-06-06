@@ -33,7 +33,8 @@
 // Terrain Dictionary
 #define TERRAIN_DICT_TERRAINS_BY_NUMBER           @"TerrainsOrderedByNumber"
 #define TERRAIN_DICT_TERRAINS_BY_NAME             @"TerrainsByName"
-#define TERRAIN_DICT_DEFAULT            @"DefaultTerrain"
+#define TERRAIN_DICT_DEFAULT                      @"DefaultTerrain"
+#define TERRAIN_DICT_ALL_TILES_SET                @"AllTilesSet"
 
 // Higher scrollRate is slower; default is 9
 // Default scrollDamping is 0.85f;
@@ -136,6 +137,13 @@ typedef enum
     Southeast = 7,
     InvalidDirection = 8
 } CardinalDirections;
+
+typedef enum
+{
+	PrimaryDirections,
+    SecondaryDirections,
+    AllDirections
+} DirctionType;
 
 typedef enum
 {

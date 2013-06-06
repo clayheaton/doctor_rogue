@@ -118,6 +118,8 @@
 
         [processedTiles addObject:t];
         
+        // NSLog(@"signature: %@", [t signatureAsString]);
+        
         // Set it in the main dictionary at a key == tileGID
         [tileDictionary setObject:t forKey:[NSString stringWithFormat:@"%i", tileGID]];
         
@@ -137,6 +139,9 @@
         }
 
     }
+    
+    // Add a set of all of the tiles to the dictionary
+    [tileDictionary setObject:[NSSet setWithArray:processedTiles] forKey:TERRAIN_DICT_ALL_TILES_SET];
     
     // Add the tiles as brushes to the terrain types
     for (Tile *t in processedTiles) {
@@ -186,16 +191,8 @@
     // Now that we have possible tiles set in the dictionary, we will build the list of allowed neighbors for each 
     // by iterating through the array created in the loop above and the keys in the dictionary.
     
-    for (NSString *key in tileDictionary) {
-        if ([key isEqualToString:TERRAIN_DICT_TERRAINS_BY_NUMBER] ||
-            [key isEqualToString:TERRAIN_DICT_TERRAINS_BY_NAME]   ||
-            [key isEqualToString:TERRAIN_DICT_DEFAULT]) {
-            continue;
-        }
-        
-        Tile *t = [tileDictionary objectForKey:key];
+    for (Tile *t in [tileDictionary objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
         [t assignNeighborsFrom:processedTiles];
-        
     }
     
     doc = nil;

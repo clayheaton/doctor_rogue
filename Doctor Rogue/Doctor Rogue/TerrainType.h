@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "Constants.h"
 
+@class Tile;
+
 @interface TerrainType : NSObject
 
 
@@ -17,5 +19,8 @@
 @property (retain, readwrite) NSMutableArray *threeQuarterBrushes;
 @property (retain, readwrite) NSMutableArray *halfBrushes;
 @property (retain, readwrite) NSMutableArray *quarterBrushes;
+
+- (Tile *) wholeBrush;
+- (NSMutableSet *) allBrushes;
 
 @end

@@ -3,13 +3,35 @@
 //  Doctor Rogue
 //
 //  Created by Clay Heaton on 6/4/13.
-//  Copyright (c) 2013 The Perihelion Group. All rights reserved.
 //
 
 #import "Tile.h"
 #import "TerrainType.h"
 
 @implementation Tile
+
+#pragma mark Comparison for tables
+
+// Override so that iEqual: works in collections
+- (NSUInteger) hash
+{
+    NSUInteger val = 0;
+    val +=  _cornerNWTarget + 1;
+    val += (_cornerNETarget + 1) * 100;
+    val += (_cornerSWTarget + 1) * 10000;
+    val += (_cornerSETarget + 1) * 1000000;
+    
+    return val;
+}
+
+- (BOOL) isEqual:(id)object
+{
+    if ([object isKindOfClass:[Tile class]]) {
+        Tile *otherTile = object;
+        return [self isEqualToTile:otherTile];
+    } else
+        return NO;
+}
 
 #pragma mark Setup
 
@@ -61,6 +83,66 @@
 
 #pragma mark -
 #pragma mark General Queries
+
+- (BOOL) isEqualToTile:(Tile *)t
+{
+    return self.cornerNWTarget == t.cornerNWTarget &&
+           self.cornerNETarget == t.cornerNETarget &&
+           self.cornerSWTarget == t.cornerSWTarget &&
+           self.cornerSETarget == t.cornerSETarget;
+}
+
+- (unsigned short) numCornerMatchesWithTile:(Tile *)t
+{
+    unsigned short count = 0;
+    if (self.cornerNWTarget == t.cornerNWTarget) count += 1;
+    if (self.cornerNETarget == t.cornerNETarget) count += 1;
+    if (self.cornerSWTarget == t.cornerSWTarget) count += 1;
+    if (self.cornerSETarget == t.cornerSETarget) count += 1;
+    return count;
+}
+
+- (BOOL) isEqualToSignature:(NSString *)sig
+{
+    NSArray *sigParts = [sig componentsSeparatedByString:@"|"];
+    unsigned short val1, val2, val3, val4;
+    
+    // We're looking for missing values that are in the string
+    // because there is no adjacent tile (off map). In those cases
+    // we send in -1. If we detect a -1, we replace it with the
+    // appropriate value from this tile so that this tile will
+    // be considered a match.
+    
+    if ([[sigParts objectAtIndex:0] integerValue] == -1) {
+        val1 = self.cornerNWTarget;
+    } else {
+        val1 = [[sigParts objectAtIndex:0] unsignedIntValue];
+    }
+    
+    if ([[sigParts objectAtIndex:1] integerValue] == -1) {
+        val2 = self.cornerNETarget;
+    } else {
+        val2 = [[sigParts objectAtIndex:1] unsignedIntValue];
+    }
+    
+    if ([[sigParts objectAtIndex:2] integerValue] == -1) {
+        val3 = self.cornerSWTarget;
+    } else {
+        val3 = [[sigParts objectAtIndex:2] unsignedIntValue];
+    }
+    
+    if ([[sigParts objectAtIndex:3] integerValue] == -1) {
+        val4 = self.cornerSETarget;
+    } else {
+        val4 = [[sigParts objectAtIndex:3] unsignedIntValue];
+    }
+    
+    return val1 == self.cornerNWTarget &&
+           val2 == self.cornerNETarget &&
+           val3 == self.cornerSWTarget &&
+           val4 == self.cornerSETarget;
+}
+
 - (NSArray *) signature
 {
     return [NSArray arrayWithObjects:
@@ -73,7 +155,7 @@
 
 - (NSString *) signatureAsString
 {
-    return [NSString stringWithFormat:@"%i-%i-%i-%i", _cornerNWTarget, _cornerNETarget, _cornerSWTarget, _cornerSETarget];
+    return [NSString stringWithFormat:@"%i|%i|%i|%i", _cornerNWTarget, _cornerNETarget, _cornerSWTarget, _cornerSETarget];
 }
 
 - (NSSet *)    terrainTypes

@@ -7,6 +7,7 @@
 
 #import "TerrainType.h"
 
+
 @implementation TerrainType
 
 - (id) init
@@ -19,6 +20,21 @@
         _quarterBrushes        = [[NSMutableArray alloc] init];
     }
     return self;
+}
+
+- (Tile *) wholeBrush
+{
+    return [_wholeBrushes objectAtIndex:0];
+}
+
+- (NSMutableSet *)allBrushes
+{
+    NSMutableSet *set = [[NSMutableSet alloc] init];
+    [set addObjectsFromArray:_wholeBrushes];
+    [set addObjectsFromArray:_threeQuarterBrushes];
+    [set addObjectsFromArray:_halfBrushes];
+    [set addObjectsFromArray:_quarterBrushes];
+    return set;
 }
 
 @end
