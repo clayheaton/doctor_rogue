@@ -128,8 +128,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // Randomize here, into _workingMap
     
     NSMutableSet *lockedCoordinates = [[NSMutableSet alloc] init];
-    [self clayTestCreateOutdoorEntryPoint:lockedCoordinates];
-
+    // [self clayTestCreateOutdoorEntryPoint:lockedCoordinates];
+    
+    [self lakeTest];
 }
 
 - (void)clayTestCreateOutdoorEntryPoint:(NSMutableSet *)lockedCoordinates
@@ -190,7 +191,6 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
     Tile *dirt  = [self tileForTerrainType:@"dirt"]; //_landingStripTerrain
     [self paintTile:dirt atPoint:ccp(4,4)];
-    
 }
 
 - (void) lakeTest
