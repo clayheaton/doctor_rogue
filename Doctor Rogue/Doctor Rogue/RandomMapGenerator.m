@@ -86,55 +86,6 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 #pragma mark -
 #pragma mark Building the Allowed Neighbors Map
 
-/*  The _tileDict is an NSDictionary that contains a key for every tileGID that is part of the marked terrain
-    in the tileset for the indicated layer. Here, you'll see it's the @"terrain" layer, though we may want to
-    use this approach in the fog of war manager, too. The structure is built to support tiles that can rotate,
-    but the ones in this tile set currently cannot rotate, so the additional rotations are disabled, leaving
-    only the TileRotation_0.
- 
-    Let's say that you're interested in the tile with gID == 1. You would call the following to get the array
-    of Tile objects (again, only one at this time):
- 
-    NSArray *allTilesWithGID1 = [_tileDict objectforKey:@"1"];
-    
-    Then, to get the tile:
- 
-    Tile *theTile = [allTilesWithGID1 objectAtIndex:TileRotation_0]; //equivalent to index of 0
-    
-    The Tile class is a container class for the Tile class, meant to represent it in different rotations.
- 
-    The _tileDict also stores information about the terrain types. To get the TerrainType objects, call:
- 
-    NSArray *terrainTypes = [_tileDict objectForKey:TERRAIN_DICT_TERRAINS];
- 
-    terrainTypes will then contain an ordered list of the TerrainType objects in the tile set, as defined in the .tsx file. The index
-    number of the TerrainType corresponds to the number that the Tiles and Tile objects use to refer
-    to the type of terrain that is in each corner. For example, if you called:
- 
-    unsigned int terType = [theTile cornerNWTarget];
- 
-    you then could use terType to retrieve the TerrainType from the _tileDict, like this:
- 
-    TerrainType *myTerrain = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS] objectAtIndex:terType];
- 
-    When parsing the tiles, they are added to special "brush" arrays in the TerrainType objects. If you
-    are looking for a Tile object that has all 4 corners of one type of terrain, then you could just call:
- 
-    Tile *mySolidTile = [[myTerrain wholeBrushes] objectAtIndex:0];
- 
-    TerrainType objects also have halfBrushes and quarterBrushes arrays from which you can draw tiles. The purpose of brushes
-    is not to simply be tiles in an array. Eventually, there should be a TerrainBrush class that paints terrain in a manner
-    similar to how it is done in Tiled. Take a look here, around line 260, to see how it is implemented in Tiled:
-    https://github.com/bjorn/tiled/blob/master/src/tiled/terrainbrush.cpp
- 
-    What we probably need to do is to simply place down the whole tile for the desired brush, and then perform a tree search,
-    maybe a breadth-first search, to look for tiles that will match as closely as possible with the surrounding terrain.
- 
-    Finally, the Tile objects have a series of pass-through (to the Tile) methods that
-    provide more detail about whether they contain a certain type of terrain. See the header file for more info.
- 
- */
-
 - (void) parseTileset:(HKTMXTiledMap *)map
 {
     NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
@@ -147,6 +98,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     CCLOG(@"Tileset parsed");
 }
 
+// Each TerrainType object has a dictionary of transitions; an array of steps that must be taken to transition from itself to another terrain
 - (void) establishTerrainTransitions
 {
     NSArray *terrainTypes = [_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER];
@@ -161,6 +113,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         [tt findTransitionsTo:terrainTypes];
     }
 }
+
+
+
+
+
+
 
 # pragma mark -
 # pragma mark Clay's Randomization Testing
