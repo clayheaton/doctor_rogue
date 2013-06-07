@@ -150,7 +150,9 @@
     
     if ( tileFogID == _fogTileID) {
         NSString *fogKey = [_tileTypes objectForKey:[NSString stringWithFormat:@"%i", _fogTileID]];
-        return NSLocalizedString(fogKey, nil);
+        fogKey = NSLocalizedString(fogKey, nil);
+        fogKey = [fogKey stringByAppendingFormat:@" %@", NSStringFromCGPoint(coord)];
+        return fogKey;
     }
     
     // No black fog -- look for terrain description
@@ -161,7 +163,10 @@
         return @"";
     }
     
-    return NSLocalizedString(val, nil);
+    val = NSLocalizedString(val, nil);
+    val = [val stringByAppendingFormat:@" %@", NSStringFromCGPoint(coord)];
+    
+    return val;
     
 }
 

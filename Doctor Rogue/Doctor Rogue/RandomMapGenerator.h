@@ -27,6 +27,8 @@
 
 @property (retain, readwrite) NSMutableSet *processedTiles;
 
+@property (retain, readwrite) NSMutableArray *tilesToCheck;
+
 @property (assign, readwrite) CGSize mapSize;
 
 @property (assign, readwrite) unsigned int landingStripTerrain;

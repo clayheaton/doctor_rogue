@@ -127,6 +127,12 @@
     if (CGRectContainsPoint([self getChildByTag:kTag_UILayer_tempQuitButton].boundingBox, location)) {
         CCLOG(@"UI Layer Quit Button tapped.");
         [TestFlight passCheckpoint:@"Quit back to MainMenu from UILayer"];
+        
+        // Prevents a hang that happens when the player taps this twice quickly
+        [self getChildByTag:kTag_UILayer_tempQuitButton].visible = NO;
+        [self getChildByTag:kTag_UILayer_toggleGridButton].visible = NO;
+        
+        
         CCScene *mainMenu = [LoadingScene sceneWithTargetScene:LoadingTargetScene_MainMenuScene];
         
         // Pause might allow to fade out music, etc.

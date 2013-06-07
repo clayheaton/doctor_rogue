@@ -24,6 +24,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     if (self) {
         _edges          = [[NSMutableArray alloc] init];
         _protectedTiles = [[NSMutableSet alloc] init];
+        _tilesToCheck   = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -56,6 +57,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     if (isTest) {
         CCLOG(@"RandomMapGenerator detects a test map: skipping randomizer.");
+        return map;
     }
     
     CCLOG(@"RandomMapGenerator is generating the map.");
@@ -84,21 +86,38 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 }
 
 #pragma mark -
-#pragma mark Building the Allowed Neighbors Map
+#pragma mark Build the tile dictionary and terrain transitions
 
 - (void) parseTileset:(HKTMXTiledMap *)map
 {
     NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
     _tileDict             = [TSXTerrainSetParser parseTileset:tilesetName];
+    NSAssert(_tileDict != nil, @"The tileDict is nil so the map cannot be randomized.");
+    
+    
+    // _tileDict contains the following:
+    // 1. A key for each tile GID that returns the Tile object.
+    // 2. A key called TERRAIN_DICT_ALL_TILES_SET that returns a set of all of the tiles
+    // 3. A key called TERRAIN_DICT_DEFAULT that returns the Tile that represents the default tile for the tile set (set in the .tsx file)
+    // 4. A key called TERRAIN_DICT_TERRAINS_BY_NAME that returns a dictionary of the TerrainType objects, using their names as keys
+    // 5. A key called TERRAIN_DICT_TERRAINS_BY_NUMBER that returns an array of TerrainType objects, in order of their terrainNumber.
+    
+    // There are some utility methods in this file to help extract these more easily. For example:
+    // [self tileForTerrainType:@"water_shallow"] will return the tile that is completely water, useful for painting.
+    
     
     [self establishTerrainTransitions];
     
-    NSAssert(_tileDict != nil, @"The tileDict is nil so the map cannot be randomized.");
     
-    CCLOG(@"Tileset parsed");
+    // Each TerrainType object has a dictionary of transitions; an array of steps that must be taken to transition from itself to another terrain
+    // Each TerrainType is stored under a key that responds to the terrainNumber. For example:
+    // [[dirt transitions] objectForKey:@"2"] will return an NSArray of TerrainType objects that represents the steps that you must take
+    // to transition from dirt to the TerrainType with terrainNumber == 2.
+    
+    // More simply, you can call [dirt connections] to receive an array of the terrain types that have a direct connection to dirt.
+    // dirt itself will not be included in the array; it is assumed to connect to itself.
 }
 
-// Each TerrainType object has a dictionary of transitions; an array of steps that must be taken to transition from itself to another terrain
 - (void) establishTerrainTransitions
 {
     NSArray *terrainTypes = [_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER];
@@ -128,9 +147,139 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // Randomize here, into _workingMap
     
     NSMutableSet *lockedCoordinates = [[NSMutableSet alloc] init];
-    // [self clayTestCreateOutdoorEntryPoint:lockedCoordinates];
+    // [self clayTestCreateOutdoorEntryPoint:lockedCoordinates]; // currently not implemented
     
-    [self lakeTest];
+    //[self clayLakeTest];
+    [self clayRiverTest];
+}
+
+- (void) clayRiverTest {
+    Tile *water  = [self tileForTerrainType:@"water_shallow"];
+    
+    int randStartY = (rand() % (int)_mapSize.height * 0.25);
+    int randEndY   = (rand() % (int)_mapSize.height);
+    
+    if (randStartY < 0) {
+        randStartY = 0;
+    }
+    
+    if (randEndY < 0) {
+        randEndY = 0;
+    }
+    
+    int offset1 = rand() % 10;
+    int offset2 = rand() % 10;
+    
+    int offsetDir1 = rand() % 100;
+    int offsetDir2 = rand() % 100;
+    
+    if (offsetDir1 > 50) {
+        offsetDir1 = -1;
+    } else {
+        offsetDir1 = 1;
+    }
+    
+    if (offsetDir2 > 50) {
+        offsetDir2 = -1;
+    } else {
+        offsetDir2 = 1;
+    }
+    
+    offset1 *= offsetDir1;
+    offset2 *= offsetDir1;
+    
+    CGPoint start = ccp(0,randStartY);
+    CGPoint mid   = ccp((int)(_mapSize.width * 0.5) + offset1, (int)(_mapSize.height * 0.5) + offset2);
+    
+    CGPoint end   = ccp(_mapSize.width, randEndY);
+    
+    while (!CGPointEqualToPoint(start, mid)) {
+        [self paintTile:water atPoint:start];
+        
+        int rand1 = rand() % 100;
+        BOOL startingRandom = YES;
+        int randLimit = 20;
+        CGPoint next;
+        while (rand1 > randLimit) {
+            if (startingRandom) {
+                next = [self nextPointInDirection:(rand() % InvalidDirection) from:start];
+                startingRandom = NO;
+            } else {
+                next = [self nextPointInDirection:(rand() % InvalidDirection) from:next];
+            }
+            [self paintTile:water atPoint:next];
+            rand1 = rand() % 100;
+            randLimit += 5;
+        }
+        
+        if (start.x < mid.x) {
+            start.x += 1;
+        } else if (start.x > mid.x) {
+            start.x -= 1;
+        }
+        
+        if (start.y < mid.y) {
+            start.y += 1;
+        } else if (start.y > mid.y) {
+            start.y -= 1;
+        }
+    }
+    
+    while (!CGPointEqualToPoint(start, end)) {
+        [self paintTile:water atPoint:start];
+        
+        int rand1 = rand() % 100;
+        BOOL startingRandom = YES;
+        int randLimit = 20;
+        CGPoint next;
+        while (rand1 > randLimit) {
+            if (startingRandom) {
+                next = [self nextPointInDirection:(rand() % InvalidDirection) from:start];
+                startingRandom = NO;
+            } else {
+                next = [self nextPointInDirection:(rand() % InvalidDirection) from:next];
+            }
+            [self paintTile:water atPoint:next];
+            rand1 = rand() % 100;
+            randLimit += 5;
+        }
+        
+        if (start.x < end.x) {
+            start.x += 1;
+        } else if (start.x > end.x) {
+            start.x -= 1;
+        }
+        
+        if (start.y < end.y) {
+            start.y += 1;
+        } else if (start.y > end.y) {
+            start.y -= 1;
+        }
+    }
+}
+
+- (void) clayLakeTest
+{
+    // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
+    Tile *water  = [self tileForTerrainType:@"water_shallow"]; //_landingStripTerrain
+    Tile *grass  = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
+    
+    // Make a big lake
+    for (int i = 4; i < 9; i++) {
+        for (int j = 4; j < 9; j++) {
+            [self paintTile:water atPoint:ccp(j, i)];
+        }
+    }
+    
+    // Fill some of it in with grass
+    [self paintTile:grass atPoint:ccp(7,6)];
+    [self paintTile:grass atPoint:ccp(5,5)];
+    [self paintTile:grass atPoint:ccp(4,4)];
+    [self paintTile:grass atPoint:ccp(7,7)];
+    [self paintTile:grass atPoint:ccp(8,8)];
+    
+    // Ability to protect tiles is here if needed
+    //[_protectedTiles removeAllObjects];
 }
 
 - (void)clayTestCreateOutdoorEntryPoint:(NSMutableSet *)lockedCoordinates
@@ -155,7 +304,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))],
                               [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))]
                               , nil];
-           break; 
+            break;
         }
             
         case 1:
@@ -181,9 +330,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         {
             extraTile      = ccpAdd(start, ccp(1,0));
             coordsToIgnore = [NSSet setWithObjects:
-                           [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))],
-                           [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))]
-                           , nil];
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))],
+                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))]
+                              , nil];
             break;
         }
     }
@@ -193,32 +342,18 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     [self paintTile:dirt atPoint:ccp(4,4)];
 }
 
-- (void) lakeTest
-{
-    // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
-    Tile *water  = [self tileForTerrainType:@"water_shallow"]; //_landingStripTerrain
-    Tile *grass  = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
-    
-    // Make a big lake
-    for (int i = 4; i < 9; i++) {
-        for (int j = 4; j < 9; j++) {
-            [self paintTile:water atPoint:ccp(j, i)];
-        }
-    }
-    
-    // Fill some of it in with grass
-    [self paintTile:grass atPoint:ccp(7,6)];
-    [self paintTile:grass atPoint:ccp(5,5)];
-    [self paintTile:grass atPoint:ccp(4,4)];
-    [self paintTile:grass atPoint:ccp(7,7)];
-    [self paintTile:grass atPoint:ccp(8,8)];
-    
-    // Ability to protect tiles is here if needed
-    //[_protectedTiles removeAllObjects];
-}
+
+#pragma mark -
+#pragma mark Painting Tiles onto the Map
 
 - (void) paintTile:(Tile *)tile atPoint:(CGPoint)target
 {
+    
+    // Stop if the target is invalid
+    if (![self isValid:target]) {
+        return;
+    }
+    
     // the single specified tile
     [self addTile:tile toWorkingMapAtPoint:target];
     
@@ -245,6 +380,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         
         [self addTile:success toWorkingMapAtPoint:[[diagonals objectAtIndex:i] CGPointValue]];
+        [self putNeighborsOf:[[diagonals objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
     }
     
     // Try placing the straights.
@@ -262,6 +398,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         
         [self addTile:success toWorkingMapAtPoint:[[straights objectAtIndex:i] CGPointValue]];
+        [self putNeighborsOf:[[straights objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
     }
     
     
@@ -279,8 +416,23 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
         [self addTile:success toWorkingMapAtPoint:[[failures objectAtIndex:i] CGPointValue]];
     }
+    
+    while (_tilesToCheck.count > 0) {
+        CGPoint mapCoord = [[_tilesToCheck objectAtIndex:0] CGPointValue];
+        Tile *t = [self tileAt:mapCoord];
+        NSString *requiredSignature = [self signatureForMapCoord:mapCoord];
+        [_tilesToCheck removeObjectAtIndex:0];
+        
+        if ([t isEqualToSignature:requiredSignature]) {
+            continue;
+        } else {
+            [self paintTile:tile atPoint:mapCoord];
+        }
+    }
 
 }
+
+
 
 
 - (Tile *) findTileFor:(CGPoint)coord withAnchorCoord:(CGPoint)anchor
@@ -302,13 +454,26 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
             
             if (!w) {
-                nw = -1;
+                // Edge
+                w = [self tileAt:[self nextPointInDirection:North from:coord]];
+                
+                if (!w) {
+                    // Corner
+                    nw = -1;
+                } else {
+                    nw = [w cornerSWTarget];
+                }
             } else {
                 nw = [w cornerNETarget];
             }
             
             if (!e) {
-                ne = -1;
+                e = [self tileAt:[self nextPointInDirection:North from:coord]];
+                if (!e) {
+                    ne = -1;
+                } else {
+                    ne = [e cornerSETarget];
+                }
             } else {
                 ne = [e cornerNWTarget];
             }
@@ -324,13 +489,23 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
             
             if (!n) {
-                ne = -1;
+                n = [self tileAt:[self nextPointInDirection:East from:coord]];
+                if (!n) {
+                    ne = -1;
+                } else {
+                    ne = [n cornerNWTarget];
+                }
             } else {
                 ne = [n cornerSETarget];
             }
             
             if (!s) {
-                se = -1;
+                s = [self tileAt:[self nextPointInDirection:East from:coord]];
+                if (!s) {
+                    se = -1;
+                } else {
+                    se = [s cornerSWTarget];
+                }
             } else {
                 se = [s cornerNETarget];
             }
@@ -346,13 +521,23 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
             
             if (!w) {
-                sw = -1;
+                w = [self tileAt:[self nextPointInDirection:South from:coord]];
+                if (!w) {
+                    sw = -1;
+                } else {
+                    sw = [w cornerNWTarget];
+                }
             } else {
                 sw = [w cornerSETarget];
             }
             
             if (!e) {
-                se = -1;
+                e = [self tileAt:[self nextPointInDirection:South from:coord]];
+                if (!e) {
+                    se = -1;
+                } else {
+                    se = [e cornerNETarget];
+                }
             } else {
                 se = [e cornerSWTarget];
             }
@@ -368,13 +553,23 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
             
             if (!n) {
-                nw = -1;
+                n = [self tileAt:[self nextPointInDirection:West from:coord]];
+                if (!n) {
+                    nw = -1;
+                } else {
+                    nw = [n cornerNETarget];
+                }
             } else {
                 nw = [n cornerSWTarget];
             }
             
             if (!s) {
-                sw = -1;
+                s = [self tileAt:[self nextPointInDirection:West from:coord]];
+                if (!s) {
+                    sw = -1;
+                } else {
+                    sw = [s cornerSETarget];
+                }
             } else {
                 sw = [s cornerNWTarget];
             }
@@ -389,6 +584,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
             Tile *nwTile = [self tileAt:[self nextPointInDirection:Northwest from:coord]];
             
+            // If we've gone NW and NW exists, there WILL be a tile to the east and the south
             if (!e) {
                 ne = -1;
             } else {
@@ -401,8 +597,20 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                 sw = [s cornerNWTarget];
             }
             
+            // There may not be a tile to the NW, so we can check n then west
+            // If neither are there, we are in the corner
             if (!nwTile) {
-                nw = -1;
+                nwTile = [self tileAt:[self nextPointInDirection:North from:coord]];
+                if (nwTile) {
+                    nw = [nwTile cornerSWTarget];
+                } else {
+                    nwTile = [self tileAt:[self nextPointInDirection:West from:coord]];
+                    if (nwTile) {
+                        nw = [nwTile cornerNETarget];
+                    } else {
+                        nw = -1;
+                    }
+                }
             } else {
                 nw = [nwTile cornerSETarget];
             }
@@ -430,7 +638,17 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             }
             
             if (!neTile) {
-                ne = -1;
+                neTile = [self tileAt:[self nextPointInDirection:North from:coord]];
+                if (neTile) {
+                    ne = [neTile cornerSETarget];
+                } else {
+                    neTile = [self tileAt:[self nextPointInDirection:East from:coord]];
+                    if (neTile) {
+                        ne = [neTile cornerNWTarget];
+                    } else {
+                        ne = -1;
+                    }
+                }
             } else {
                 ne = [neTile cornerSWTarget];
             }
@@ -458,7 +676,17 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             }
             
             if (!swTile) {
-                sw = -1;
+                swTile = [self tileAt:[self nextPointInDirection:South from:coord]];
+                if (swTile) {
+                    sw = [swTile cornerNWTarget];
+                } else {
+                    swTile = [self tileAt:[self nextPointInDirection:West from:coord]];
+                    if (swTile) {
+                        sw = [swTile cornerSETarget];
+                    } else {
+                        sw = -1;
+                    }
+                }
             } else {
                 sw = [swTile cornerNETarget];
             }
@@ -486,7 +714,17 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             }
             
             if (!seTile) {
-                se = -1;
+                seTile = [self tileAt:[self nextPointInDirection:South from:coord]];
+                if (seTile) {
+                    se = [seTile cornerNETarget];
+                } else {
+                    seTile = [self tileAt:[self nextPointInDirection:East from:coord]];
+                    if (seTile) {
+                        se = [seTile cornerSWTarget];
+                    } else {
+                        se = -1;
+                    }
+                }
             } else {
                 se = [seTile cornerNWTarget];
             }
@@ -498,9 +736,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
     }
     
-    
-    
     NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
+    
+    // We may not need to change the tile, if the existing tile matches the signature
+    if ([[self tileAt:coord] isEqualToSignature:signature]) {
+        return [self tileAt:coord];
+    }
     
     // Use the signature to search through all of the tiles
     for (Tile *t in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
@@ -927,6 +1168,52 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 - (void) addTile:(Tile *)tile toWorkingMapAtPoint:(CGPoint)coord
 {
     [[_workingMap objectAtIndex:coord.x] setObject:tile atIndex:coord.y];
+}
+
+- (NSString *)signatureForMapCoord:(CGPoint)coord
+{
+    int nw, ne, sw, se;
+    
+    Tile *n = [self tileAt:[self nextPointInDirection:North from:coord]];
+    Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
+    Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
+    Tile *w = [self tileAt:[self nextPointInDirection:West from:coord]];
+    
+    // North Tile exists; assign nw and ne
+    if (n) {
+        nw = [n cornerSWTarget];
+        ne = [n cornerSETarget];
+    } else {
+        if (w) {
+            nw = [w cornerNETarget];
+        } else {
+            nw = -1;
+        }
+        if (e) {
+            ne = [e cornerNWTarget];
+        } else {
+            ne = -1;
+        }
+    }
+    
+    if (s) {
+        sw = [s cornerNWTarget];
+        se = [s cornerNETarget];
+    } else {
+        if (w) {
+            sw = [w cornerSETarget];
+        } else {
+            sw = -1;
+        }
+        if (e) {
+            se = [e cornerSWTarget];
+        } else {
+            se = -1;
+        }
+    }
+    
+    NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
+    return signature;
 }
 
 #pragma mark -
