@@ -6,9 +6,14 @@
 //
 
 #import "TerrainType.h"
-
+#import "Tile.h"
 
 @implementation TerrainType
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%i: %@", self.terrainNumber, self.name];
+}
 
 - (id) init
 {
@@ -18,6 +23,8 @@
         _threeQuarterBrushes   = [[NSMutableArray alloc] init];
         _halfBrushes           = [[NSMutableArray alloc] init];
         _quarterBrushes        = [[NSMutableArray alloc] init];
+        _connections           = [[NSMutableSet alloc] init];
+        _transitions           = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -35,6 +42,123 @@
     [set addObjectsFromArray:_halfBrushes];
     [set addObjectsFromArray:_quarterBrushes];
     return set;
+}
+
+#pragma mark -
+#pragma mark Establishing connections
+- (void) establishConnections:(NSArray *)terrainTypes
+{
+    for (Tile *t in [self allBrushes]) {
+        for (NSNumber *num in [t terrainTypes]) {
+            TerrainType *tt = [terrainTypes objectAtIndex:[num intValue]];
+            if (tt.terrainNumber == self.terrainNumber) {
+                continue;
+            }
+            [_connections addObject:tt];
+        }
+    }
+}
+
+#pragma mark -
+#pragma mark Establishing transitions
+- (void) findTransitionsTo:(NSArray *)terrainTypes
+{
+    //NSLog(@" ");
+    //NSLog(@"%@ is establishing transitions", self);
+    
+    for (TerrainType *tt in terrainTypes) {
+        //NSLog(@" ");
+        //NSLog(@"-- Looking for path to %@ --", tt);
+        if (tt.terrainNumber == self.terrainNumber) {
+            //NSLog(@"     Don't need to find myself duh.");
+            continue;
+        }
+        if ([_connections member:tt]) {
+            //NSLog(@"     Already directly connected to %@", tt);
+            [_transitions setObject:[NSArray arrayWithObject:tt] forKey:[NSString stringWithFormat:@"%i",[tt terrainNumber]]];
+            continue;
+        }
+    
+        //NSLog(@"     Searching for a path through direct connections.");
+        NSArray    *bestPath  = nil;
+        int  lowestCost = NSIntegerMax;
+        
+        
+        for (TerrainType *connection in _connections) {
+            int thisCost = -1; // Initialize to value that represents no available path.
+            
+            NSMutableSet *closed = [[NSMutableSet alloc] init];
+            [closed removeAllObjects];
+            [closed addObject:connection];
+            [closed addObject:self];
+            
+            NSMutableArray *workingPath = [[NSMutableArray alloc] init];
+            [workingPath addObject:connection];
+            
+            NSMutableArray *path = [self pathTo:tt
+                                        through:connection
+                                    workingPath:workingPath
+                                      closedSet:closed];
+            
+            if (!path) {
+                // NSLog(@"     No path found through %@", connection.name);
+                continue;
+            }
+            
+            thisCost = [path count];
+            
+            // NSLog(@"     Located path with cost %i: %@", thisCost, path);
+            if (thisCost != -1 && thisCost < lowestCost) {
+                lowestCost = thisCost;
+                bestPath = path;
+            }
+        }
+        
+        // NSLog(@"     Best path to %@ has cost %i: %@", tt.name, lowestCost, bestPath);
+        
+        [_transitions setObject:bestPath forKey:[NSString stringWithFormat:@"%i",[tt terrainNumber]]];
+    }
+    
+}
+
+- (NSMutableArray *)pathTo:(TerrainType *)endPoint
+                   through:(TerrainType *)connection
+               workingPath:(NSMutableArray *)workingPath
+                 closedSet:(NSMutableSet *)closed
+{
+    // Direct connection through this connection
+    if ([[connection connections] member:endPoint]) {
+        [workingPath addObject:endPoint];
+        return workingPath;
+    }
+    
+    NSMutableArray  *bestPath  = nil;
+    int  lowestCost = NSIntegerMax;
+    
+    for (TerrainType *tt in [connection connections]) {
+        int thisCost = -1;
+        if ([closed member:tt]) {
+            continue;
+        }
+        
+        [closed addObject:tt];
+        [workingPath addObject:tt];
+        
+        NSMutableArray *path = [self pathTo:endPoint
+                                    through:tt
+                                workingPath:workingPath
+                                  closedSet:closed];
+        if (!path) {
+            [workingPath removeObject:tt];
+            continue;
+        }
+        thisCost = [path count];
+        if (thisCost != -1 && thisCost < lowestCost) {
+            lowestCost = thisCost;
+            bestPath   = path;
+        }
+    }
+    return bestPath;
 }
 
 @end

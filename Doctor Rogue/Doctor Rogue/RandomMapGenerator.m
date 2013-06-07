@@ -140,9 +140,26 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     NSString *tilesetName = [[map layerNamed:@"terrain"]tileset].name; // Make this so that we can pass in other layer names
     _tileDict             = [TSXTerrainSetParser parseTileset:tilesetName];
     
+    [self establishTerrainTransitions];
+    
     NSAssert(_tileDict != nil, @"The tileDict is nil so the map cannot be randomized.");
     
     CCLOG(@"Tileset parsed");
+}
+
+- (void) establishTerrainTransitions
+{
+    NSArray *terrainTypes = [_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER];
+    
+    for (int i = 0; i < terrainTypes.count; i++) {
+        TerrainType *tt = [terrainTypes objectAtIndex:i];
+        [tt establishConnections:terrainTypes];
+    }
+    
+    for (int i = 0; i < terrainTypes.count; i++) {
+        TerrainType *tt = [terrainTypes objectAtIndex:i];
+        [tt findTransitionsTo:terrainTypes];
+    }
 }
 
 # pragma mark -
@@ -153,19 +170,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // Randomize here, into _workingMap
     
     NSMutableSet *lockedCoordinates = [[NSMutableSet alloc] init];
-    
     [self clayTestCreateOutdoorEntryPoint:lockedCoordinates];
-    
-    // Test by making a river from left to right and filling in the neighboring tiles
-    
-    /*
-    Tile *t = [self tileWithID:23];
-    [self placeTile:t atCoord:ccp(1,1)];
-    */
-    
-    
-    
-    
 
 }
 
@@ -225,37 +230,33 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
     
     // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
+    Tile *dirt  = [self tileForTerrainType:@"dirt"]; //_landingStripTerrain
+    [self paintTile:dirt atPoint:ccp(4,4)];
+    
+}
+
+- (void) lakeTest
+{
+    // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
     Tile *water  = [self tileForTerrainType:@"water_shallow"]; //_landingStripTerrain
     Tile *grass  = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
     
-    
+    // Make a big lake
     for (int i = 4; i < 9; i++) {
         for (int j = 4; j < 9; j++) {
             [self paintTile:water atPoint:ccp(j, i)];
         }
     }
     
-    
+    // Fill some of it in with grass
     [self paintTile:grass atPoint:ccp(7,6)];
     [self paintTile:grass atPoint:ccp(5,5)];
     [self paintTile:grass atPoint:ccp(4,4)];
     [self paintTile:grass atPoint:ccp(7,7)];
     [self paintTile:grass atPoint:ccp(8,8)];
     
-    /*
-    [self paintTile:water atPoint:ccp(4,5)];
-    [_protectedTiles addObject:[NSValue valueWithCGPoint:ccp(5,5)]];
-
-    
-    [self paintTile:water atPoint:ccp(5,5)];
-    [_protectedTiles addObject:[NSValue valueWithCGPoint:ccp(5,5)]];
-    
-    [self paintTile:water atPoint:ccp(5,5)];
-    [_protectedTiles addObject:[NSValue valueWithCGPoint:ccp(5,5)]];
-    */
-     
-    // Only protect tiles for this operation
-    [_protectedTiles removeAllObjects];
+    // Ability to protect tiles is here if needed
+    //[_protectedTiles removeAllObjects];
 }
 
 - (void) paintTile:(Tile *)tile atPoint:(CGPoint)target
@@ -269,6 +270,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     NSMutableArray *straights = [[NSMutableArray alloc] initWithCapacity:4];
     [self putNeighborsOf:target intoQueue:straights directions:PrimaryDirections];
     
+    NSMutableArray *failures = [[NSMutableArray alloc] init];
+    
     // Try placing the diagonals.
     for (int i = 0; i < diagonals.count; i++) {
         // Leave this tile along
@@ -276,9 +279,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             continue;
         }
         
-        Tile *success = [self findTileFor:[[diagonals objectAtIndex:i] CGPointValue] isDiagonal:YES fromAnchorCoord:target];
+        Tile *success = [self findTileFor:[[diagonals objectAtIndex:i] CGPointValue] withAnchorCoord:target];
         if (!success) {
             CCLOG(@"Failed to find a tile for %@", NSStringFromCGPoint([[diagonals objectAtIndex:i] CGPointValue]));
+            [failures addObject:[diagonals objectAtIndex:i]];
             continue;
         }
         
@@ -287,31 +291,47 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     // Try placing the straights.
     for (int i = 0; i < straights.count; i++) {
-        // Leave this tile along
+        // Leave this tile alone
         if ([_protectedTiles member:[straights objectAtIndex:i]]) {
             continue;
         }
         
-        Tile *success = [self findTileFor:[[straights objectAtIndex:i] CGPointValue] isDiagonal:NO fromAnchorCoord:target];
+        Tile *success = [self findTileFor:[[straights objectAtIndex:i] CGPointValue] withAnchorCoord:target];
         if (!success) {
             CCLOG(@"Failed to find a tile for %@", NSStringFromCGPoint([[straights objectAtIndex:i] CGPointValue]));
+            [failures addObject:[diagonals objectAtIndex:i]];
             continue;
         }
         
         [self addTile:success toWorkingMapAtPoint:[[straights objectAtIndex:i] CGPointValue]];
     }
+    
+    
+    // Retry the failures
+    for (int i = 0; i < failures.count; i++) {
+        if ([_protectedTiles member:[failures objectAtIndex:i]]) {
+            continue;
+        }
+        
+        Tile *success = [self findTileFor:[[failures objectAtIndex:i] CGPointValue] withAnchorCoord:target];
+        if (!success) {
+            CCLOG(@"AGAIN failed to find a tile for %@", NSStringFromCGPoint([[failures objectAtIndex:i] CGPointValue]));
+            continue;
+        }
+    
+        [self addTile:success toWorkingMapAtPoint:[[failures objectAtIndex:i] CGPointValue]];
+    }
 
 }
 
 
-- (Tile *) findTileFor:(CGPoint)coord isDiagonal:(BOOL)isDiagonal fromAnchorCoord:(CGPoint)anchor
+- (Tile *) findTileFor:(CGPoint)coord withAnchorCoord:(CGPoint)anchor
 {
     
     // Build the integers that we need to make the signature we will use to search for a tile
     CardinalDirections directionFromAnchor = [self directionOfCoord:coord relativeToCoord:anchor];
     
     int nw, ne, sw, se;
-    
     
     switch (directionFromAnchor) {
         case North:
@@ -516,9 +536,11 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case InvalidDirection:
         {
-            return nil;
+            NSAssert(directionFromAnchor != InvalidDirection, @"Invalid Direction");
         }
     }
+    
+    
     
     NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
     

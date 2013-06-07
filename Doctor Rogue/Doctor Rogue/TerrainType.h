@@ -20,7 +20,14 @@
 @property (retain, readwrite) NSMutableArray *halfBrushes;
 @property (retain, readwrite) NSMutableArray *quarterBrushes;
 
+@property (retain, readwrite) NSMutableSet *connections;
+
+@property (retain, readwrite) NSMutableDictionary *transitions;
+
 - (Tile *) wholeBrush;
 - (NSMutableSet *) allBrushes;
+
+- (void) findTransitionsTo:(NSArray *)terrainTypes;
+- (void) establishConnections:(NSArray *)terrainTypes;
 
 @end
