@@ -30,4 +30,6 @@
 - (void) findTransitionsTo:(NSArray *)terrainTypes;
 - (void) establishConnections:(NSArray *)terrainTypes;
 
+- (unsigned short) costOfTransitionTo:(unsigned short)terrainNumber;
+
 @end

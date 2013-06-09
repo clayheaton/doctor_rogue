@@ -150,8 +150,15 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // [self clayTestCreateOutdoorEntryPoint:lockedCoordinates]; // currently not implemented
     
     //[self clayLakeTest];
-    [self clayRiverTest];
+    //[self clayRiverTest];
+    [self clayDirtTest];
 }
+
+- (void) clayDirtTest
+{
+    Tile *dirt  = [self tileForTerrainType:@"brick"];
+    [self paintTile:dirt atPoint:ccp(5,5)];
+}   
 
 - (void) clayRiverTest {
     Tile *water  = [self tileForTerrainType:@"water_shallow"];
@@ -354,6 +361,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         return;
     }
     
+    [_protectedTiles addObject:[NSValue valueWithCGPoint:target]];
+    
     // the single specified tile
     [self addTile:tile toWorkingMapAtPoint:target];
     
@@ -379,8 +388,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             continue;
         }
         
+        [_protectedTiles addObject:[diagonals objectAtIndex:i]];
+        // [self paintTile:success atPoint:[[diagonals objectAtIndex:i] CGPointValue]];
         [self addTile:success toWorkingMapAtPoint:[[diagonals objectAtIndex:i] CGPointValue]];
-        [self putNeighborsOf:[[diagonals objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
+        // [self putNeighborsOf:[[diagonals objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
     }
     
     // Try placing the straights.
@@ -397,11 +408,18 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             continue;
         }
         
+        [_protectedTiles addObject:[straights objectAtIndex:i]];
+        // [self paintTile:success atPoint:[[straights objectAtIndex:i] CGPointValue]];
         [self addTile:success toWorkingMapAtPoint:[[straights objectAtIndex:i] CGPointValue]];
-        [self putNeighborsOf:[[straights objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
+        // [self putNeighborsOf:[[straights objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
     }
     
+    NSArray *protected = [_protectedTiles allObjects];
+    for (int i = 0; i < [protected count]; i++) {
+        [self putNeighborsOf:[[protected objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
+    }
     
+    /*
     // Retry the failures
     for (int i = 0; i < failures.count; i++) {
         if ([_protectedTiles member:[failures objectAtIndex:i]]) {
@@ -416,24 +434,42 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
         [self addTile:success toWorkingMapAtPoint:[[failures objectAtIndex:i] CGPointValue]];
     }
+     */
     
+
     while (_tilesToCheck.count > 0) {
-        CGPoint mapCoord = [[_tilesToCheck objectAtIndex:0] CGPointValue];
-        Tile *t = [self tileAt:mapCoord];
-        NSString *requiredSignature = [self signatureForMapCoord:mapCoord];
+        NSValue *mapVal = [_tilesToCheck objectAtIndex:0];
+        CGPoint mapCoord = [mapVal CGPointValue];
         [_tilesToCheck removeObjectAtIndex:0];
         
+        if ([_protectedTiles member:mapVal]) {
+            continue;
+        }
+        
+        Tile *t = [self tileAt:mapCoord];
+        NSString *requiredSignature = [self signatureForMapCoord:mapCoord];
+        
         if ([t isEqualToSignature:requiredSignature]) {
+            [_protectedTiles addObject:mapVal];
             continue;
         } else {
-            [self paintTile:tile atPoint:mapCoord];
+            
+            // Find what tile matches the signature
+            NSString *sig = [self signatureForMapCoord:mapCoord];
+            for (Tile *til in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
+                if ([til isEqualToSignature:sig]) {
+                    [self addTile:til toWorkingMapAtPoint:mapCoord];
+                    [_protectedTiles addObject:mapVal];
+                    [self putNeighborsOf:mapCoord intoQueue:_tilesToCheck directions:AllDirections];
+                    CCLOG(@"here");
+                    break;
+                }
+            }
+            
         }
     }
-
+     
 }
-
-
-
 
 - (Tile *) findTileFor:(CGPoint)coord withAnchorCoord:(CGPoint)anchor
 {
@@ -442,10 +478,17 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     CardinalDirections directionFromAnchor = [self directionOfCoord:coord relativeToCoord:anchor];
     
     int nw, ne, sw, se;
+    BOOL nwMustMatch = NO;
+    BOOL neMustMatch = NO;
+    BOOL swMustMatch = NO;
+    BOOL seMustMatch = NO;
     
     switch (directionFromAnchor) {
         case North:
         {
+            seMustMatch = YES;
+            swMustMatch = YES;
+            
             Tile *s = [self tileAt:anchor];
             sw = [s cornerNWTarget];
             se = [s cornerNETarget];
@@ -481,6 +524,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case East:
         {
+            nwMustMatch = YES;
+            swMustMatch = YES;
+            
             Tile *w = [self tileAt:anchor];
             nw = [w cornerNETarget];
             sw = [w cornerSETarget];
@@ -513,6 +559,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case South:
         {
+            nwMustMatch = YES;
+            neMustMatch = YES;
+            
             Tile *n = [self tileAt:anchor];
             nw = [n cornerSWTarget];
             ne = [n cornerSETarget];
@@ -545,6 +594,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case West:
         {
+            neMustMatch = YES;
+            seMustMatch = YES;
+            
             Tile *e = [self tileAt:anchor];
             ne = [e cornerNWTarget];
             se = [e cornerSWTarget];
@@ -577,6 +629,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case Northwest:
         {
+            seMustMatch = YES;
+            
             Tile *seTile = [self tileAt:anchor];
             se = [seTile cornerNWTarget];
             
@@ -618,6 +672,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case Northeast:
         {
+            swMustMatch = YES;
+            
             Tile *swTile = [self tileAt:anchor];
             sw = [swTile cornerNETarget];
             
@@ -656,6 +712,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case Southwest:
         {
+            neMustMatch = YES;
+            
             Tile *neTile = [self tileAt:anchor];
             ne = [neTile cornerSWTarget];
             
@@ -694,6 +752,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
         case Southeast:
         {
+            nwMustMatch = YES;
+            
             Tile *nwTile = [self tileAt:anchor];
             nw = [nwTile cornerSETarget];
             
@@ -743,14 +803,62 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         return [self tileAt:coord];
     }
     
+    int lowestCost = INT_MAX;
+    Tile *bestCandidate = nil;
+    
     // Use the signature to search through all of the tiles
     for (Tile *t in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
+        
+        // check for mustMatch
+        if (nwMustMatch && [t cornerNWTarget] != nw) {
+            continue;
+        }
+        if (neMustMatch && [t cornerNETarget] != ne) {
+            continue;
+        }
+        if (swMustMatch && [t cornerSWTarget] != sw) {
+            continue;
+        }
+        if (seMustMatch && [t cornerSETarget] != se) {
+            continue;
+        }
+        
+        // CCLOG(@"[t signature]: %@", [t signatureAsString]);
+        
+        // Exact Match
         if ([t isEqualToSignature:signature]) {
+            // CCLOG(@"Exact Match!");
             return t;
         }
+        
+        // There was no exact match; look for the lowest cost match.
+        // Calculate cost
+        int nwCost = [self costFrom:nw toTerrain:[t cornerNWTarget]];
+        int neCost = [self costFrom:ne toTerrain:[t cornerNETarget]];
+        int swCost = [self costFrom:sw toTerrain:[t cornerSWTarget]];
+        int seCost = [self costFrom:se toTerrain:[t cornerSETarget]];
+        int totalCost = nwCost + neCost + swCost + seCost;
+        
+        if (totalCost < lowestCost) {
+            lowestCost = totalCost;
+            bestCandidate = t;
+        }
+        // CCLOG(@"totalCost: %i vs. lowestCost: %i", totalCost, lowestCost);
+        
     }
     
-    return nil;
+    // If we have gotten here, the terrain constraints were not satisfied and we
+    // are using a bestCandidate. We need to add the neighbors of this coordinate
+    // to the consideration list, which will be processed after the tiles from
+    // the anchor that led to this point in the first place.
+    
+    // For tiles on the consideration list, we need to search for the best terrain
+    // for the location and then add it to the map; in searaching, if we again are
+    // unable to satisfy the terrain constraints, then we will append more locations
+    // to the consideration list until all constraints are satisfied. These tiles
+    // do not need to add diagonals -- only primary directions
+    
+    return bestCandidate;
 }
 
 - (Tile *)brushForTerrain:(unsigned int)matchingTerrain
@@ -811,6 +919,11 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 - (Tile *)tileForTerrainNumber:(int)terNumber
 {
     return [[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:terNumber] wholeBrush];
+}
+
+- (TerrainType *)terrainWithNumber:(unsigned int)terNum
+{
+    return [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:terNum];
 }
 
 // Useful for debugging
@@ -1214,6 +1327,15 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
     return signature;
+}
+
+- (int) costFrom:(int)sourceTerrain toTerrain:(int)destTerrain
+{
+    if (sourceTerrain == -1 || destTerrain == -1) {
+        return 0;
+    }
+    TerrainType *source = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:sourceTerrain];
+    return [source costOfTransitionTo:destTerrain];
 }
 
 #pragma mark -

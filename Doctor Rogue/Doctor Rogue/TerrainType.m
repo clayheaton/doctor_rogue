@@ -63,23 +63,21 @@
 #pragma mark Establishing transitions
 - (void) findTransitionsTo:(NSArray *)terrainTypes
 {
-    //NSLog(@" ");
-    //NSLog(@"%@ is establishing transitions", self);
-    
     for (TerrainType *tt in terrainTypes) {
-        //NSLog(@" ");
-        //NSLog(@"-- Looking for path to %@ --", tt);
+        
+        // Connection to self -- add an empty array as the array member.
         if (tt.terrainNumber == self.terrainNumber) {
-            //NSLog(@"     Don't need to find myself duh.");
+            NSMutableArray *ea  = [[NSMutableArray alloc] initWithCapacity:1];
+            NSArray *emptyArray = [NSArray arrayWithArray:ea];
+            [_transitions setObject:emptyArray forKey:[NSString stringWithFormat:@"%i", self.terrainNumber]];
             continue;
         }
+        
+        // There is a direct connection -- add the destination type as the array member.
         if ([_connections member:tt]) {
-            //NSLog(@"     Already directly connected to %@", tt);
             [_transitions setObject:[NSArray arrayWithObject:tt] forKey:[NSString stringWithFormat:@"%i",[tt terrainNumber]]];
             continue;
         }
-    
-        //NSLog(@"     Searching for a path through direct connections.");
         NSArray    *bestPath  = nil;
         int  lowestCost = NSIntegerMax;
         
@@ -101,24 +99,26 @@
                                       closedSet:closed];
             
             if (!path) {
-                // NSLog(@"     No path found through %@", connection.name);
                 continue;
             }
             
             thisCost = [path count];
-            
-            // NSLog(@"     Located path with cost %i: %@", thisCost, path);
+
             if (thisCost != -1 && thisCost < lowestCost) {
                 lowestCost = thisCost;
                 bestPath = path;
             }
         }
         
-        // NSLog(@"     Best path to %@ has cost %i: %@", tt.name, lowestCost, bestPath);
-        
         [_transitions setObject:bestPath forKey:[NSString stringWithFormat:@"%i",[tt terrainNumber]]];
     }
-    
+
+    /*
+    //testing
+    for(NSString *key in _transitions) {
+        NSLog(@"transition to %@ costs %i",key, [self costOfTransitionTo:[key intValue]]);
+    }
+     */
 }
 
 - (NSMutableArray *)pathTo:(TerrainType *)endPoint
@@ -159,6 +159,11 @@
         }
     }
     return bestPath;
+}
+
+- (unsigned short) costOfTransitionTo:(unsigned short)terrainNumber
+{
+    return [[_transitions objectForKey:[NSString stringWithFormat:@"%i", terrainNumber]] count];
 }
 
 @end
