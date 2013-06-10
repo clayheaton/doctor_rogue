@@ -16,6 +16,9 @@
 
 @property (retain, readwrite) NSDictionary *infoDict;
 @property (retain, readwrite) NSArray      *locationInfo;
+@property (assign, readwrite) BOOL         *loadingStarted;
+@property (retain, readwrite) CCScene      *mainGameScene;
+@property (assign, readwrite) BOOL         *gameSceneLoaded;
 
 +(id) sceneWithTargetScene:(LoadingTargetScenes)targetScene;
 -(id) initWithTargetScene:(LoadingTargetScenes)targetScene;

@@ -10,6 +10,7 @@
 #import "MainMenuLayer.h"
 #import "MainGameScene.h"
 #import "GameState.h"
+#import "CCSprite+GLBoxes.h"
 
 
 @interface LoadingScene (PrivateMethods)
@@ -32,6 +33,11 @@
 {
 	if ((self = [super init]))
 	{
+        _loadingStarted = NO;
+        _gameSceneLoaded = NO;
+        
+        CGSize size = [[CCDirector sharedDirector] winSize];
+        
 		targetScene_  = targetScene;
 		NSString *title;
         
@@ -44,7 +50,6 @@
         
         
         CCLabelBMFont *label = [CCLabelBMFont labelWithString:title fntFile:@"fedora-titles-35.fnt"];
-		CGSize size = [[CCDirector sharedDirector] winSize];
 		label.position = CGPointMake(size.width / 2, size.height / 2);
 		[self addChild:label];
 		
@@ -56,49 +61,71 @@
 	return self;
 }
 
+- (void) onEnter
+{
+    [super onEnter];
+}
+
+- (void) onExit
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super onEnter];
+}
+
+- (void) loadMainGameScene
+{
+    NSString *mapTemplateName = [_locationInfo objectAtIndex:1];
+    _mainGameScene = [MainGameScene sceneWithMapTemplate:mapTemplateName];
+    _gameSceneLoaded = YES;
+}
+
 -(void) update:(ccTime)delta
 {
 	// It's not strictly necessary, as we're changing the scene anyway. But just to be safe.
 	[self unscheduleAllSelectors];
-	
+
 	// Decide which scene to load based on the TargetScenes enum.
 	// You could also use TargetScene to load the same with using a variety of transitions.
-	switch (targetScene_)
-	{
-		case LoadingTargetScene_MainMenuScene:
+        
+        switch (targetScene_)
         {
-            
-            // TODO: Remove temporary reset of GameState
-            
-            // At the moment, this allows reproducability with the same seed because it sets the location number
-            // and the map number back to -1 on the GameState. This is acceptable because we do not currently
-            // have a way to save the gamestate with regards to map changes, etc.
-            
-            [[GameState gameState] temporaryReset];
-            
-            CCScene *mainMenuScene = [MainMenuLayer scene];
-            CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:mainMenuScene withColor:ccBLACK];
-			[[CCDirector sharedDirector] replaceScene:transition];
-            break;
+            case LoadingTargetScene_MainMenuScene:
+            {
+                
+                // TODO: Remove temporary reset of GameState
+                
+                // At the moment, this allows reproducability with the same seed because it sets the location number
+                // and the map number back to -1 on the GameState. This is acceptable because we do not currently
+                // have a way to save the gamestate with regards to map changes, etc.
+                
+                [[GameState gameState] temporaryReset];
+                
+                CCScene *mainMenuScene = [MainMenuLayer scene];
+                CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:mainMenuScene withColor:ccBLACK];
+                [[CCDirector sharedDirector] replaceScene:transition];
+                break;
+            }
+                
+            case LoadingTargetScene_MainGameScene:
+            {
+                if (!_loadingStarted) {
+                    [self loadMainGameScene];
+                    _loadingStarted = YES;
+                }
+                
+                if (_gameSceneLoaded) {
+                    CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:_mainGameScene withColor:ccBLACK];
+                    [[CCDirector sharedDirector] replaceScene:transition];
+                }
+                break;
+            }
+                
+            default:
+                // Always warn if an unspecified enum value was used. It's a reminder for yourself to update the switch
+                // whenever you add more enum values.
+                NSAssert2(nil, @"%@: unsupported TargetScene %i", NSStringFromSelector(_cmd), targetScene_);
+                break;
         }
-
-		case LoadingTargetScene_MainGameScene:
-		{
-            NSString *mapTemplateName = [_locationInfo objectAtIndex:1];
-            
-            CCScene *mainGameScene = [MainGameScene sceneWithMapTemplate:mapTemplateName];
-            
-			CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:mainGameScene withColor:ccBLACK];
-			[[CCDirector sharedDirector] replaceScene:transition];
-			break;
-		}
-			
-		default:
-			// Always warn if an unspecified enum value was used. It's a reminder for yourself to update the switch
-			// whenever you add more enum values.
-			NSAssert2(nil, @"%@: unsupported TargetScene %i", NSStringFromSelector(_cmd), targetScene_);
-			break;
-	}
 
 }
 

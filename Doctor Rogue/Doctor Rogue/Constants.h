@@ -12,10 +12,12 @@
 #endif
 */
 
-#define NOTIFICATION_TOGGLE_GRID        @"toggle_grid"
-#define NOTIFICATION_TOUCH_ENDED        @"CCPanZoom Touch Ended"
-#define NOTIFICATION_DISPLAY_TILE_INFO  @"Display tile info"
-#define NOTIFICATION_HIDE_TILE_INFO     @"Hide tile info"
+#define NOTIFICATION_TOGGLE_GRID          @"toggle_grid"
+#define NOTIFICATION_TOUCH_ENDED          @"CCPanZoom Touch Ended"
+#define NOTIFICATION_DISPLAY_TILE_INFO    @"Display tile info"
+#define NOTIFICATION_HIDE_TILE_INFO       @"Hide tile info"
+#define NOTIFICATION_MAP_GENERATOR_UPDATE @"MapGeneratorUpdate"
+#define NOTIFICATION_LOADING_UPDATE       @"MapGeneratorUpdate"
 
 #define MAP_LAYER_TERRAIN               @"terrain"
 #define MAP_LAYER_OBJECTS               @"objects"
@@ -61,6 +63,8 @@ typedef enum
 // kTag_Parent_Child
 typedef enum {
     kTagMIN = 0,
+    kTag_LoadingScene_mapUpdate,
+    kTag_LoadingScene_loadingHelper,
     kTag_MainGameScene_mapLayer,
     kTag_MainGameScene_uiLayer,
     kTag_MainGameScene_underlayer,

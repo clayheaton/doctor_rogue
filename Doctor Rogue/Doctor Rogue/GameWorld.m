@@ -127,6 +127,9 @@
     // Make sure that the tile type is in the dictionary of descriptions if it has one
     if (![_tileTypes objectForKey:[NSString stringWithFormat:@"%i", tileID]]) {
         
+        
+        // TODO: There is a bug here... sometimes this fails to retain the string
+
         NSString *terrain_type_str = [[_map propertiesForGID:tileID] objectForKey:@"terrain_type"];
         
         if ([terrain_type_str isEqualToString:FOG_BLACK]) {

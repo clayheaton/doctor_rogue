@@ -26,6 +26,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         _edges          = [[NSMutableArray alloc] init];
         _protectedTiles = [[NSMutableSet alloc] init];
         _considerationList   = [[NSMutableArray alloc] init];
+        _modifiedTiles = [[NSMutableSet alloc] init];
     }
     return self;
 }
@@ -62,6 +63,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
     
     CCLOG(@"RandomMapGenerator is generating the map.");
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObject:@"Generating the Random Map..." forKey:NOTIFICATION_LOADING_UPDATE];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
     
     // TODO: Read this from a tile property instead of assigning it here.
     _landingStripTerrain = 0;
@@ -146,24 +150,76 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 - (void) clayTestRandomizeOutdoorMap:(HKTMXTiledMap *)map
 {
     // Randomize here, into _workingMap
-    
-    NSMutableSet *lockedCoordinates = [[NSMutableSet alloc] init];
     // [self clayTestCreateOutdoorEntryPoint:lockedCoordinates]; // currently not implemented
     
     //[self clayLakeTest];
     //[self clayRiverTest];
-    [self clayDirtTest];
+    
+    [self clayExampleUsage];
 }
 
-- (void) clayDirtTest
+- (void) clayExampleUsage
 {
-    Tile *dirt  = [self tileForTerrainType:@"brick"];
-    [self paintTile:dirt atPoint:ccp(5,5)];
-}   
+    // If you know you want to paint many tiles with the same terrain type,
+    // you can submit the coordinates of those tiles in this manner:
+    
+    [self spotPaintTerrain:@"grass_heavy" atPercentageOfMap:0.1];
+    [self spotPaintTerrain:@"grass_light" atPercentageOfMap:0.05];
+    [self spotPaintTerrain:@"hole" atPercentageOfMap:0.01];
+    
+    // If you want to paint tiles one at a time, then you can submit them like this:
+    
+    //[self paintTile:dirt atPoint:ccp(5,3)];
+    
+    // Individual tile painting guarantees slightly more accurate painting results
+    // due to errors that have to be handled when painting multiple tiles at once.
+    // Performance is better painting multiple tiles with an array, however.
+    
+    // Here we paint a river, just as an example.
+    
+    CCLOG(@"Now performing the clayRiverTest");
+    [self clayRiverTest];
 
-/*
+}
+
+- (void) spotPaintTerrain:(NSString *)terrain atPercentageOfMap:(float)percentage
+{
+    int totalTiles       = _mapSize.width * _mapSize.height;
+    int tilesToPaint      = 10 + ((rand() % (totalTiles - 10) * percentage));
+    
+    NSString *update = [NSString stringWithFormat:@"Painting %i tiles with %@", tilesToPaint, terrain];
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObject:update forKey:NOTIFICATION_LOADING_UPDATE];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
+    
+    CCLOG(@"Painting %i tiles with %@", tilesToPaint, terrain);
+    
+    NSMutableArray *pts = [[NSMutableArray alloc] initWithCapacity:tilesToPaint];
+    
+    for (int i=0; i<tilesToPaint; i++) {
+        [pts addObject:[NSValue valueWithCGPoint:ccp(rand() % (int)_mapSize.width, rand() % (int)_mapSize.height)]];
+    }
+    
+    Tile    *terrType    = [self tileForTerrainType:terrain];
+    
+    [self paintTile:terrType atMultiplePoints:pts];
+}
+
+
 - (void) clayRiverTest {
-    Tile *water  = [self tileForTerrainType:@"water_shallow"];
+    
+    NSString *terrType = nil;
+    
+    int randN = rand() % 100;
+    if (randN < 50) {
+        terrType = @"water_shallow";
+    } else {
+        terrType = @"water_deep";
+    }
+    
+    Tile *terrain  = [self tileForTerrainType:terrType];
+    
+    NSMutableArray *paintPoints = [[NSMutableArray alloc] init];
     
     int randStartY = (rand() % (int)_mapSize.height * 0.25);
     int randEndY   = (rand() % (int)_mapSize.height);
@@ -203,7 +259,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     CGPoint end   = ccp(_mapSize.width, randEndY);
     
     while (!CGPointEqualToPoint(start, mid)) {
-        [self paintTile:water atPoint:start];
+        [paintPoints addObject:[NSValue valueWithCGPoint:start]];
+        //[self paintTile:terrain atPoint:start];
         
         int rand1 = rand() % 100;
         BOOL startingRandom = YES;
@@ -216,7 +273,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             } else {
                 next = [self nextPointInDirection:(rand() % InvalidDirection) from:next];
             }
-            [self paintTile:water atPoint:next];
+            //[self paintTile:terrain atPoint:next];
+            [paintPoints addObject:[NSValue valueWithCGPoint:next]];
             rand1 = rand() % 100;
             randLimit += 5;
         }
@@ -235,7 +293,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
     
     while (!CGPointEqualToPoint(start, end)) {
-        [self paintTile:water atPoint:start];
+        [paintPoints addObject:[NSValue valueWithCGPoint:start]];
+        //[self paintTile:terrain atPoint:start];
         
         int rand1 = rand() % 100;
         BOOL startingRandom = YES;
@@ -248,7 +307,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             } else {
                 next = [self nextPointInDirection:(rand() % InvalidDirection) from:next];
             }
-            [self paintTile:water atPoint:next];
+            //[self paintTile:terrain atPoint:next];
+            [paintPoints addObject:[NSValue valueWithCGPoint:next]];
             rand1 = rand() % 100;
             randLimit += 5;
         }
@@ -265,32 +325,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             start.y -= 1;
         }
     }
+    
+    // Send in the points as an array for painting
+    [self paintTile:terrain atMultiplePoints:paintPoints];
 }
 
-- (void) clayLakeTest
-{
-    // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
-    Tile *water  = [self tileForTerrainType:@"water_shallow"]; //_landingStripTerrain
-    Tile *grass  = [_tileDict objectForKey:TERRAIN_DICT_DEFAULT];
-    
-    // Make a big lake
-    for (int i = 4; i < 9; i++) {
-        for (int j = 4; j < 9; j++) {
-            [self paintTile:water atPoint:ccp(j, i)];
-        }
-    }
-    
-    // Fill some of it in with grass
-    [self paintTile:grass atPoint:ccp(7,6)];
-    [self paintTile:grass atPoint:ccp(5,5)];
-    [self paintTile:grass atPoint:ccp(4,4)];
-    [self paintTile:grass atPoint:ccp(7,7)];
-    [self paintTile:grass atPoint:ccp(8,8)];
-    
-    // Ability to protect tiles is here if needed
-    //[_protectedTiles removeAllObjects];
-}
-
+/*
 - (void)clayTestCreateOutdoorEntryPoint:(NSMutableSet *)lockedCoordinates
 {
     // Pick a 3x3 starting area and lock it.
@@ -358,6 +398,65 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 // Easy entry point into the painting
 - (void) paintTile:(Tile *)tile atPoint:(CGPoint)target
 {
+    NSArray *point = [NSArray arrayWithObject:[NSValue valueWithCGPoint:target]];
+    [self doPaintTile:tile atMultiplePoints:point];
+}
+
+- (void) paintTile:(Tile *)tile atMultiplePoints:(NSArray *)points
+{
+    [self doPaintTile:tile atMultiplePoints:points];
+    
+    // Finally, we want to double-check all modified tiles to make sure that they fit their space.
+    // If they don't, then paint them with the preferred tile.
+    // This shouldn't be an issue for individually painted tiles.
+    [self doubleCheckTiles];
+}
+
+
+- (void) doubleCheckTiles
+{
+    /*
+    for (int i = 0; i < _mapSize.width; i++) {
+        for (int j = 0; j < _mapSize.height; j++) {
+            NSValue *ptVal = [NSValue valueWithCGPoint:ccp(i, j)];
+            if ([_modifiedTiles member:ptVal]) {
+                [_modifiedTiles removeObject:ptVal];
+            } else {
+                continue; // Only check modified tiles.
+            }
+            
+            NSString *currentSignature   = [[self tileAt:[ptVal CGPointValue]] signatureAsString];
+            NSString *preferredSignature = [self signatureForMapCoord:[ptVal CGPointValue] matchTo:InvalidDirection];
+            if ([currentSignature isEqualToString:preferredSignature]) {
+                continue;
+            } else {
+                Tile *preferred = [self bestTileForSignature:preferredSignature mustMatchNW:NO mustMatchNE:NO mustMatchSW:NO mustMatchSE:NO];
+                [self paintTile:preferred atPoint:[ptVal CGPointValue]];
+            }
+            
+        }
+    }
+     */
+    CCLOG(@"Double-checking tiles");
+    NSArray *modifiedArray = [_modifiedTiles allObjects];
+    for (int i=0; i<modifiedArray.count; i++) {
+        NSValue *ptVal = [modifiedArray objectAtIndex:i];
+        [_modifiedTiles removeObject:ptVal];
+        NSString *currentSignature   = [[self tileAt:[ptVal CGPointValue]] signatureAsString];
+        NSString *preferredSignature = [self signatureForMapCoord:[ptVal CGPointValue] matchTo:InvalidDirection];
+        if ([currentSignature isEqualToString:preferredSignature]) {
+            continue;
+        } else {
+            Tile *preferred = [self bestTileForSignature:preferredSignature mustMatchNW:NO mustMatchNE:NO mustMatchSW:NO mustMatchSE:NO];
+            [self paintTile:preferred atPoint:[ptVal CGPointValue]];
+        }
+    }
+    [_modifiedTiles removeAllObjects];
+}
+
+// Don't call this directly
+- (void) doPaintTile:(Tile *)tile atMultiplePoints:(NSArray *)points
+{
     NSMutableArray *transitionList = [[NSMutableArray alloc] init];
     
     // Create the array that we will use to track whether a tile has been set
@@ -367,7 +466,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
         
         for (int i = 0; i < _mapSize.height; i++) {
-            [nested addObject:@"NO"];
+            [nested addObject:[NSNumber numberWithBool:NO]];
         }
         
         [checked addObject:nested];
@@ -386,27 +485,38 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         [newTerrain addObject:nested];
     }
     
-    TransitionPlan *initial = [[TransitionPlan alloc] init];
-    [initial setPoint:target];
-    [initial setIsInitialTile:YES];
-    [initial setDirFromAnchor:InvalidDirection];
-    [initial setDirToAnchor:InvalidDirection];
+    // Container for tiles that cannot be handled during the loop
+    // This should only be handled when submitting an array of points
+    // instead of painting tiles individually
+    NSMutableSet *misfits = [[NSMutableSet alloc] init];
     
-    [transitionList addObject:initial];
+    // Get the initial points that were painted and flag them as initials so that
+    // they are painted with the proper terrain
+    for (int i=0; i<points.count; i++) {
+        CGPoint thisPt = [[points objectAtIndex:i] CGPointValue];
+        
+        TransitionPlan *initial = [[TransitionPlan alloc] init];
+        [initial setPoint:thisPt];
+        [initial setIsInitialTile:YES];
+        [initial setDirFromAnchor:InvalidDirection];
+        [initial setDirToAnchor:InvalidDirection];
+        
+        [transitionList addObject:initial];
+    }
     
     while (transitionList.count > 0) {
-        CCLOG(@" ");
-        CCLOG(@"-------------------------------");
-        CCLOG(@"transitionList count: %i", transitionList.count);
+        // CCLOG(@" ");
+        // CCLOG(@"-------------------------------");
+        // CCLOG(@"transitionList count: %i", transitionList.count);
         
         TransitionPlan *plan = [transitionList objectAtIndex:0];
         CGPoint point        = [plan point];
-        CCLOG(@"Working with %@", NSStringFromCGPoint(point));
+        // CCLOG(@"Working with %@", NSStringFromCGPoint(point));
         
         [transitionList removeObjectAtIndex:0];
         
         if (![self isValid:point]) {
-            CCLOG(@"Point is invalid");
+            // CCLOG(@"Point is invalid");
             continue;
         }
         
@@ -417,20 +527,20 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         
         // We have already considered this point. Skip to the next
         if ([self checked:point inArray:checked]) {
-            CCLOG(@"We already have checked this point -- it is in the checked array. Continuing.");
+            // CCLOG(@"We already have checked this point -- it is in the checked array. Continuing.");
             continue;
         }
         
         Tile *currentTile = [self tileAt:point];
         
-        CCLOG(@"Tile currently at %@ is %@", NSStringFromCGPoint(point), currentTile);
+        // CCLOG(@"Tile currently at %@ is %@", NSStringFromCGPoint(point), currentTile);
         
         NSString *currentSignature   = [currentTile signatureAsString];
         
         // This should be overwritten later, in the else part of the next block
         NSString *preferredSignature = [self signatureForMapCoord:point matchTo:[plan dirToAnchor]];
         
-        CCLOG(@"Initial setting of preferredSignature: %@", preferredSignature);
+        // CCLOG(@"Initial setting of preferredSignature: %@", preferredSignature);
         
         BOOL nwMustMatch = NO;
         BOOL neMustMatch = NO;
@@ -438,17 +548,17 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         BOOL seMustMatch = NO;
         
         if (plan.isInitialTile) {
-            CCLOG(@"This is the initial tile...");
+            // CCLOG(@"This is the initial tile...");
             preferredSignature = [tile signatureAsString];
             nwMustMatch = YES;
             neMustMatch = YES;
             swMustMatch = YES;
             seMustMatch = YES;
             
-            CCLOG(@"The preferred signature of the initial tile is: %@", preferredSignature);
+            // CCLOG(@"The preferred signature of the initial tile is: %@", preferredSignature);
             // set the tile to be the 'tile' parameter sent in
             if ([currentSignature isEqualToString:preferredSignature]) {
-                CCLOG(@"This is equal to the tile currently in place. There's nothing to do. Continuing.");
+                // CCLOG(@"This is equal to the tile currently in place. There's nothing to do. Continuing.");
                 // There's nothing to paint
                 continue;
             }
@@ -461,7 +571,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             int se = -1;
 
             if ([self isValid:n] && [self checked:n inArray:checked]) {
-                CCLOG(@"This tile has a checked tile to the north.");
+                // CCLOG(@"This tile has a checked tile to the north.");
                 nw = [[[newTerrain objectAtIndex:n.x] objectAtIndex:n.y] cornerSWTarget];
                 ne = [[[newTerrain objectAtIndex:n.x] objectAtIndex:n.y] cornerSETarget];
                 nwMustMatch = YES;
@@ -469,7 +579,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             }
             
             if ([self isValid:e] && [self checked:e inArray:checked]) {
-                CCLOG(@"This tile has a checked tile to the east.");
+                // CCLOG(@"This tile has a checked tile to the east.");
                 ne = [[[newTerrain objectAtIndex:e.x] objectAtIndex:e.y] cornerNWTarget];
                 se = [[[newTerrain objectAtIndex:e.x] objectAtIndex:e.y] cornerSWTarget];
                 neMustMatch = YES;
@@ -477,7 +587,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             }
             
             if ([self isValid:s] && [self checked:s inArray:checked]) {
-                CCLOG(@"This tile has a checked tile to the south.");
+                // CCLOG(@"This tile has a checked tile to the south.");
                 sw = [[[newTerrain objectAtIndex:s.x] objectAtIndex:s.y] cornerNWTarget];
                 se = [[[newTerrain objectAtIndex:s.x] objectAtIndex:s.y] cornerNETarget];
                 swMustMatch = YES;
@@ -485,7 +595,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             }
             
             if ([self isValid:w] && [self checked:w inArray:checked]) {
-                CCLOG(@"This tile has a checked tile to the west.");
+                // CCLOG(@"This tile has a checked tile to the west.");
                 nw = [[[newTerrain objectAtIndex:w.x] objectAtIndex:w.y] cornerNETarget];
                 sw = [[[newTerrain objectAtIndex:w.x] objectAtIndex:w.y] cornerSETarget];
                 nwMustMatch = YES;
@@ -507,9 +617,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                 se = [[prev objectAtIndex:3] intValue];
             }
             
-            // TODO: Should these remain -1 or be the previous preferredSignature values?
             preferredSignature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
-            CCLOG(@"Preferred Signature set to %@", preferredSignature);
+            // CCLOG(@"Preferred Signature set to %@", preferredSignature);
         }
         
         // Continue from line 493
@@ -519,17 +628,19 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                                    mustMatchNW:nwMustMatch
                                    mustMatchNE:neMustMatch
                                    mustMatchSW:swMustMatch
-                                   mustMatchSE:seMustMatch]; //TODO: Make sure that the required sides are identified and followed
+                                   mustMatchSE:seMustMatch];
             
             if (!paste) {
-                CCLOG(@"Paste tile not located.");
+                // CCLOG(@"Paste tile not located for point %@", NSStringFromCGPoint(point));
+                [misfits addObject:[NSValue valueWithCGPoint:point]];
                 continue;
             }
-             CCLOG(@"Best tile found (paste) has signature: %@", [paste signatureAsString]);
+            // CCLOG(@"Best tile found (paste) has signature: %@", [paste signatureAsString]);
         }
         
-        [[newTerrain objectAtIndex:point.x] setObject:paste    atIndex:point.y];
-        [[checked objectAtIndex:point.x]    setObject:@"YES"   atIndex:point.y];
+        [[newTerrain objectAtIndex:point.x] setObject:paste                           atIndex:point.y];
+        [[checked objectAtIndex:point.x]    setObject:[NSNumber numberWithBool:YES]   atIndex:point.y];
+        [_modifiedTiles addObject:[NSValue valueWithCGPoint:point]];
         
         // consider surrounding tiles if terrain constraints were not satisfied
         if ([self isValid:n] && ![self checked:n inArray:checked]) {
@@ -541,7 +652,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                 [nPlan setDirFromAnchor:North];
                 [nPlan setDirToAnchor:South];
                 [transitionList addObject:nPlan];
-                CCLOG(@"Tile to the north of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(n));
+                // CCLOG(@"Tile to the north of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(n));
             }
         }
         
@@ -554,7 +665,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                 [ePlan setDirFromAnchor:East];
                 [ePlan setDirToAnchor:West];
                 [transitionList addObject:ePlan];
-                CCLOG(@"Tile to the east  of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(e));
+                // CCLOG(@"Tile to the east  of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(e));
             }
         }
         
@@ -567,7 +678,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                 [sPlan setDirFromAnchor:South];
                 [sPlan setDirToAnchor:North];
                 [transitionList addObject:sPlan];
-                CCLOG(@"Tile to the south of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(s));
+                // CCLOG(@"Tile to the south of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(s));
             }
         }
         
@@ -580,7 +691,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
                 [wPlan setDirFromAnchor:West];
                 [wPlan setDirToAnchor:East];
                 [transitionList addObject:wPlan];
-                CCLOG(@"Tile to the west  of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(w));
+                // CCLOG(@"Tile to the west  of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(w));
             }
         }
     }
@@ -596,12 +707,20 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         }
     }
     
+    // Handle misfits by painting them with the tile submitted to the method
+    // This should only be needed for situations that arise when submitting an array of points
+    // It's not ideal and perhaps we can figure out how to handle it better
+    
+    for (NSValue *ptVal in misfits) {
+        [self paintTile:tile atPoint:[ptVal CGPointValue]];
+    }
+    
 }
 
 - (BOOL) checked:(CGPoint)point inArray:(NSMutableArray *)array
 {
-    NSString *val = [[array objectAtIndex:point.x] objectAtIndex:point.y];
-    return [val isEqualToString:@"YES"] ? YES : NO;
+    NSNumber *val = [[array objectAtIndex:point.x] objectAtIndex:point.y];
+    return [val boolValue];
 }
 
 
@@ -1628,7 +1747,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         se = [s cornerNETarget];
         sw = [s cornerNWTarget];
     } else {
-        CCLOG(@"!! Matching invalid direction: Ok for initial point.");
+        // CCLOG(@"!! Matching invalid direction: Ok for initial point.");
     }
     
     NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
