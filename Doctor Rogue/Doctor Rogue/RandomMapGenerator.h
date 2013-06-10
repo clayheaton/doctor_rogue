@@ -25,9 +25,7 @@
 @property (retain, readwrite) NSMutableArray *edges;
 @property (retain, readwrite) NSMutableSet   *protectedTiles;
 
-@property (retain, readwrite) NSMutableSet *processedTiles;
-
-@property (retain, readwrite) NSMutableArray *tilesToCheck;
+@property (retain, readwrite) NSMutableArray *considerationList;
 
 @property (assign, readwrite) CGSize mapSize;
 

@@ -12,6 +12,7 @@
 #import "TSXTerrainSetParser.h"
 #import "Tile.h"
 #import "TerrainType.h"
+#import "TransitionPlan.h"
 
 const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 
@@ -24,7 +25,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     if (self) {
         _edges          = [[NSMutableArray alloc] init];
         _protectedTiles = [[NSMutableSet alloc] init];
-        _tilesToCheck   = [[NSMutableArray alloc] init];
+        _considerationList   = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -160,6 +161,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     [self paintTile:dirt atPoint:ccp(5,5)];
 }   
 
+/*
 - (void) clayRiverTest {
     Tile *water  = [self tileForTerrainType:@"water_shallow"];
     
@@ -348,127 +350,415 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     Tile *dirt  = [self tileForTerrainType:@"dirt"]; //_landingStripTerrain
     [self paintTile:dirt atPoint:ccp(4,4)];
 }
-
+*/
 
 #pragma mark -
 #pragma mark Painting Tiles onto the Map
 
+// Easy entry point into the painting
 - (void) paintTile:(Tile *)tile atPoint:(CGPoint)target
 {
+    NSMutableArray *transitionList = [[NSMutableArray alloc] init];
     
-    // Stop if the target is invalid
-    if (![self isValid:target]) {
-        return;
+    // Create the array that we will use to track whether a tile has been set
+    NSMutableArray *checked        = [[NSMutableArray alloc] initWithCapacity:_mapSize.width];
+    
+    for (int i = 0; i < _mapSize.width; i++) {
+        NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
+        
+        for (int i = 0; i < _mapSize.height; i++) {
+            [nested addObject:@"NO"];
+        }
+        
+        [checked addObject:nested];
     }
     
-    [_protectedTiles addObject:[NSValue valueWithCGPoint:target]];
+    // Will hold tiles that we intend to push to the working map
+    NSMutableArray *newTerrain    = [[NSMutableArray alloc] initWithCapacity:_mapSize.width];
     
-    // the single specified tile
-    [self addTile:tile toWorkingMapAtPoint:target];
-    
-    NSMutableArray *diagonals = [[NSMutableArray alloc] initWithCapacity:4];
-    [self putNeighborsOf:target intoQueue:diagonals directions:SecondaryDirections];
-    
-    NSMutableArray *straights = [[NSMutableArray alloc] initWithCapacity:4];
-    [self putNeighborsOf:target intoQueue:straights directions:PrimaryDirections];
-    
-    NSMutableArray *failures = [[NSMutableArray alloc] init];
-    
-    // Try placing the diagonals.
-    for (int i = 0; i < diagonals.count; i++) {
-        // Leave this tile along
-        if ([_protectedTiles member:[diagonals objectAtIndex:i]]) {
-            continue;
+    for (int i = 0; i < _mapSize.width; i++) {
+        NSMutableArray *nested = [[NSMutableArray alloc] initWithCapacity:_mapSize.height];
+        
+        for (int i = 0; i < _mapSize.height; i++) {
+            [nested addObject:[NSNull null]];
         }
         
-        Tile *success = [self findTileFor:[[diagonals objectAtIndex:i] CGPointValue] withAnchorCoord:target];
-        if (!success) {
-            CCLOG(@"Failed to find a tile for %@", NSStringFromCGPoint([[diagonals objectAtIndex:i] CGPointValue]));
-            [failures addObject:[diagonals objectAtIndex:i]];
-            continue;
-        }
-        
-        [_protectedTiles addObject:[diagonals objectAtIndex:i]];
-        // [self paintTile:success atPoint:[[diagonals objectAtIndex:i] CGPointValue]];
-        [self addTile:success toWorkingMapAtPoint:[[diagonals objectAtIndex:i] CGPointValue]];
-        // [self putNeighborsOf:[[diagonals objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
+        [newTerrain addObject:nested];
     }
     
-    // Try placing the straights.
-    for (int i = 0; i < straights.count; i++) {
-        // Leave this tile alone
-        if ([_protectedTiles member:[straights objectAtIndex:i]]) {
-            continue;
-        }
-        
-        Tile *success = [self findTileFor:[[straights objectAtIndex:i] CGPointValue] withAnchorCoord:target];
-        if (!success) {
-            CCLOG(@"Failed to find a tile for %@", NSStringFromCGPoint([[straights objectAtIndex:i] CGPointValue]));
-            [failures addObject:[diagonals objectAtIndex:i]];
-            continue;
-        }
-        
-        [_protectedTiles addObject:[straights objectAtIndex:i]];
-        // [self paintTile:success atPoint:[[straights objectAtIndex:i] CGPointValue]];
-        [self addTile:success toWorkingMapAtPoint:[[straights objectAtIndex:i] CGPointValue]];
-        // [self putNeighborsOf:[[straights objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
-    }
+    TransitionPlan *initial = [[TransitionPlan alloc] init];
+    [initial setPoint:target];
+    [initial setIsInitialTile:YES];
+    [initial setDirFromAnchor:InvalidDirection];
+    [initial setDirToAnchor:InvalidDirection];
     
-    NSArray *protected = [_protectedTiles allObjects];
-    for (int i = 0; i < [protected count]; i++) {
-        [self putNeighborsOf:[[protected objectAtIndex:i] CGPointValue] intoQueue:_tilesToCheck directions:AllDirections];
-    }
+    [transitionList addObject:initial];
     
-    /*
-    // Retry the failures
-    for (int i = 0; i < failures.count; i++) {
-        if ([_protectedTiles member:[failures objectAtIndex:i]]) {
+    while (transitionList.count > 0) {
+        CCLOG(@" ");
+        CCLOG(@"-------------------------------");
+        CCLOG(@"transitionList count: %i", transitionList.count);
+        
+        TransitionPlan *plan = [transitionList objectAtIndex:0];
+        CGPoint point        = [plan point];
+        CCLOG(@"Working with %@", NSStringFromCGPoint(point));
+        
+        [transitionList removeObjectAtIndex:0];
+        
+        if (![self isValid:point]) {
+            CCLOG(@"Point is invalid");
             continue;
         }
         
-        Tile *success = [self findTileFor:[[failures objectAtIndex:i] CGPointValue] withAnchorCoord:target];
-        if (!success) {
-            CCLOG(@"AGAIN failed to find a tile for %@", NSStringFromCGPoint([[failures objectAtIndex:i] CGPointValue]));
-            continue;
-        }
-    
-        [self addTile:success toWorkingMapAtPoint:[[failures objectAtIndex:i] CGPointValue]];
-    }
-     */
-    
-
-    while (_tilesToCheck.count > 0) {
-        NSValue *mapVal = [_tilesToCheck objectAtIndex:0];
-        CGPoint mapCoord = [mapVal CGPointValue];
-        [_tilesToCheck removeObjectAtIndex:0];
+        CGPoint n = [self nextPointInDirection:North from:point];
+        CGPoint e = [self nextPointInDirection:East  from:point];
+        CGPoint s = [self nextPointInDirection:South from:point];
+        CGPoint w = [self nextPointInDirection:West  from:point];
         
-        if ([_protectedTiles member:mapVal]) {
+        // We have already considered this point. Skip to the next
+        if ([self checked:point inArray:checked]) {
+            CCLOG(@"We already have checked this point -- it is in the checked array. Continuing.");
             continue;
         }
         
-        Tile *t = [self tileAt:mapCoord];
-        NSString *requiredSignature = [self signatureForMapCoord:mapCoord];
+        Tile *currentTile = [self tileAt:point];
         
-        if ([t isEqualToSignature:requiredSignature]) {
-            [_protectedTiles addObject:mapVal];
-            continue;
-        } else {
+        CCLOG(@"Tile currently at %@ is %@", NSStringFromCGPoint(point), currentTile);
+        
+        NSString *currentSignature   = [currentTile signatureAsString];
+        
+        // This should be overwritten later, in the else part of the next block
+        NSString *preferredSignature = [self signatureForMapCoord:point matchTo:[plan dirToAnchor]];
+        
+        CCLOG(@"Initial setting of preferredSignature: %@", preferredSignature);
+        
+        BOOL nwMustMatch = NO;
+        BOOL neMustMatch = NO;
+        BOOL swMustMatch = NO;
+        BOOL seMustMatch = NO;
+        
+        if (plan.isInitialTile) {
+            CCLOG(@"This is the initial tile...");
+            preferredSignature = [tile signatureAsString];
+            nwMustMatch = YES;
+            neMustMatch = YES;
+            swMustMatch = YES;
+            seMustMatch = YES;
             
-            // Find what tile matches the signature
-            NSString *sig = [self signatureForMapCoord:mapCoord];
-            for (Tile *til in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
-                if ([til isEqualToSignature:sig]) {
-                    [self addTile:til toWorkingMapAtPoint:mapCoord];
-                    [_protectedTiles addObject:mapVal];
-                    [self putNeighborsOf:mapCoord intoQueue:_tilesToCheck directions:AllDirections];
-                    CCLOG(@"here");
-                    break;
-                }
+            CCLOG(@"The preferred signature of the initial tile is: %@", preferredSignature);
+            // set the tile to be the 'tile' parameter sent in
+            if ([currentSignature isEqualToString:preferredSignature]) {
+                CCLOG(@"This is equal to the tile currently in place. There's nothing to do. Continuing.");
+                // There's nothing to paint
+                continue;
+            }
+        
+        } else {
+            // Setting the preferredSignature based on which of the neighbors have been checked already
+            int nw = -1;
+            int ne = -1;
+            int sw = -1;
+            int se = -1;
+
+            if ([self isValid:n] && [self checked:n inArray:checked]) {
+                CCLOG(@"This tile has a checked tile to the north.");
+                nw = [[[newTerrain objectAtIndex:n.x] objectAtIndex:n.y] cornerSWTarget];
+                ne = [[[newTerrain objectAtIndex:n.x] objectAtIndex:n.y] cornerSETarget];
+                nwMustMatch = YES;
+                neMustMatch = YES;
             }
             
+            if ([self isValid:e] && [self checked:e inArray:checked]) {
+                CCLOG(@"This tile has a checked tile to the east.");
+                ne = [[[newTerrain objectAtIndex:e.x] objectAtIndex:e.y] cornerNWTarget];
+                se = [[[newTerrain objectAtIndex:e.x] objectAtIndex:e.y] cornerSWTarget];
+                neMustMatch = YES;
+                seMustMatch = YES;
+            }
+            
+            if ([self isValid:s] && [self checked:s inArray:checked]) {
+                CCLOG(@"This tile has a checked tile to the south.");
+                sw = [[[newTerrain objectAtIndex:s.x] objectAtIndex:s.y] cornerNWTarget];
+                se = [[[newTerrain objectAtIndex:s.x] objectAtIndex:s.y] cornerNETarget];
+                swMustMatch = YES;
+                seMustMatch = YES;
+            }
+            
+            if ([self isValid:w] && [self checked:w inArray:checked]) {
+                CCLOG(@"This tile has a checked tile to the west.");
+                nw = [[[newTerrain objectAtIndex:w.x] objectAtIndex:w.y] cornerNETarget];
+                sw = [[[newTerrain objectAtIndex:w.x] objectAtIndex:w.y] cornerSETarget];
+                nwMustMatch = YES;
+                swMustMatch = YES;
+            }
+            
+            NSArray *prev = [preferredSignature componentsSeparatedByString:@"|"];
+            
+            if (nw == -1) {
+                nw = [[prev objectAtIndex:0] intValue];
+            }
+            if (ne == -1) {
+                ne = [[prev objectAtIndex:1] intValue];
+            }
+            if (sw == -1) {
+                sw = [[prev objectAtIndex:2] intValue];
+            }
+            if (se == -1) {
+                se = [[prev objectAtIndex:3] intValue];
+            }
+            
+            // TODO: Should these remain -1 or be the previous preferredSignature values?
+            preferredSignature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
+            CCLOG(@"Preferred Signature set to %@", preferredSignature);
+        }
+        
+        // Continue from line 493
+        Tile *paste = nil;
+        if (preferredSignature != nil) {
+            paste = [self bestTileForSignature:preferredSignature
+                                   mustMatchNW:nwMustMatch
+                                   mustMatchNE:neMustMatch
+                                   mustMatchSW:swMustMatch
+                                   mustMatchSE:seMustMatch]; //TODO: Make sure that the required sides are identified and followed
+            
+            if (!paste) {
+                CCLOG(@"Paste tile not located.");
+                continue;
+            }
+             CCLOG(@"Best tile found (paste) has signature: %@", [paste signatureAsString]);
+        }
+        
+        [[newTerrain objectAtIndex:point.x] setObject:paste    atIndex:point.y];
+        [[checked objectAtIndex:point.x]    setObject:@"YES"   atIndex:point.y];
+        
+        // consider surrounding tiles if terrain constraints were not satisfied
+        if ([self isValid:n] && ![self checked:n inArray:checked]) {
+            Tile *nTile = [self tileAt:n];
+            if ([nTile cornerSWTarget] != [paste cornerNWTarget] || [nTile cornerSETarget] != [paste cornerNETarget]) {
+                TransitionPlan *nPlan = [[TransitionPlan alloc] init];
+                [nPlan setPoint:n];
+                [nPlan setAnchorPoint:point];
+                [nPlan setDirFromAnchor:North];
+                [nPlan setDirToAnchor:South];
+                [transitionList addObject:nPlan];
+                CCLOG(@"Tile to the north of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(n));
+            }
+        }
+        
+        if ([self isValid:e] && ![self checked:e inArray:checked]) {
+            Tile *eTile = [self tileAt:e];
+            if ([eTile cornerSWTarget] != [paste cornerSETarget] || [eTile cornerNWTarget] != [paste cornerNETarget]) {
+                TransitionPlan *ePlan = [[TransitionPlan alloc] init];
+                [ePlan setPoint:e];
+                [ePlan setAnchorPoint:point];
+                [ePlan setDirFromAnchor:East];
+                [ePlan setDirToAnchor:West];
+                [transitionList addObject:ePlan];
+                CCLOG(@"Tile to the east  of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(e));
+            }
+        }
+        
+        if ([self isValid:s] && ![self checked:s inArray:checked]) {
+            Tile *sTile = [self tileAt:s];
+            if ([sTile cornerNWTarget] != [paste cornerSWTarget] || [sTile cornerNETarget] != [paste cornerSETarget]) {
+                TransitionPlan *sPlan = [[TransitionPlan alloc] init];
+                [sPlan setPoint:s];
+                [sPlan setAnchorPoint:point];
+                [sPlan setDirFromAnchor:South];
+                [sPlan setDirToAnchor:North];
+                [transitionList addObject:sPlan];
+                CCLOG(@"Tile to the south of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(s));
+            }
+        }
+        
+        if ([self isValid:w] && ![self checked:w inArray:checked]) {
+            Tile *wTile = [self tileAt:w];
+            if ([wTile cornerNETarget] != [paste cornerNWTarget] || [wTile cornerSETarget] != [paste cornerSWTarget]) {
+                TransitionPlan *wPlan = [[TransitionPlan alloc] init];
+                [wPlan setPoint:w];
+                [wPlan setAnchorPoint:point];
+                [wPlan setDirFromAnchor:West];
+                [wPlan setDirToAnchor:East];
+                [transitionList addObject:wPlan];
+                CCLOG(@"Tile to the west  of %@ at %@ added to the transitionList.", NSStringFromCGPoint(point), NSStringFromCGPoint(w));
+            }
         }
     }
-     
+    
+    // Process and place the tiles from newTerrain onto WorkingMap
+    // Finished setting up the Working map -- now use it to set tiles
+    for (int i = 0; i < _mapSize.width; i++) {
+        for (int j = 0; j < _mapSize.height; j++) {
+            if ([self checked:ccp(i, j) inArray:checked]) {
+                Tile *newTile = [[newTerrain objectAtIndex:i] objectAtIndex:j];
+                [[_workingMap objectAtIndex:i] setObject:newTile atIndex:j];
+            }
+        }
+    }
+    
+}
+
+- (BOOL) checked:(CGPoint)point inArray:(NSMutableArray *)array
+{
+    NSString *val = [[array objectAtIndex:point.x] objectAtIndex:point.y];
+    return [val isEqualToString:@"YES"] ? YES : NO;
+}
+
+
+
+- (Tile *) bestTileForSignature:(NSString *)sig
+                    mustMatchNW:(BOOL)nwMustMatch
+                    mustMatchNE:(BOOL)neMustMatch
+                    mustMatchSW:(BOOL)swMustMatch
+                    mustMatchSE:(BOOL)seMustMatch
+{
+    
+    NSArray *corners = [sig componentsSeparatedByString:@"|"];
+    int nw = [[corners objectAtIndex:0] integerValue];
+    int ne = [[corners objectAtIndex:1] integerValue];
+    int sw = [[corners objectAtIndex:2] integerValue];
+    int se = [[corners objectAtIndex:3] integerValue];
+    
+    int lowestCost = INT_MAX;
+    Tile *bestCandidate = nil;
+    
+    for (Tile *t in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
+        
+        // CCLOG(@"[t signature]: %@", [t signatureAsString]);
+        
+        // Exact Match
+        if ([t isEqualToSignature:sig]) {
+            // CCLOG(@"Exact Match!");
+            return t;
+        }
+        
+        if (nwMustMatch && nw != [t cornerNWTarget]) {
+            continue;
+        }
+        if (neMustMatch && ne != [t cornerNETarget]) {
+            continue;
+        }
+        if (swMustMatch && sw != [t cornerSWTarget]) {
+            continue;
+        }
+        if (seMustMatch && se != [t cornerSETarget]) {
+            continue;
+        }
+        
+        // There was no exact match; look for the lowest cost match.
+        // Calculate cost
+        int nwCost = [self costFrom:nw toTerrain:[t cornerNWTarget]];
+        int neCost = [self costFrom:ne toTerrain:[t cornerNETarget]];
+        int swCost = [self costFrom:sw toTerrain:[t cornerSWTarget]];
+        int seCost = [self costFrom:se toTerrain:[t cornerSETarget]];
+        int totalCost = nwCost + neCost + swCost + seCost;
+        
+        if (totalCost < lowestCost) {
+            lowestCost = totalCost;
+            bestCandidate = t;
+        }
+    }
+    
+    // CCLOG(@"Searching for match to sig %@ and found %@", sig, bestCandidate);
+    
+    if (!bestCandidate) {
+        // CCLOG(@"Unable to locate a best candidate.");
+    }
+    
+    return bestCandidate;
+}
+
+
+- (Tile *) bestTileForSignature:(NSString *)sig mustMatch:(CardinalDirections)matchDirection
+{
+    BOOL nwMustMatch = NO;
+    BOOL neMustMatch = NO;
+    BOOL swMustMatch = NO;
+    BOOL seMustMatch = NO;
+    
+    if (matchDirection == East || matchDirection == West) {
+        
+    }
+    
+    switch (matchDirection) {
+        case North:
+            nwMustMatch = YES;
+            neMustMatch = YES;
+            break;
+            
+        case East:
+            neMustMatch = YES;
+            seMustMatch = YES;
+            break;
+            
+        case South:
+            swMustMatch = YES;
+            seMustMatch = YES;
+            break;
+            
+        case West:
+            nwMustMatch = YES;
+            swMustMatch = YES;
+            break;
+            
+        default:
+            break;
+    }
+    
+    NSArray *corners = [sig componentsSeparatedByString:@"|"];
+    int nw = [[corners objectAtIndex:0] integerValue];
+    int ne = [[corners objectAtIndex:1] integerValue];
+    int sw = [[corners objectAtIndex:2] integerValue];
+    int se = [[corners objectAtIndex:3] integerValue];
+    
+    int lowestCost = INT_MAX;
+    Tile *bestCandidate = nil;
+    
+    for (Tile *t in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
+        //CCLOG(@"Seeking %@ and Checking %@",sig, [t signatureAsString]);
+        // check for mustMatch
+        if (nwMustMatch && [t cornerNWTarget] != nw) {
+            continue;
+        }
+        if (neMustMatch && [t cornerNETarget] != ne) {
+            continue;
+        }
+        if (swMustMatch && [t cornerSWTarget] != sw) {
+            continue;
+        }
+        if (seMustMatch && [t cornerSETarget] != se) {
+            continue;
+        }
+        
+        // CCLOG(@"[t signature]: %@", [t signatureAsString]);
+        
+        // Exact Match
+        if ([t isEqualToSignature:sig]) {
+            // CCLOG(@"Exact Match!");
+            return t;
+        }
+        
+        // There was no exact match; look for the lowest cost match.
+        // Calculate cost
+        int nwCost = [self costFrom:nw toTerrain:[t cornerNWTarget]];
+        int neCost = [self costFrom:ne toTerrain:[t cornerNETarget]];
+        int swCost = [self costFrom:sw toTerrain:[t cornerSWTarget]];
+        int seCost = [self costFrom:se toTerrain:[t cornerSETarget]];
+        int totalCost = nwCost + neCost + swCost + seCost;
+        
+        if (totalCost < lowestCost) {
+            lowestCost = totalCost;
+            bestCandidate = t;
+        }
+    }
+    
+    // CCLOG(@"Searching for match to sig %@ and found %@", sig, bestCandidate);
+    
+    if (!bestCandidate) {
+        // CCLOG(@"Unable to locate a best candidate.");
+    }
+    
+    return bestCandidate;
 }
 
 - (Tile *) findTileFor:(CGPoint)coord withAnchorCoord:(CGPoint)anchor
@@ -1283,7 +1573,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     [[_workingMap objectAtIndex:coord.x] setObject:tile atIndex:coord.y];
 }
 
-- (NSString *)signatureForMapCoord:(CGPoint)coord
+- (NSString *)signatureForMapCoord:(CGPoint)coord matchTo:(CardinalDirections)matchDirection
 {
     int nw, ne, sw, se;
     
@@ -1323,6 +1613,22 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         } else {
             se = -1;
         }
+    }
+    
+    if (matchDirection == East) {
+        ne = [e cornerNWTarget];
+        se = [e cornerSWTarget];
+    } else if(matchDirection == West) {
+        nw = [w cornerNETarget];
+        sw = [w cornerSETarget];
+    } else if(matchDirection == North) {
+        nw = [n cornerSWTarget];
+        ne = [n cornerSETarget];
+    } else if(matchDirection == South) {
+        se = [s cornerNETarget];
+        sw = [s cornerNWTarget];
+    } else {
+        CCLOG(@"!! Matching invalid direction: Ok for initial point.");
     }
     
     NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];

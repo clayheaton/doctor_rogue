@@ -210,6 +210,7 @@
 		6F8799AF1741271600CA9E08 /* ActiveSupportInflector.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F8799A91741271600CA9E08 /* ActiveSupportInflector.plist */; };
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
 		6FA00F7B174D879F002345E5 /* CCSprite+GLBoxes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FA00F7A174D879E002345E5 /* CCSprite+GLBoxes.m */; };
+		6FBF7C0017656F4D003E8967 /* TransitionPlan.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF7BFF17656F4D003E8967 /* TransitionPlan.m */; };
 		6FC4E475174873E000C36B5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6FC4E474174873E000C36B5A /* Localizable.strings */; };
 		6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0611747FCCE002ECBE7 /* place_names.csv */; };
 		6FCAC0671747FCCE002ECBE7 /* item_objects.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0621747FCCE002ECBE7 /* item_objects.csv */; };
@@ -601,6 +602,8 @@
 		6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ActiveSupportInflector.m"; sourceTree = "<group>"; };
 		6FA00F79174D879E002345E5 /* CCSprite+GLBoxes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CCSprite+GLBoxes.h"; sourceTree = "<group>"; };
 		6FA00F7A174D879E002345E5 /* CCSprite+GLBoxes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CCSprite+GLBoxes.m"; sourceTree = "<group>"; };
+		6FBF7BFE17656F4D003E8967 /* TransitionPlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionPlan.h; sourceTree = "<group>"; };
+		6FBF7BFF17656F4D003E8967 /* TransitionPlan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionPlan.m; sourceTree = "<group>"; };
 		6FC4E474174873E000C36B5A /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		6FCAC0611747FCCE002ECBE7 /* place_names.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = place_names.csv; sourceTree = "<group>"; };
 		6FCAC0621747FCCE002ECBE7 /* item_objects.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = item_objects.csv; sourceTree = "<group>"; };
@@ -659,6 +662,8 @@
 			children = (
 				6FD387A11745B51000AC6F76 /* RandomMapGenerator.h */,
 				6FD387A21745B51000AC6F76 /* RandomMapGenerator.m */,
+				6FBF7BFE17656F4D003E8967 /* TransitionPlan.h */,
+				6FBF7BFF17656F4D003E8967 /* TransitionPlan.m */,
 				6F16CD8617567AE8003FFC38 /* TSXTerrainSetParser.h */,
 				6F16CD8717567AE9003FFC38 /* TSXTerrainSetParser.m */,
 				6F16CD9217582A34003FFC38 /* TerrainType.h */,
@@ -1623,6 +1628,7 @@
 				6F16CD8817567AE9003FFC38 /* TSXTerrainSetParser.m in Sources */,
 				6F16CD9417582A35003FFC38 /* TerrainType.m in Sources */,
 				6FE34663175E7E8500BD9418 /* Tile.m in Sources */,
+				6FBF7C0017656F4D003E8967 /* TransitionPlan.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
