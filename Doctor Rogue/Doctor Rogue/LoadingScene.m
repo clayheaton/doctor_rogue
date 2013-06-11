@@ -57,41 +57,35 @@
 		rmgLabel.position = CGPointMake(size.width / 2, size.height / 3);
 		[self addChild:rmgLabel z:1 tag:kTag_LoadingScene_mapUpdate];
         
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rmgUpdate:) name:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil];
-
-        // http://stackoverflow.com/questions/7954905/how-can-i-listen-for-all-notifications-sent-to-the-ios-nsnotificationcenters-de
         NSNotificationCenter *notifyCenter = [NSNotificationCenter defaultCenter];
         [notifyCenter addObserverForName:nil
                                   object:nil
                                    queue:nil
                               usingBlock:^(NSNotification* notification){
-                                  // Explore notification
-                                  /*
-                                  NSLog(@"Notification found with:"
-                                        "\r\n     name:     %@"
-                                        "\r\n     object:   %@"
-                                        "\r\n     userInfo: %@",
-                                        [notification name],
-                                        [notification object],
-                                        [notification userInfo]);
-                                   */
                                   
                                   if ([[notification name] isEqualToString:NOTIFICATION_MAP_GENERATOR_UPDATE]) {
                                       _rmgUpdateLabel = [[notification userInfo] objectForKey:NOTIFICATION_LOADING_UPDATE];
                                       _rmgLabelNeedsUpdate = YES;
                                       
                                   }
-                                  
+        
                               }];
         
         CCLabelBMFont *label = [CCLabelBMFont labelWithString:title fntFile:@"fedora-titles-35.fnt"];
 		label.position = CGPointMake(size.width / 2, size.height / 2);
 		[self addChild:label];
 		
+        // Add the plane for fun
+        _plane = [CCSprite spriteWithFile:@"hawker_hart.png"];
+        _plane.position = ccp(-1* _plane.boundingBox.size.width, size.height * 0.75);
+        _plane.rotation = 90;
+        
+        [self addChild:_plane z:3 tag:kTag_LoadingScene_plane];
+        
+        
 		// Must wait one frame before loading the target scene!
 		// Two reasons: first, it would crash if not. Second, the Loading label wouldn't be displayed.
 		[self scheduleUpdate];
-        
 	}
 	
 	return self;
@@ -116,6 +110,7 @@
     
     _gameSceneLoaded = YES;
     
+    // Perform the transition on the main thread
     dispatch_async(dispatch_get_main_queue(), ^{
         [self transitionToMap:map];
     });
@@ -150,10 +145,9 @@
     if (_rmgLabelNeedsUpdate) {
         [self replaceRMGLabel];
     }
-    
-	// It's not strictly necessary, as we're changing the scene anyway. But just to be safe.
-	// [self unscheduleAllSelectors];
 
+    _plane.position = ccpAdd(_plane.position, ccp(2.0f, 0));
+    
 	// Decide which scene to load based on the TargetScenes enum.
 	// You could also use TargetScene to load the same with using a variety of transitions.
     
@@ -188,6 +182,8 @@
                     HKTMXTiledMap      *map = [HKTMXTiledMap tiledMapWithTMXFile:mapTemplateName];
                     _rmg = [[RandomMapGenerator alloc] init];
                     
+                    // Randomize the map on another thread
+                    // This allows us to animate the loading screen -- currently used to show labels
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
                                                              (unsigned long)NULL), ^(void) {
                         [self randomize:map];

@@ -27,6 +27,8 @@
 
 @property (retain, readwrite) RandomMapGenerator *rmg;
 
+@property (retain, readwrite) CCSprite     *plane;
+
 +(id) sceneWithTargetScene:(LoadingTargetScenes)targetScene;
 -(id) initWithTargetScene:(LoadingTargetScenes)targetScene;
 

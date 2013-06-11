@@ -65,6 +65,7 @@ typedef enum {
     kTagMIN = 0,
     kTag_LoadingScene_mapUpdate,
     kTag_LoadingScene_loadingHelper,
+    kTag_LoadingScene_plane,
     kTag_MainGameScene_mapLayer,
     kTag_MainGameScene_uiLayer,
     kTag_MainGameScene_underlayer,

@@ -36,7 +36,7 @@
     // TODO: Make this programmatic in the future, for now, just use strings
     
     NSArray *availableTemplates = [NSArray arrayWithObjects:
-                                   @"75x75", 
+                                   // @"75x75",
                                    @"50x50",
                                    @"50x25",
                                    @"25x50",
