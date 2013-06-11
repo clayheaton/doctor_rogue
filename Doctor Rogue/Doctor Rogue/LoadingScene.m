@@ -174,13 +174,12 @@
             case LoadingTargetScene_MainGameScene:
             {
                 if (!_loadingStarted) {
-                    // [self loadMainGameScene];
                     
                     NSString *mapTemplateName = [_locationInfo objectAtIndex:1];
-                    // _mainGameScene = [MainGameScene sceneWithMapTemplate:mapTemplateName];
+                    unsigned int mapSeed      = [[_locationInfo objectAtIndex:2] unsignedIntValue];
                     
                     HKTMXTiledMap      *map = [HKTMXTiledMap tiledMapWithTMXFile:mapTemplateName];
-                    _rmg = [[RandomMapGenerator alloc] init];
+                    _rmg = [[RandomMapGenerator alloc] initWithRandomSeed:mapSeed];
                     
                     // Randomize the map on another thread
                     // This allows us to animate the loading screen -- currently used to show labels

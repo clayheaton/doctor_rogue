@@ -225,6 +225,7 @@
 		6FD7EDB61743E0F9001022EB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB21743E0F9001022EB /* README.md */; };
 		6FD7EDB71743E0F9001022EB /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 6FD7EDB31743E0F9001022EB /* release_notes.md */; };
 		6FD7EDBA1743E344001022EB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FD7EDB81743E134001022EB /* libz.dylib */; };
+		6FDE9FF217676EE400292B88 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDE9FF117676EE400292B88 /* Utilities.m */; };
 		6FE34663175E7E8500BD9418 /* Tile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE34662175E7E8500BD9418 /* Tile.m */; };
 /* End PBXBuildFile section */
 
@@ -621,6 +622,8 @@
 		6FD7EDB31743E0F9001022EB /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
 		6FD7EDB41743E0F9001022EB /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		6FD7EDB81743E134001022EB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		6FDE9FF017676EE400292B88 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+		6FDE9FF117676EE400292B88 /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		6FE34661175E7E8400BD9418 /* Tile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tile.h; sourceTree = "<group>"; };
 		6FE34662175E7E8500BD9418 /* Tile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tile.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -810,6 +813,8 @@
 			isa = PBXGroup;
 			children = (
 				6F359657173DCB3B00C9C717 /* Constants.h */,
+				6FDE9FF017676EE400292B88 /* Utilities.h */,
+				6FDE9FF117676EE400292B88 /* Utilities.m */,
 				6F3693A6173B4109005BAC8B /* AppDelegate.h */,
 				6F3693A7173B4109005BAC8B /* AppDelegate.m */,
 				6F3693AC173B4109005BAC8B /* IntroLayer.h */,
@@ -1629,6 +1634,7 @@
 				6F16CD9417582A35003FFC38 /* TerrainType.m in Sources */,
 				6FE34663175E7E8500BD9418 /* Tile.m in Sources */,
 				6FBF7C0017656F4D003E8967 /* TransitionPlan.m in Sources */,
+				6FDE9FF217676EE400292B88 /* Utilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

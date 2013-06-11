@@ -13,20 +13,35 @@
 #import "Tile.h"
 #import "TerrainType.h"
 #import "TransitionPlan.h"
-
-const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
+#import "Utilities.h"
 
 @implementation RandomMapGenerator
 
+
+- (id) initWithRandomSeed:(unsigned int)seed
+{
+    self = [super init];
+    if (self) {
+        _seed                = seed;
+        
+        _edges               = [[NSMutableArray alloc] init];
+        _protectedTiles      = [[NSMutableSet alloc] init];
+        _considerationList   = [[NSMutableArray alloc] init];
+        _modifiedTiles       = [[NSMutableSet alloc] init];
+    }
+    return self;
+}
 
 - (id) init
 {
     self = [super init];
     if (self) {
-        _edges          = [[NSMutableArray alloc] init];
-        _protectedTiles = [[NSMutableSet alloc] init];
+        _seed                = arc4random() % INT_MAX;
+        
+        _edges               = [[NSMutableArray alloc] init];
+        _protectedTiles      = [[NSMutableSet alloc] init];
         _considerationList   = [[NSMutableArray alloc] init];
-        _modifiedTiles = [[NSMutableSet alloc] init];
+        _modifiedTiles       = [[NSMutableSet alloc] init];
     }
     return self;
 }
@@ -78,7 +93,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     [self establishWorkingMapFrom:_map];
     
-    // Just for testing purposes
+    // Use the seed
+    srand(_seed);
+    
+    // Just for testing purposes -- Switch this out with a better method
+    // We will have to randomize indoor separately from outdoor.
+    // Maps need an entry and exit point -- more on that later.
     [self clayTestRandomizeOutdoorMap:_map];
     
     CCLOG(@"Map randomization complete");
@@ -111,15 +131,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     
     [self establishTerrainTransitions];
-    
-    
-    // Each TerrainType object has a dictionary of transitions; an array of steps that must be taken to transition from itself to another terrain
-    // Each TerrainType is stored under a key that responds to the terrainNumber. For example:
-    // [[dirt transitions] objectForKey:@"2"] will return an NSArray of TerrainType objects that represents the steps that you must take
-    // to transition from dirt to the TerrainType with terrainNumber == 2.
-    
-    // More simply, you can call [dirt connections] to receive an array of the terrain types that have a direct connection to dirt.
-    // dirt itself will not be included in the array; it is assumed to connect to itself.
+
 }
 
 - (void) establishTerrainTransitions
@@ -138,22 +150,11 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 }
 
 
-
-
-
-
-
 # pragma mark -
 # pragma mark Clay's Randomization Testing
 
 - (void) clayTestRandomizeOutdoorMap:(HKTMXTiledMap *)map
 {
-    // Randomize here, into _workingMap
-    // [self clayTestCreateOutdoorEntryPoint:lockedCoordinates]; // currently not implemented
-    
-    //[self clayLakeTest];
-    //[self clayRiverTest];
-    
     [self clayExampleUsage];
 }
 
@@ -259,12 +260,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     CGPoint start = ccp(0,randStartY);
     CGPoint mid   = ccp((int)(_mapSize.width * 0.5) + offset1, (int)(_mapSize.height * 0.5) + offset2);
-    
     CGPoint end   = ccp(_mapSize.width, randEndY);
     
     while (!CGPointEqualToPoint(start, mid)) {
         [paintPoints addObject:[NSValue valueWithCGPoint:start]];
-        //[self paintTile:terrain atPoint:start];
         
         int rand1 = rand() % 100;
         BOOL startingRandom = YES;
@@ -272,12 +271,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         CGPoint next;
         while (rand1 > randLimit) {
             if (startingRandom) {
-                next = [self nextPointInDirection:(rand() % InvalidDirection) from:start];
+                next = [Utilities nextPointInDirection:(rand() % InvalidDirection) from:start];
                 startingRandom = NO;
             } else {
-                next = [self nextPointInDirection:(rand() % InvalidDirection) from:next];
+                next = [Utilities nextPointInDirection:(rand() % InvalidDirection) from:next];
             }
-            //[self paintTile:terrain atPoint:next];
+
             [paintPoints addObject:[NSValue valueWithCGPoint:next]];
             rand1 = rand() % 100;
             randLimit += 5;
@@ -298,7 +297,6 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     while (!CGPointEqualToPoint(start, end)) {
         [paintPoints addObject:[NSValue valueWithCGPoint:start]];
-        //[self paintTile:terrain atPoint:start];
         
         int rand1 = rand() % 100;
         BOOL startingRandom = YES;
@@ -306,12 +304,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         CGPoint next;
         while (rand1 > randLimit) {
             if (startingRandom) {
-                next = [self nextPointInDirection:(rand() % InvalidDirection) from:start];
+                next = [Utilities nextPointInDirection:(rand() % InvalidDirection) from:start];
                 startingRandom = NO;
             } else {
-                next = [self nextPointInDirection:(rand() % InvalidDirection) from:next];
+                next = [Utilities nextPointInDirection:(rand() % InvalidDirection) from:next];
             }
-            //[self paintTile:terrain atPoint:next];
+
             [paintPoints addObject:[NSValue valueWithCGPoint:next]];
             rand1 = rand() % 100;
             randLimit += 5;
@@ -334,67 +332,6 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     [self paintTile:terrain atMultiplePoints:paintPoints];
 }
 
-/*
-- (void)clayTestCreateOutdoorEntryPoint:(NSMutableSet *)lockedCoordinates
-{
-    // Pick a 3x3 starting area and lock it.
-    int startX = (rand() % (int)(_mapSize.width  - 12)) + 6;
-    int startY = (rand() % (int)(_mapSize.height - 12)) + 6;
-    
-    CGPoint start  = ccp(4, 4);
-    
-    // Use this to determine the landing pad orientation
-    int direction = 0; //rand() % 4;
-    
-    NSSet *coordsToIgnore = nil;
-    CGPoint extraTile;
-    
-    switch (direction) {
-        case 0:
-        {
-            extraTile      = ccpAdd(start, ccp(2,1));
-            coordsToIgnore = [NSSet setWithObjects:
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))],
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))]
-                              , nil];
-            break;
-        }
-            
-        case 1:
-        {
-            extraTile      = ccpAdd(start, ccp(1,2));
-            coordsToIgnore = [NSSet setWithObjects:
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,2))],
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))]
-                              , nil];
-            break;
-        }
-            
-        case 2:
-        {
-            extraTile      = ccpAdd(start, ccp(0,1));
-            coordsToIgnore = [NSSet setWithObjects:
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,2))],
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))]
-                              , nil];
-            break;
-        }
-        case 3:
-        {
-            extraTile      = ccpAdd(start, ccp(1,0));
-            coordsToIgnore = [NSSet setWithObjects:
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(0,0))],
-                              [NSValue valueWithCGPoint:ccpAdd(start, ccp(2,0))]
-                              , nil];
-            break;
-        }
-    }
-    
-    // Need a way to figure out the 'landing strip' terrain for each tileset -- maybe it should be flagged in the .tsx file as a property
-    Tile *dirt  = [self tileForTerrainType:@"dirt"]; //_landingStripTerrain
-    [self paintTile:dirt atPoint:ccp(4,4)];
-}
-*/
 
 #pragma mark -
 #pragma mark Painting Tiles onto the Map
@@ -507,10 +444,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
             continue;
         }
         
-        CGPoint n = [self nextPointInDirection:North from:point];
-        CGPoint e = [self nextPointInDirection:East  from:point];
-        CGPoint s = [self nextPointInDirection:South from:point];
-        CGPoint w = [self nextPointInDirection:West  from:point];
+        CGPoint n = [Utilities nextPointInDirection:North from:point];
+        CGPoint e = [Utilities nextPointInDirection:East  from:point];
+        CGPoint s = [Utilities nextPointInDirection:South from:point];
+        CGPoint w = [Utilities nextPointInDirection:West  from:point];
         
         // We have already considered this point. Skip to the next
         if ([self checked:point inArray:checked]) {
@@ -775,596 +712,22 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     return bestCandidate;
 }
 
-
-- (Tile *) bestTileForSignature:(NSString *)sig mustMatch:(CardinalDirections)matchDirection
+- (int) costFrom:(int)sourceTerrain toTerrain:(int)destTerrain
 {
-    BOOL nwMustMatch = NO;
-    BOOL neMustMatch = NO;
-    BOOL swMustMatch = NO;
-    BOOL seMustMatch = NO;
-    
-    if (matchDirection == East || matchDirection == West) {
-        
+    if (sourceTerrain == -1 || destTerrain == -1) {
+        return 0;
     }
-    
-    switch (matchDirection) {
-        case North:
-            nwMustMatch = YES;
-            neMustMatch = YES;
-            break;
-            
-        case East:
-            neMustMatch = YES;
-            seMustMatch = YES;
-            break;
-            
-        case South:
-            swMustMatch = YES;
-            seMustMatch = YES;
-            break;
-            
-        case West:
-            nwMustMatch = YES;
-            swMustMatch = YES;
-            break;
-            
-        default:
-            break;
-    }
-    
-    NSArray *corners = [sig componentsSeparatedByString:@"|"];
-    short nw = (short)[[corners objectAtIndex:0] intValue];
-    short ne = (short)[[corners objectAtIndex:1] intValue];
-    short sw = (short)[[corners objectAtIndex:2] intValue];
-    short se = (short)[[corners objectAtIndex:3] intValue];
-    
-    int lowestCost = INT_MAX;
-    Tile *bestCandidate = nil;
-    
-    for (Tile *t in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
-        //CCLOG(@"Seeking %@ and Checking %@",sig, [t signatureAsString]);
-        // check for mustMatch
-        if (nwMustMatch && [t cornerNWTarget] != nw) {
-            continue;
-        }
-        if (neMustMatch && [t cornerNETarget] != ne) {
-            continue;
-        }
-        if (swMustMatch && [t cornerSWTarget] != sw) {
-            continue;
-        }
-        if (seMustMatch && [t cornerSETarget] != se) {
-            continue;
-        }
-        
-        // CCLOG(@"[t signature]: %@", [t signatureAsString]);
-        
-        // Exact Match
-        if ([t isEqualToNW:nw NE:se SW:sw SE:se]) {
-            // CCLOG(@"Exact Match!");
-            return t;
-        }
-        
-        // There was no exact match; look for the lowest cost match.
-        // Calculate cost
-        int nwCost = [self costFrom:nw toTerrain:[t cornerNWTarget]];
-        int neCost = [self costFrom:ne toTerrain:[t cornerNETarget]];
-        int swCost = [self costFrom:sw toTerrain:[t cornerSWTarget]];
-        int seCost = [self costFrom:se toTerrain:[t cornerSETarget]];
-        int totalCost = nwCost + neCost + swCost + seCost;
-        
-        if (totalCost < lowestCost) {
-            lowestCost = totalCost;
-            bestCandidate = t;
-        }
-    }
-    
-    // CCLOG(@"Searching for match to sig %@ and found %@", sig, bestCandidate);
-    
-    if (!bestCandidate) {
-        // CCLOG(@"Unable to locate a best candidate.");
-    }
-    
-    return bestCandidate;
+    TerrainType *source = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:sourceTerrain];
+    return [source costOfTransitionTo:destTerrain];
 }
 
-- (Tile *) findTileFor:(CGPoint)coord withAnchorCoord:(CGPoint)anchor
+- (void) addTile:(Tile *)tile toWorkingMapAtPoint:(CGPoint)coord
 {
-    
-    // Build the integers that we need to make the signature we will use to search for a tile
-    CardinalDirections directionFromAnchor = [self directionOfCoord:coord relativeToCoord:anchor];
-    
-    int nw, ne, sw, se;
-    BOOL nwMustMatch = NO;
-    BOOL neMustMatch = NO;
-    BOOL swMustMatch = NO;
-    BOOL seMustMatch = NO;
-    
-    switch (directionFromAnchor) {
-        case North:
-        {
-            seMustMatch = YES;
-            swMustMatch = YES;
-            
-            Tile *s = [self tileAt:anchor];
-            sw = [s cornerNWTarget];
-            se = [s cornerNETarget];
-            
-            Tile *w = [self tileAt:[self nextPointInDirection:West from:coord]];
-            Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
-            
-            if (!w) {
-                // Edge
-                w = [self tileAt:[self nextPointInDirection:North from:coord]];
-                
-                if (!w) {
-                    // Corner
-                    nw = -1;
-                } else {
-                    nw = [w cornerSWTarget];
-                }
-            } else {
-                nw = [w cornerNETarget];
-            }
-            
-            if (!e) {
-                e = [self tileAt:[self nextPointInDirection:North from:coord]];
-                if (!e) {
-                    ne = -1;
-                } else {
-                    ne = [e cornerSETarget];
-                }
-            } else {
-                ne = [e cornerNWTarget];
-            }
-            break;
-        }
-        case East:
-        {
-            nwMustMatch = YES;
-            swMustMatch = YES;
-            
-            Tile *w = [self tileAt:anchor];
-            nw = [w cornerNETarget];
-            sw = [w cornerSETarget];
-            
-            Tile *n = [self tileAt:[self nextPointInDirection:North from:coord]];
-            Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
-            
-            if (!n) {
-                n = [self tileAt:[self nextPointInDirection:East from:coord]];
-                if (!n) {
-                    ne = -1;
-                } else {
-                    ne = [n cornerNWTarget];
-                }
-            } else {
-                ne = [n cornerSETarget];
-            }
-            
-            if (!s) {
-                s = [self tileAt:[self nextPointInDirection:East from:coord]];
-                if (!s) {
-                    se = -1;
-                } else {
-                    se = [s cornerSWTarget];
-                }
-            } else {
-                se = [s cornerNETarget];
-            }
-            break;
-        }
-        case South:
-        {
-            nwMustMatch = YES;
-            neMustMatch = YES;
-            
-            Tile *n = [self tileAt:anchor];
-            nw = [n cornerSWTarget];
-            ne = [n cornerSETarget];
-            
-            Tile *w = [self tileAt:[self nextPointInDirection:West from:coord]];
-            Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
-            
-            if (!w) {
-                w = [self tileAt:[self nextPointInDirection:South from:coord]];
-                if (!w) {
-                    sw = -1;
-                } else {
-                    sw = [w cornerNWTarget];
-                }
-            } else {
-                sw = [w cornerSETarget];
-            }
-            
-            if (!e) {
-                e = [self tileAt:[self nextPointInDirection:South from:coord]];
-                if (!e) {
-                    se = -1;
-                } else {
-                    se = [e cornerNETarget];
-                }
-            } else {
-                se = [e cornerSWTarget];
-            }
-            break;
-        }
-        case West:
-        {
-            neMustMatch = YES;
-            seMustMatch = YES;
-            
-            Tile *e = [self tileAt:anchor];
-            ne = [e cornerNWTarget];
-            se = [e cornerSWTarget];
-            
-            Tile *n = [self tileAt:[self nextPointInDirection:North from:coord]];
-            Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
-            
-            if (!n) {
-                n = [self tileAt:[self nextPointInDirection:West from:coord]];
-                if (!n) {
-                    nw = -1;
-                } else {
-                    nw = [n cornerNETarget];
-                }
-            } else {
-                nw = [n cornerSWTarget];
-            }
-            
-            if (!s) {
-                s = [self tileAt:[self nextPointInDirection:West from:coord]];
-                if (!s) {
-                    sw = -1;
-                } else {
-                    sw = [s cornerSETarget];
-                }
-            } else {
-                sw = [s cornerNWTarget];
-            }
-            break;
-        }
-        case Northwest:
-        {
-            seMustMatch = YES;
-            
-            Tile *seTile = [self tileAt:anchor];
-            se = [seTile cornerNWTarget];
-            
-            Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
-            Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
-            Tile *nwTile = [self tileAt:[self nextPointInDirection:Northwest from:coord]];
-            
-            // If we've gone NW and NW exists, there WILL be a tile to the east and the south
-            if (!e) {
-                ne = -1;
-            } else {
-                ne = [e cornerNWTarget];
-            }
-            
-            if (!s) {
-                sw = -1;
-            } else {
-                sw = [s cornerNWTarget];
-            }
-            
-            // There may not be a tile to the NW, so we can check n then west
-            // If neither are there, we are in the corner
-            if (!nwTile) {
-                nwTile = [self tileAt:[self nextPointInDirection:North from:coord]];
-                if (nwTile) {
-                    nw = [nwTile cornerSWTarget];
-                } else {
-                    nwTile = [self tileAt:[self nextPointInDirection:West from:coord]];
-                    if (nwTile) {
-                        nw = [nwTile cornerNETarget];
-                    } else {
-                        nw = -1;
-                    }
-                }
-            } else {
-                nw = [nwTile cornerSETarget];
-            }
-            break;
-        }
-        case Northeast:
-        {
-            swMustMatch = YES;
-            
-            Tile *swTile = [self tileAt:anchor];
-            sw = [swTile cornerNETarget];
-            
-            Tile *w = [self tileAt:[self nextPointInDirection:West from:coord]];
-            Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
-            Tile *neTile = [self tileAt:[self nextPointInDirection:Northeast from:coord]];
-            
-            if (!w) {
-                nw = -1;
-            } else {
-                nw = [w cornerNETarget];
-            }
-            
-            if (!s) {
-                se = -1;
-            } else {
-                se = [s cornerNETarget];
-            }
-            
-            if (!neTile) {
-                neTile = [self tileAt:[self nextPointInDirection:North from:coord]];
-                if (neTile) {
-                    ne = [neTile cornerSETarget];
-                } else {
-                    neTile = [self tileAt:[self nextPointInDirection:East from:coord]];
-                    if (neTile) {
-                        ne = [neTile cornerNWTarget];
-                    } else {
-                        ne = -1;
-                    }
-                }
-            } else {
-                ne = [neTile cornerSWTarget];
-            }
-            break;
-        }
-        case Southwest:
-        {
-            neMustMatch = YES;
-            
-            Tile *neTile = [self tileAt:anchor];
-            ne = [neTile cornerSWTarget];
-            
-            Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
-            Tile *n = [self tileAt:[self nextPointInDirection:North from:coord]];
-            Tile *swTile = [self tileAt:[self nextPointInDirection:Southwest from:coord]];
-            
-            if (!e) {
-                se = -1;
-            } else {
-                se = [e cornerSWTarget];
-            }
-            
-            if (!n) {
-                nw = -1;
-            } else {
-                nw = [n cornerSWTarget];
-            }
-            
-            if (!swTile) {
-                swTile = [self tileAt:[self nextPointInDirection:South from:coord]];
-                if (swTile) {
-                    sw = [swTile cornerNWTarget];
-                } else {
-                    swTile = [self tileAt:[self nextPointInDirection:West from:coord]];
-                    if (swTile) {
-                        sw = [swTile cornerSETarget];
-                    } else {
-                        sw = -1;
-                    }
-                }
-            } else {
-                sw = [swTile cornerNETarget];
-            }
-            break;
-        }
-        case Southeast:
-        {
-            nwMustMatch = YES;
-            
-            Tile *nwTile = [self tileAt:anchor];
-            nw = [nwTile cornerSETarget];
-            
-            Tile *w = [self tileAt:[self nextPointInDirection:West from:coord]];
-            Tile *n = [self tileAt:[self nextPointInDirection:North from:coord]];
-            Tile *seTile = [self tileAt:[self nextPointInDirection:Southeast from:coord]];
-            
-            if (!w) {
-                sw = -1;
-            } else {
-                sw = [w cornerSETarget];
-            }
-            
-            if (!n) {
-                ne = -1;
-            } else {
-                ne = [n cornerSETarget];
-            }
-            
-            if (!seTile) {
-                seTile = [self tileAt:[self nextPointInDirection:South from:coord]];
-                if (seTile) {
-                    se = [seTile cornerNETarget];
-                } else {
-                    seTile = [self tileAt:[self nextPointInDirection:East from:coord]];
-                    if (seTile) {
-                        se = [seTile cornerSWTarget];
-                    } else {
-                        se = -1;
-                    }
-                }
-            } else {
-                se = [seTile cornerNWTarget];
-            }
-            break;
-        }
-        case InvalidDirection:
-        {
-            NSAssert(directionFromAnchor != InvalidDirection, @"Invalid Direction");
-        }
-    }
-    
-    NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
-    
-    // We may not need to change the tile, if the existing tile matches the signature
-    if ([[self tileAt:coord] isEqualToNW:nw NE:ne SW:sw SE:se]) {
-        return [self tileAt:coord];
-    }
-    
-    int lowestCost = INT_MAX;
-    Tile *bestCandidate = nil;
-    
-    // Use the signature to search through all of the tiles
-    for (Tile *t in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
-        
-        // check for mustMatch
-        if (nwMustMatch && [t cornerNWTarget] != nw) {
-            continue;
-        }
-        if (neMustMatch && [t cornerNETarget] != ne) {
-            continue;
-        }
-        if (swMustMatch && [t cornerSWTarget] != sw) {
-            continue;
-        }
-        if (seMustMatch && [t cornerSETarget] != se) {
-            continue;
-        }
-        
-        // CCLOG(@"[t signature]: %@", [t signatureAsString]);
-        
-        // Exact Match
-        if ([t isEqualToNW:nw NE:ne SW:sw SE:se]) {
-            // CCLOG(@"Exact Match!");
-            return t;
-        }
-        
-        // There was no exact match; look for the lowest cost match.
-        // Calculate cost
-        int nwCost = [self costFrom:nw toTerrain:[t cornerNWTarget]];
-        int neCost = [self costFrom:ne toTerrain:[t cornerNETarget]];
-        int swCost = [self costFrom:sw toTerrain:[t cornerSWTarget]];
-        int seCost = [self costFrom:se toTerrain:[t cornerSETarget]];
-        int totalCost = nwCost + neCost + swCost + seCost;
-        
-        if (totalCost < lowestCost) {
-            lowestCost = totalCost;
-            bestCandidate = t;
-        }
-        // CCLOG(@"totalCost: %i vs. lowestCost: %i", totalCost, lowestCost);
-        
-    }
-    
-    // If we have gotten here, the terrain constraints were not satisfied and we
-    // are using a bestCandidate. We need to add the neighbors of this coordinate
-    // to the consideration list, which will be processed after the tiles from
-    // the anchor that led to this point in the first place.
-    
-    // For tiles on the consideration list, we need to search for the best terrain
-    // for the location and then add it to the map; in searaching, if we again are
-    // unable to satisfy the terrain constraints, then we will append more locations
-    // to the consideration list until all constraints are satisfied. These tiles
-    // do not need to add diagonals -- only primary directions
-    
-    return bestCandidate;
+    [[_workingMap objectAtIndex:coord.x] setObject:tile atIndex:coord.y];
 }
-
-- (Tile *)brushForTerrain:(unsigned int)matchingTerrain
-                           andOtherTerrain:(unsigned int)otherTerrain
-                              andDirection:(CardinalDirections)direction
-{
-    
-    TerrainType *terrain = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:matchingTerrain];
-    NSArray *brushes = nil;
-    
-    CardinalDirections oppositeDirection = [self directionOpposite:direction];
-    
-    TerrainBrushTypes brushType;
-    
-    if (   direction == North
-        || direction == South
-        || direction == East
-        || direction == West) {
-        brushType = TerrainBrush_Half;
-        brushes   = [terrain halfBrushes];
-    } else {
-        brushType = TerrainBrush_Quarter;
-        brushes   = [terrain quarterBrushes];
-        
-        // NSAssert(direction != InvalidDirection, @"Invalid Direction");
-    }
-    
-    Tile *theBrush = nil;
-    
-    for (Tile *brush in brushes) {
-        // CCLOG(@"Tile: %@", brush);
-        if (brushType == TerrainBrush_Half) {
-            if ([brush sideOn:oppositeDirection isOfTerrainType:otherTerrain] && [brush sideOn:direction isOfTerrainType:matchingTerrain]) {
-                theBrush = brush;
-                return theBrush;
-            }
-        } else if (brushType == TerrainBrush_Quarter) {
-            
-            if ([brush cornerWithTerrainType:matchingTerrain] == direction ) { // && [brush threeQuarterBrushType] == otherTerrain
-                theBrush = brush;
-                return theBrush;
-            }
-        }
-    }
-    //NSAssert(theBrush != nil, @"The brush is nil...");
-    return nil;
-}
-
 
 #pragma mark -
-#pragma mark Utility Methods
-
-- (Tile *)tileForTerrainType:(NSString *)type
-{
-    return [[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NAME] objectForKey:type] wholeBrush];
-}
-
-- (Tile *)tileForTerrainNumber:(int)terNumber
-{
-    return [[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:terNumber] wholeBrush];
-}
-
-- (TerrainType *)terrainWithNumber:(unsigned int)terNum
-{
-    return [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:terNum];
-}
-
-// Useful for debugging
-- (NSString *)stringForDirection:(CardinalDirections)direction
-{
-    switch (direction) {
-        case North:
-        {
-            return @"north";
-        }
-        case East:
-        {
-            return @"east";
-        }
-        case South:
-        {
-            return @"south";
-        }
-        case West:
-        {
-            return @"west";
-        }
-        case Northwest:
-        {
-            return @"northwest";
-        }
-        case Northeast:
-        {
-            return @"northeast";
-        }
-        case Southwest:
-        {
-            return @"southwest";
-        }
-        case Southeast:
-        {
-            return @"southeast";
-        }
-        case InvalidDirection:
-        {
-            return @"invalid direction";
-        }
-    }
-}
+#pragma mark Setup and Cleanup
 
 - (void) createLayerReferencesFrom:(HKTMXTiledMap *)map
 {
@@ -1373,6 +736,15 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     _collisionsLayer    = [map layerNamed:MAP_LAYER_COLLISIONS];
     _objectsLayer       = [map layerNamed:MAP_LAYER_OBJECTS];
     _fogLayer           = [map layerNamed:MAP_LAYER_FOG];
+}
+
+- (void) cleanTempTilesFrom:(HKTMXTiledMap *)map
+{
+    
+    [_terrainLayer    setTileGID:0 at:ccp(0,0)];
+    [_collisionsLayer setTileGID:0 at:ccp(0,0)];
+    [_objectsLayer    setTileGID:0 at:ccp(0,0)];
+    [_fogLayer        setTileGID:0 at:ccp(0,0)];
 }
 
 - (void) establishWorkingMapFrom:(HKTMXTiledMap *)map
@@ -1409,42 +781,8 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
 }
 
-- (void) fillLayer:(HKTMXLayer *)layer onMap:(HKTMXTiledMap *)map withTileID:(unsigned short)tileID
-{
-    unsigned short mw = map.mapSize.width;
-    unsigned short mh = map.mapSize.height;
-    
-    for (int i = 0; i < mw; i++) {
-        for (int j=0; j < mh; j++) {
-            [layer setTileGID:tileID at:ccp(i,j)];
-        }
-    }
-}
-
-- (void) putNeighborsOf:(CGPoint)coord intoQueue:(NSMutableArray *)queue directions:(DirctionType)dirType
-{
-    int min, max;
-    switch (dirType) {
-        case PrimaryDirections:
-            min = North;
-            max = Northwest;
-            break;
-        case SecondaryDirections:
-            min = Northwest;
-            max = InvalidDirection;
-            break;
-        case AllDirections:
-            min = North;
-            max = InvalidDirection;
-    }
-    
-    for (int direction = min; direction < max; direction++) {
-        CGPoint dir = [self nextPointInDirection:direction from:coord];
-        if ([self isValid:dir]) {
-            [queue addObject:[NSValue valueWithCGPoint:dir]];
-        }
-    }
-}
+#pragma mark -
+#pragma mark Finding Tiles
 
 - (Tile *)tileAt:(CGPoint)coord
 {
@@ -1455,207 +793,14 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     return t;
 }
 
-- (Tile *)tileTo:(CardinalDirections)direction ofTileAt:(CGPoint)coord
+- (Tile *)tileForTerrainType:(NSString *)type
 {
-    Tile *t = nil;
-    
-    switch (direction) {
-        case North:
-        {
-            CGPoint n = [self nextPointInDirection:North from:coord];
-            if ([self isValid:n]) {
-                t = [[_workingMap objectAtIndex:n.x] objectAtIndex:n.y];
-            }
-            break;
-        }
-        case East:
-        {
-            CGPoint e = [self nextPointInDirection:East from:coord];
-            if ([self isValid:e]) {
-                t = [[_workingMap objectAtIndex:e.x] objectAtIndex:e.y];
-            }
-            break;
-        }
-        case South:
-        {
-            CGPoint s = [self nextPointInDirection:South from:coord];
-            if ([self isValid:s]) {
-                t = [[_workingMap objectAtIndex:s.x] objectAtIndex:s.y];
-            }
-            break;
-        }
-        case West:
-        {
-            CGPoint w = [self nextPointInDirection:West from:coord];
-            if ([self isValid:w]) {
-                t = [[_workingMap objectAtIndex:w.x] objectAtIndex:w.y];
-            }
-            break;
-        }
-        case Northeast:
-        {
-            CGPoint ne = [self nextPointInDirection:Northeast from:coord];
-            if ([self isValid:ne]) {
-                t = [[_workingMap objectAtIndex:ne.x] objectAtIndex:ne.y];
-            }
-            break;
-        }
-        case Northwest:
-        {
-            CGPoint nw = [self nextPointInDirection:Northwest from:coord];
-            if ([self isValid:nw]) {
-                t = [[_workingMap objectAtIndex:nw.x] objectAtIndex:nw.y];
-            }
-            break;
-        }
-        case Southeast:
-        {
-            CGPoint se = [self nextPointInDirection:Southeast from:coord];
-            if ([self isValid:se]) {
-                t = [[_workingMap objectAtIndex:se.x] objectAtIndex:se.y];
-            }
-            break;
-        }
-        case Southwest:
-        {
-            CGPoint sw = [self nextPointInDirection:Southwest from:coord];
-            if ([self isValid:sw]) {
-                t = [[_workingMap objectAtIndex:sw.x] objectAtIndex:sw.y];
-            }
-            break;
-        }
-        case InvalidDirection:
-        {
-            t = nil;
-            break;
-        }
-    }
-    
-    return t;
+    return [[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NAME] objectForKey:type] wholeBrush];
 }
 
-- (CGPoint) nextPointInDirection:(CardinalDirections)direction from:(CGPoint)pt
+- (Tile *)tileForTerrainNumber:(int)terNumber
 {
-    switch (direction) {
-        case North:
-        {
-            return ccpSub(pt, ccp(0,1));
-        }
-        case East:
-        {
-            return ccpAdd(pt, ccp(1,0));
-        }
-        case South:
-        {
-            return ccpAdd(pt, ccp(0,1));
-        }
-        case West:
-        {
-            return ccpSub(pt, ccp(1,0));
-        }
-        case Northwest:
-        {
-            return ccpSub(pt, ccp(1,1));
-        }
-        case Northeast:
-        {
-            return ccpAdd(pt, ccp(1,-1));
-        }
-        case Southwest:
-        {
-            return ccpAdd(pt, ccp(-1,1));
-        }
-        case Southeast:
-        {
-            return ccpAdd(pt, ccp(1,1));
-        }
-        case InvalidDirection:
-        {
-            return CGPointNull;
-        }
-    }
-}
-
-- (BOOL) isValid:(CGPoint)coord
-{
-    // Invalid coordinate
-    if (coord.x > _mapSize.width - 1
-        || coord.x < 0
-        || coord.y > _mapSize.height - 1
-        || coord.y < 0)
-    {
-        return NO;
-    } else {
-        return YES;
-    }
-}
-
-- (CardinalDirections)directionOpposite:(CardinalDirections)direction
-{
-    switch (direction) {
-        case North:
-        {
-            return South;
-        }
-        case East:
-        {
-            return West;
-        }
-        case South:
-        {
-            return North;
-        }
-        case West:
-        {
-            return East;
-        }
-        case Northwest:
-        {
-            return Southeast;
-        }
-        case Northeast:
-        {
-            return Southwest;
-        }
-        case Southwest:
-        {
-            return Northeast;
-        }
-        case Southeast:
-        {
-            return Northwest;
-        }
-        default:
-            return InvalidDirection;
-    }
-}
-
-- (CardinalDirections)directionOfCoord:(CGPoint)coord relativeToCoord:(CGPoint)otherCoord
-{
-    CGPoint offset = ccpSub(coord, otherCoord);
-    
-    if (CGPointEqualToPoint(offset, ccp(0,0))) {
-        return InvalidDirection;
-    } else if (offset.x == 0  && offset.y == 1)  {
-        return South;
-    } else if (offset.x == 0  && offset.y == -1) {
-        return North;
-    } else if (offset.x == 1  && offset.y == 0)  {
-        return East;
-    } else if (offset.x == -1 && offset.y == 0)  {
-        return West;
-    } else if (offset.x == 1  && offset.y == 1)  {
-        return Southeast;
-    } else if (offset.x == 1  && offset.y == -1) {
-        return Northeast;
-    } else if (offset.x == -1 && offset.y == 1)  {
-        return Southwest;
-    } else if (offset.x == -1 && offset.y == -1) {
-        return Northwest;
-    } else {
-        return InvalidDirection;
-    }
-    
+    return [[[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:terNumber] wholeBrush];
 }
 
 - (Tile *)tileWithID:(unsigned int)tileID
@@ -1675,19 +820,36 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     return [[_workingMap objectAtIndex:pt.x] objectAtIndex:pt.y];
 }
 
-- (void) addTile:(Tile *)tile toWorkingMapAtPoint:(CGPoint)coord
+- (TerrainType *)terrainWithNumber:(unsigned int)terNum
 {
-    [[_workingMap objectAtIndex:coord.x] setObject:tile atIndex:coord.y];
+    return [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:terNum];
+}
+
+#pragma mark -
+#pragma mark Validating Tiles
+
+- (BOOL) isValid:(CGPoint)coord
+{
+    // Invalid coordinate
+    if (coord.x > _mapSize.width - 1
+        || coord.x < 0
+        || coord.y > _mapSize.height - 1
+        || coord.y < 0)
+    {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 - (NSString *)signatureForMapCoord:(CGPoint)coord matchTo:(CardinalDirections)matchDirection
 {
     int nw, ne, sw, se;
     
-    Tile *n = [self tileAt:[self nextPointInDirection:North from:coord]];
-    Tile *s = [self tileAt:[self nextPointInDirection:South from:coord]];
-    Tile *e = [self tileAt:[self nextPointInDirection:East from:coord]];
-    Tile *w = [self tileAt:[self nextPointInDirection:West from:coord]];
+    Tile *n = [self tileAt:[Utilities nextPointInDirection:North from:coord]];
+    Tile *s = [self tileAt:[Utilities nextPointInDirection:South from:coord]];
+    Tile *e = [self tileAt:[Utilities nextPointInDirection:East from:coord]];
+    Tile *w = [self tileAt:[Utilities nextPointInDirection:West from:coord]];
     
     // North Tile exists; assign nw and ne
     if (n) {
@@ -1741,58 +903,5 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
     return signature;
 }
-
-- (int) costFrom:(int)sourceTerrain toTerrain:(int)destTerrain
-{
-    if (sourceTerrain == -1 || destTerrain == -1) {
-        return 0;
-    }
-    TerrainType *source = [[_tileDict objectForKey:TERRAIN_DICT_TERRAINS_BY_NUMBER] objectAtIndex:sourceTerrain];
-    return [source costOfTransitionTo:destTerrain];
-}
-
-#pragma mark -
-#pragma mark Cleaning templates
-
-- (void) cleanTempTilesFrom:(HKTMXTiledMap *)map
-{
-    
-    [_terrainLayer    setTileGID:0 at:ccp(0,0)];
-    [_collisionsLayer setTileGID:0 at:ccp(0,0)];
-    [_objectsLayer    setTileGID:0 at:ccp(0,0)];
-    [_fogLayer        setTileGID:0 at:ccp(0,0)];
-}
-
-
-// This isn't a great method because it changes the map without
-// changing the _workingMap, so the tiles that are here go
-// undetected by the _workingMap. It is useful, however, to
-// fill the map so that there are no blank tiles.
-// It probably should be removed.
-- (void) setDefaultTerrainFor:(HKTMXTiledMap *)map
-{
-    BOOL defaultLocated = NO;
-    
-    unsigned int defaultTileID = 0;
-    
-    unsigned int counter = 0;
-    
-    // Figure out what the default tile is
-    while (!defaultLocated) {
-        counter += 1;
-        
-        NSString *default_tile = [[map propertiesForGID:counter] objectForKey:@"default_tile"];
-        
-        if ([default_tile isEqualToString:@"YES"]) {
-            // Found the default
-            defaultTileID  = counter;
-            defaultLocated = YES;
-        }
-    }
-    
-    // Fill the terrain layer with the default tile
-    [self fillLayer:_terrainLayer onMap:map withTileID:defaultTileID];
-}
-
 
 @end

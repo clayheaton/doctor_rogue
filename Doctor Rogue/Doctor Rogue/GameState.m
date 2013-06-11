@@ -45,13 +45,14 @@ static GameState *gameState;
     AdventureLocation *loc = [_adventureLocations objectAtIndex:_currentLocationNumber];
     
     NSString *locationName = [loc locationName];
+    NSNumber *mapSeed   = [[loc mapSeeds] objectAtIndex:_currentMapNumberInLocation];
     
     // TODO: this should check whether the map has been created and created it if not. Or something like that.
     // If GameState is to store saved games, the AdventureLocation needs a pointer to the map or needs to store
     // actions that have altered the map so that the state can be recreated upon load.
     _activeMapTemplate  = [[loc mapTemplates] objectAtIndex:_currentMapNumberInLocation];
     
-    return [NSArray arrayWithObjects:locationName, _activeMapTemplate, nil];
+    return [NSArray arrayWithObjects:locationName, _activeMapTemplate, mapSeed, nil];
 }
 
 - (void) temporaryReset

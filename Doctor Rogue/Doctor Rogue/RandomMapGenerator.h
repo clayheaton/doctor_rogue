@@ -17,6 +17,8 @@
 
 @property (retain, readwrite) HKTMXTiledMap *map;
 
+@property (assign, readwrite) unsigned int seed;
+
 @property (retain, readwrite) HKTMXLayer *terrainLayer;
 @property (retain, readwrite) HKTMXLayer *objectsLayer;
 @property (retain, readwrite) HKTMXLayer *collisionsLayer;
@@ -34,6 +36,8 @@
 @property (assign, readwrite) CGSize mapSize;
 
 @property (assign, readwrite) unsigned int landingStripTerrain;
+
+- (id) initWithRandomSeed:(unsigned int)seed;
 
 - (void)randomize:(HKTMXTiledMap *)map;
 - (void)setNewTiles;

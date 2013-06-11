@@ -20,7 +20,7 @@
         NSMutableArray *seeds = [NSMutableArray arrayWithCapacity:_numMaps];
         
         for (int j = 0; j < _numMaps; j++) {
-            [seeds addObject:[NSNumber numberWithInt:rand()]];
+            [seeds addObject:[NSNumber numberWithUnsignedInt:rand()]];
         }
         
         _mapSeeds = [NSArray arrayWithArray:seeds];
