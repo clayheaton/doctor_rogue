@@ -146,7 +146,7 @@
         [self replaceRMGLabel];
     }
 
-    _plane.position = ccpAdd(_plane.position, ccp(2.0f, 0));
+    _plane.position = ccpAdd(_plane.position, ccp(8.0f, 0));
     
 	// Decide which scene to load based on the TargetScenes enum.
 	// You could also use TargetScene to load the same with using a variety of transitions.

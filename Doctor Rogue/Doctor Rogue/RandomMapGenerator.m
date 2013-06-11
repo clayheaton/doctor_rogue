@@ -64,12 +64,6 @@
 
 - (void)randomize:(HKTMXTiledMap *)map
 {
-    // TODO: Reseed with srand() using the value in the AdventureLocation
-    // this will create a consistent randomization experience, me thinks,
-    // meaning that the same map will randomize the same way for the same seed each time
-    
-    // Check for map property test_map with a value of YES
-    
     _map = map;
     if (!_map) {
         NSAssert(_map != nil, @"The map is nil.");
@@ -77,23 +71,26 @@
     
     CCLOG(@"RandomMapGenerator is generating the map.");
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObject:@"Generating the Random Map..." forKey:NOTIFICATION_LOADING_UPDATE];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
+    // This is how you send a notification that will be displayed on the LoadingScene screen
+    [self displayOnLoadingScreen:@"Generating the Random Map..."];
     
     // TODO: Read this from a tile property instead of assigning it here.
+    // This is something Clay is working on -- leave it for the time being.
     _landingStripTerrain = 0;
     
+    // Create internal layer references - REQUIRED
     [self createLayerReferencesFrom:_map];
     
-    // This removes the placeholder tiles on each layer in the .tmx file.
-    // Map randomization will not work properly if you remove this line.
+    // Remove placeholder tiles - REQUIRED
     [self cleanTempTilesFrom:_map];
     
+    // Create the internal representations of the tile set - REQUIRED
     [self parseTileset:_map];
     
+    // Create the internal representation of the map - REQUIRED
     [self establishWorkingMapFrom:_map];
     
-    // Use the seed
+    // Use the seed - REQUIRED
     srand(_seed);
     
     // Just for testing purposes -- Switch this out with a better method
@@ -150,6 +147,8 @@
 }
 
 
+
+
 # pragma mark -
 # pragma mark Clay's Randomization Testing
 
@@ -166,6 +165,13 @@
     [self spotPaintTerrain:@"grass_heavy" atPercentageOfMap:0.1];
     [self spotPaintTerrain:@"grass_light" atPercentageOfMap:0.05];
     [self spotPaintTerrain:@"hole"        atPercentageOfMap:0.01];
+    [self spotPaintTerrain:@"brick"       atPercentageOfMap:0.005];
+    [self spotPaintTerrain:@"water_deep"  atPercentageOfMap:0.005];
+    
+    // Others
+    // [self spotPaintTerrain:@"brick_dirty"       atPercentageOfMap:0.005];
+    // [self spotPaintTerrain:@"water_shallow"     atPercentageOfMap:0.005];
+    // [self spotPaintTerrain:@"grass_medium"      atPercentageOfMap:0.005]; // This is the default terrain
     
     // If you want to paint tiles one at a time, then you can submit them like this:
     
@@ -185,14 +191,9 @@
 - (void) spotPaintTerrain:(NSString *)terrain atPercentageOfMap:(float)percentage
 {
     int totalTiles       = _mapSize.width * _mapSize.height;
-    int tilesToPaint      = 10 + ((rand() % (totalTiles - 10) * percentage));
+    int tilesToPaint      = 3 + ((rand() % (totalTiles - 3) * percentage));
     
-    NSString *update = [NSString stringWithFormat:@"Painting %i tiles with %@", tilesToPaint, terrain];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObject:update forKey:NOTIFICATION_LOADING_UPDATE];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
-    
-    CCLOG(@"Painting %i tiles with %@", tilesToPaint, terrain);
+    [self displayOnLoadingScreen:[NSString stringWithFormat:@"Painting %i tiles with %@", tilesToPaint, terrain]];
     
     NSMutableArray *pts = [[NSMutableArray alloc] initWithCapacity:tilesToPaint];
     
@@ -217,10 +218,7 @@
         terrType = @"water_deep";
     }
     
-    NSString *update = [NSString stringWithFormat:@"Painting a river with %@", terrType];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObject:update forKey:NOTIFICATION_LOADING_UPDATE];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
+    [self displayOnLoadingScreen:[NSString stringWithFormat:@"Painting a river with %@", terrType]];
     
     Tile *terrain  = [self tileForTerrainType:terrType];
     
@@ -346,39 +344,10 @@
 - (void) paintTile:(Tile *)tile atMultiplePoints:(NSArray *)points
 {
     [self doPaintTile:tile atMultiplePoints:points];
-    
-    // Finally, we want to double-check all modified tiles to make sure that they fit their space.
-    // If they don't, then paint them with the preferred tile.
-    // This shouldn't be an issue for individually painted tiles.
     [self doubleCheckTiles];
 }
 
-
-- (void) doubleCheckTiles
-{
-    NSString *update = [NSString stringWithFormat:@"Double-checking placed tiles..."];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObject:update forKey:NOTIFICATION_LOADING_UPDATE];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
-    
-    CCLOG(@"Double-checking tiles");
-    NSArray *modifiedArray = [_modifiedTiles allObjects];
-    for (int i=0; i<modifiedArray.count; i++) {
-        NSValue *ptVal = [modifiedArray objectAtIndex:i];
-        [_modifiedTiles removeObject:ptVal];
-        NSString *currentSignature   = [[self tileAt:[ptVal CGPointValue]] signatureAsString];
-        NSString *preferredSignature = [self signatureForMapCoord:[ptVal CGPointValue] matchTo:InvalidDirection];
-        if ([currentSignature isEqualToString:preferredSignature]) {
-            continue;
-        } else {
-            Tile *preferred = [self bestTileForSignature:preferredSignature mustMatchNW:NO mustMatchNE:NO mustMatchSW:NO mustMatchSE:NO];
-            [self paintTile:preferred atPoint:[ptVal CGPointValue]];
-        }
-    }
-    [_modifiedTiles removeAllObjects];
-}
-
-// Don't call this directly
+// DON'T CALL THIS DIRECTLY - USE ONE OF THE METHODS ABOVE
 - (void) doPaintTile:(Tile *)tile atMultiplePoints:(NSArray *)points
 {
     NSMutableArray *transitionList = [[NSMutableArray alloc] init];
@@ -647,8 +616,6 @@
     return [val boolValue];
 }
 
-
-
 - (Tile *) bestTileForSignature:(NSString *)sig
                     mustMatchNW:(BOOL)nwMustMatch
                     mustMatchNE:(BOOL)neMustMatch
@@ -726,6 +693,26 @@
     [[_workingMap objectAtIndex:coord.x] setObject:tile atIndex:coord.y];
 }
 
+- (void) doubleCheckTiles
+{
+    [self displayOnLoadingScreen:@"Double-checking placed tiles..."];
+    
+    NSArray *modifiedArray = [_modifiedTiles allObjects];
+    for (int i=0; i<modifiedArray.count; i++) {
+        NSValue *ptVal = [modifiedArray objectAtIndex:i];
+        [_modifiedTiles removeObject:ptVal];
+        NSString *currentSignature   = [[self tileAt:[ptVal CGPointValue]] signatureAsString];
+        NSString *preferredSignature = [self signatureForMapCoord:[ptVal CGPointValue] matchTo:InvalidDirection];
+        if ([currentSignature isEqualToString:preferredSignature]) {
+            continue;
+        } else {
+            Tile *preferred = [self bestTileForSignature:preferredSignature mustMatchNW:NO mustMatchNE:NO mustMatchSW:NO mustMatchSE:NO];
+            [self paintTile:preferred atPoint:[ptVal CGPointValue]];
+        }
+    }
+    [_modifiedTiles removeAllObjects];
+}
+
 #pragma mark -
 #pragma mark Setup and Cleanup
 
@@ -779,6 +766,13 @@
             }
         }
     }
+}
+
+- (void) displayOnLoadingScreen:(NSString *)message
+{
+    CCLOG(message);
+    NSDictionary *dict = [NSDictionary dictionaryWithObject:message forKey:NOTIFICATION_LOADING_UPDATE];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
 }
 
 #pragma mark -
