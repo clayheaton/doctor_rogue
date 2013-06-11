@@ -47,8 +47,10 @@
         
         [self registerForNotifications];
         
+        // Randomization is memory hungry and was moved to the LoadingScene
+        
         // Randomization could be moved to setUpWithMap:
-        RandomMapGenerator *rmg = [[RandomMapGenerator alloc] init];
+        // RandomMapGenerator *rmg = [[RandomMapGenerator alloc] init];
         
         // [RandomMapGenerator randomize:] returns a HKTMXTiledMap, but since we're passing a pointer,
         // we don't need to explicitly store the return value

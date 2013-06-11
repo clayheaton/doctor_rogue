@@ -720,10 +720,12 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 {
     
     NSArray *corners = [sig componentsSeparatedByString:@"|"];
-    int nw = [[corners objectAtIndex:0] integerValue];
-    int ne = [[corners objectAtIndex:1] integerValue];
-    int sw = [[corners objectAtIndex:2] integerValue];
-    int se = [[corners objectAtIndex:3] integerValue];
+    short nw = (short)[[corners objectAtIndex:0] intValue];
+    short ne = (short)[[corners objectAtIndex:1] intValue];
+    short sw = (short)[[corners objectAtIndex:2] intValue];
+    short se = (short)[[corners objectAtIndex:3] intValue];
+    
+    corners = nil;
     
     int lowestCost = INT_MAX;
     Tile *bestCandidate = nil;
@@ -733,11 +735,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         // CCLOG(@"[t signature]: %@", [t signatureAsString]);
         
         // Exact Match
-        if ([t isEqualToSignature:sig]) {
-            // CCLOG(@"Exact Match!");
+        if ([t isEqualToNW:nw NE:ne SW:sw SE:se]) {
             return t;
         }
-        
+         
         if (nwMustMatch && nw != [t cornerNWTarget]) {
             continue;
         }
@@ -812,10 +813,10 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     }
     
     NSArray *corners = [sig componentsSeparatedByString:@"|"];
-    int nw = [[corners objectAtIndex:0] integerValue];
-    int ne = [[corners objectAtIndex:1] integerValue];
-    int sw = [[corners objectAtIndex:2] integerValue];
-    int se = [[corners objectAtIndex:3] integerValue];
+    short nw = (short)[[corners objectAtIndex:0] intValue];
+    short ne = (short)[[corners objectAtIndex:1] intValue];
+    short sw = (short)[[corners objectAtIndex:2] intValue];
+    short se = (short)[[corners objectAtIndex:3] intValue];
     
     int lowestCost = INT_MAX;
     Tile *bestCandidate = nil;
@@ -839,7 +840,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         // CCLOG(@"[t signature]: %@", [t signatureAsString]);
         
         // Exact Match
-        if ([t isEqualToSignature:sig]) {
+        if ([t isEqualToNW:nw NE:se SW:sw SE:se]) {
             // CCLOG(@"Exact Match!");
             return t;
         }
@@ -1195,7 +1196,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     NSString *signature = [NSString stringWithFormat:@"%i|%i|%i|%i", nw, ne, sw, se];
     
     // We may not need to change the tile, if the existing tile matches the signature
-    if ([[self tileAt:coord] isEqualToSignature:signature]) {
+    if ([[self tileAt:coord] isEqualToNW:nw NE:ne SW:sw SE:se]) {
         return [self tileAt:coord];
     }
     
@@ -1222,7 +1223,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
         // CCLOG(@"[t signature]: %@", [t signatureAsString]);
         
         // Exact Match
-        if ([t isEqualToSignature:signature]) {
+        if ([t isEqualToNW:nw NE:ne SW:sw SE:se]) {
             // CCLOG(@"Exact Match!");
             return t;
         }

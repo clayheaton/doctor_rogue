@@ -12,7 +12,7 @@
 
 #pragma mark Comparison for tables
 
-// Override so that iEqual: works in collections
+// Override so that isEqual: works in collections
 - (NSUInteger) hash
 {
     NSUInteger val = 0;
@@ -141,6 +141,22 @@
            val2 == self.cornerNETarget &&
            val3 == self.cornerSWTarget &&
            val4 == self.cornerSETarget;
+}
+
+- (BOOL) isEqualToNW:(short)nwNum NE:(short)neNum SW:(short)swNum SE:(short)seNum
+{
+    
+    if (nwNum == -1 || nwNum == self.cornerNWTarget) {
+        if (neNum == -1 || neNum == self.cornerNETarget) {
+            if (swNum == -1 || swNum == self.cornerSWTarget) {
+                if (seNum == -1 || seNum == self.cornerSETarget) {
+                    return YES;
+                }
+            }
+        }
+    }
+    
+    return NO;
 }
 
 - (NSArray *) signature

@@ -39,6 +39,9 @@
 - (unsigned short) numCornerMatchesWithTile:(Tile *)t;
 - (BOOL) isEqualToSignature:(NSString *)sig;
 
+// For better performance
+- (BOOL) isEqualToNW:(short)nwNum NE:(short)neNum SW:(short)swNum SE:(short)seNum;
+
 - (BOOL) containsTerrainType:(TerrainType *)type;
 - (BOOL) containsTerrainTypeByNumber:(int)type;
 
