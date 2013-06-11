@@ -24,6 +24,12 @@
 #define MAP_LAYER_COLLISIONS            @"collisions"
 #define MAP_LAYER_FOG                   @"fog_of_war"
 
+#define MAP_OUTDOOR_LOCATION_FIRST_MAP  @"outdoorLocationFirstMap"
+
+#define MAP_ENTRY_TYPE                  @"mapEntryType"
+#define MAP_ENTRY_POINT                 @"mapEntryPoint"
+#define MAP_ENTRY_DIRECTION             @"mapEntryDirection"
+
 #define FOG_BLACK                       @"fog_black"
 #define FOG_GREY                        @"fog_grey"
 
@@ -71,6 +77,7 @@ typedef enum {
     kTag_MainGameScene_underlayer,
     kTag_MainGameScene_chasmwind,
     kTag_MapLayer_currentMap,
+    kTag_GameObject_plane,
     kTag_UILayer_tempQuitButton,
     kTag_UILayer_toggleGridButton,
     kTag_UILayer_tileInfoBar,

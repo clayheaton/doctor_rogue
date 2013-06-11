@@ -7,7 +7,6 @@
 
 #import "RandomMapGenerator.h"
 #import "HKTMXTiledMap.h"
-#import "Constants.h"
 #import "GameState.h"
 #import "TSXTerrainSetParser.h"
 #import "Tile.h"
@@ -28,6 +27,9 @@
         _protectedTiles      = [[NSMutableSet alloc] init];
         _considerationList   = [[NSMutableArray alloc] init];
         _modifiedTiles       = [[NSMutableSet alloc] init];
+        
+        _entryPoint = ccp(5,5);
+        _entryPointDirection = South;
     }
     return self;
 }
@@ -42,6 +44,9 @@
         _protectedTiles      = [[NSMutableSet alloc] init];
         _considerationList   = [[NSMutableArray alloc] init];
         _modifiedTiles       = [[NSMutableSet alloc] init];
+        
+        _entryPoint = ccp(5,5);
+        _entryPointDirection = South;
     }
     return self;
 }
@@ -65,6 +70,7 @@
 - (void)randomize:(HKTMXTiledMap *)map
 {
     _map = map;
+    
     if (!_map) {
         NSAssert(_map != nil, @"The map is nil.");
     }
@@ -76,7 +82,7 @@
     
     // TODO: Read this from a tile property instead of assigning it here.
     // This is something Clay is working on -- leave it for the time being.
-    _landingStripTerrain = 0;
+    _landingStripTerrain = 5;
     
     // Create internal layer references - REQUIRED
     [self createLayerReferencesFrom:_map];
@@ -185,27 +191,81 @@
     
     CCLOG(@"Now performing the clayRiverTest");
     [self clayRiverTest];
+    
+    // Location entry point is to the first map in the location of the adventure
+    // Subsequent maps at the same location will have a different type of entry point
+    [self createOutdoorLocationEntryPoint];
 
 }
 
-- (void) spotPaintTerrain:(NSString *)terrain atPercentageOfMap:(float)percentage
+- (void) createOutdoorLocationEntryPoint
 {
-    int totalTiles       = _mapSize.width * _mapSize.height;
-    int tilesToPaint      = 3 + ((rand() % (totalTiles - 3) * percentage));
     
-    [self displayOnLoadingScreen:[NSString stringWithFormat:@"Painting %i tiles with %@", tilesToPaint, terrain]];
+    // Landing strip for the airplane -- FOR NOW
+    // Later, this will need to accommodate maps that aren't the first map and/or that are inside/underground.
+    int randomDirection = rand() % 4; // 0-3 are North - West
     
-    NSMutableArray *pts = [[NSMutableArray alloc] initWithCapacity:tilesToPaint];
+    int anchorCoordX = 5 + (rand() % (int)(_mapSize.width  - 10));
+    int anchorCoordY = 5 + (rand() % (int)(_mapSize.height - 10));
     
-    for (int i=0; i<tilesToPaint; i++) {
-        [pts addObject:[NSValue valueWithCGPoint:ccp(rand() % (int)_mapSize.width, rand() % (int)_mapSize.height)]];
+    NSValue * anchorCoord = [NSValue valueWithCGPoint:ccp(anchorCoordX, anchorCoordY)];
+    
+    
+    [self displayOnLoadingScreen:[NSString stringWithFormat:@"Establishing entry point at %@", NSStringFromCGPoint(anchorCoord.CGPointValue)]];
+    
+    //  North      South
+    //    -        x - -
+    //  x - -      - - -
+    //  - - -        -
+    
+    //  East       West
+    //  x -         x -
+    //  - - -     - - -
+    //  - -         - -
+    
+    NSValue *n1, *n2, *n3, *n4, *n5, *extra;
+    
+    if (randomDirection == North || randomDirection == South) {
+        // Set up base coords
+        n1 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:East  from:anchorCoord.CGPointValue]];
+        n2 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:East  from:n1.CGPointValue]];
+        n3 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:South from:anchorCoord.CGPointValue]];
+        n4 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:East  from:n3.CGPointValue]];
+        n5 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:East  from:n4.CGPointValue]];
+        
+        if (randomDirection == North) {
+            extra = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:North from:n2.CGPointValue]];
+        } else {
+            extra = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:South from:n4.CGPointValue]];
+        }
+    } else {
+        n1 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:South  from:anchorCoord.CGPointValue]];
+        n2 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:South  from:n1.CGPointValue]];
+        n3 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:East   from:anchorCoord.CGPointValue]];
+        n4 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:South  from:n3.CGPointValue]];
+        n5 = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:South  from:n4.CGPointValue]];
+        
+        if (randomDirection == East) {
+            extra = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:East from:n4.CGPointValue]];
+        } else {
+            extra = [NSValue valueWithCGPoint: [Utilities nextPointInDirection:West from:n2.CGPointValue]];
+        }
     }
     
-    Tile    *terrType    = [self tileForTerrainType:terrain];
+    NSArray *points         = [NSArray arrayWithObjects:anchorCoord, n1, n2, n3, n4, n5, extra, nil];
+    Tile    *landingTerrain = [self tileForTerrainNumber:_landingStripTerrain];
     
-    [self paintTile:terrType atMultiplePoints:pts];
+    _entryPoint = anchorCoord.CGPointValue;
+    _entryPointDirection = randomDirection;
+    
+    // Set these properties on the map
+    [[_map properties] setObject:MAP_OUTDOOR_LOCATION_FIRST_MAP                        forKey:MAP_ENTRY_TYPE];
+    [[_map properties] setObject:[NSValue valueWithCGPoint:_entryPoint]                forKey:MAP_ENTRY_POINT];
+    [[_map properties] setObject:[NSNumber numberWithUnsignedInt:_entryPointDirection] forKey:MAP_ENTRY_DIRECTION];
+    
+    [self paintTile:landingTerrain atMultiplePoints:points];
+    
 }
-
 
 - (void) clayRiverTest {
     
@@ -333,6 +393,24 @@
 
 #pragma mark -
 #pragma mark Painting Tiles onto the Map
+
+- (void) spotPaintTerrain:(NSString *)terrain atPercentageOfMap:(float)percentage
+{
+    int totalTiles       = _mapSize.width * _mapSize.height;
+    int tilesToPaint     = 3 + ((rand() % (totalTiles - 3) * percentage));
+    
+    [self displayOnLoadingScreen:[NSString stringWithFormat:@"Painting %i tiles with %@", tilesToPaint, terrain]];
+    
+    NSMutableArray *pts  = [[NSMutableArray alloc] initWithCapacity:tilesToPaint];
+    
+    for (int i=0; i<tilesToPaint; i++) {
+        [pts addObject:[NSValue valueWithCGPoint:ccp(rand() % (int)_mapSize.width, rand() % (int)_mapSize.height)]];
+    }
+    
+    Tile    *terrType    = [self tileForTerrainType:terrain];
+    
+    [self paintTile:terrType atMultiplePoints:pts];
+}
 
 // Easy entry point into the painting
 - (void) paintTile:(Tile *)tile atPoint:(CGPoint)target
@@ -636,8 +714,6 @@
     
     for (Tile *t in [_tileDict objectForKey:TERRAIN_DICT_ALL_TILES_SET]) {
         
-        // CCLOG(@"[t signature]: %@", [t signatureAsString]);
-        
         // Exact Match
         if ([t isEqualToNW:nw NE:ne SW:sw SE:se]) {
             return t;
@@ -657,7 +733,6 @@
         }
         
         // There was no exact match; look for the lowest cost match.
-        // Calculate cost
         int nwCost = [self costFrom:nw toTerrain:[t cornerNWTarget]];
         int neCost = [self costFrom:ne toTerrain:[t cornerNETarget]];
         int swCost = [self costFrom:sw toTerrain:[t cornerSWTarget]];
@@ -668,12 +743,6 @@
             lowestCost = totalCost;
             bestCandidate = t;
         }
-    }
-    
-    // CCLOG(@"Searching for match to sig %@ and found %@", sig, bestCandidate);
-    
-    if (!bestCandidate) {
-        // CCLOG(@"Unable to locate a best candidate.");
     }
     
     return bestCandidate;

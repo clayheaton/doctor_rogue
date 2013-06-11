@@ -100,7 +100,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self unscheduleAllSelectors];
-    [self removeAllChildrenWithCleanup:YES];
+    // [self removeAllChildrenWithCleanup:YES];
     [super onExit];
 }
 

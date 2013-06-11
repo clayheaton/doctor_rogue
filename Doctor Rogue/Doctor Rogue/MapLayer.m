@@ -12,6 +12,7 @@
 #import "RandomMapGenerator.h"
 #import "GameWorld.h"
 #import "MainGameScene.h"
+#import "GameObject.h"
 
 @interface MapLayer (PrivateMethods)
 - (void) registerForNotifications;
@@ -46,15 +47,6 @@
         self.tapIsTargetingMapLayer = NO;
         
         [self registerForNotifications];
-        
-        // Randomization is memory hungry and was moved to the LoadingScene
-        
-        // Randomization could be moved to setUpWithMap:
-        // RandomMapGenerator *rmg = [[RandomMapGenerator alloc] init];
-        
-        // [RandomMapGenerator randomize:] returns a HKTMXTiledMap, but since we're passing a pointer,
-        // we don't need to explicitly store the return value
-        // CLAY [rmg randomize:map];
         
         // At this point, we can assume the map is randomized,
         // and is safe to parse into the GameWorld
@@ -108,15 +100,8 @@
 #pragma mark Map Loading and Initialization
 -(void) setUpWithMap:(HKTMXTiledMap *)mapToUse
 {
-    
-    
-    
     CGSize screenSize = [[CCDirector sharedDirector] winSize];
     [self setScreenCenter:CGPointMake(screenSize.width / 2, screenSize.height / 2)];
-    
-    // TODO: Fix so that this doesn't double-retain the map and prevent it from being unloaded
-    // Need to add currentMap as unsafe_unretained or something because it is automatically retained
-    // when it is added as a child.
     
     [self setCurrentMap:mapToUse];
     [self addChild:_currentMap z:-1 tag:kTag_MapLayer_currentMap];
@@ -143,9 +128,7 @@
     CGSize ts = [_currentMap tileSize];
     
     _mapDimensions = ccp(ms.width * ts.width, ms.height * ts.height);
-    
-    // CGPoint centerTile = CGPointMake((int)(ms.width * 0.5), (int)(ms.height * 0.5));
-    // CCLOG(@"  centerTile: %f, %f", centerTile.x, centerTile.y);
+
     
     CGRect boundingRect = CGRectMake(0, 0, (ms.width * ts.width), (ms.height * ts.height) + [[CCDirector sharedDirector] winSize].height * 0.05);
     
@@ -208,8 +191,12 @@
         [_panZoomController centerOnPoint:testMapLoadPoint];
     }
     
-    // CGPoint mapCenterPoint = ccp((ms.width * ts.width) * 0.5, (ms.height * ts.height) * 0.5);
-    //[_panZoomController centerOnPoint:mapCenterPoint];    
+    CCLOG(@"Map Entry Point: %@", [[mapToUse properties] objectForKey:MAP_ENTRY_POINT]);
+    CCLOG(@"Map Entry Type : %@", [[mapToUse properties] objectForKey:MAP_ENTRY_TYPE]);
+    
+    if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP]) {
+        [self placeAirplane];
+    }
 }
 
 - (void) draw
@@ -220,6 +207,28 @@
     if (_highlightDoubleTappedTile) {
         [self highlightTile];
     }
+    /*
+    if ([self getChildByTag:kTag_GameObject_plane]) {
+        HKTMXLayer *terrain = [_currentMap layerNamed:@"terrain"];
+        [self getChildByTag:kTag_GameObject_plane].position = [terrain positionAt:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue]];
+    }
+     */
+}
+
+#pragma mark -
+#pragma mark Object Placement
+- (void) placeAirplane
+{
+    // This will need to be redone
+    GameObject *plane = [GameObject node];
+    CCSprite *planeSprite = [CCSprite spriteWithFile:@"hawker_hart.png"];
+    [plane setPrimarySprite:planeSprite];
+    [plane addChild:planeSprite z:1 tag:kTag_GameObject_plane];
+    
+    [self addChild:plane z:1 tag:kTag_GameObject_plane];
+    
+    HKTMXLayer *terrain = [_currentMap layerNamed:@"terrain"];
+    plane.position = [terrain positionAt:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue]];
 }
 
 #pragma mark -

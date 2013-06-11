@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
+#import "Constants.h"
 
 @class HKTMXTiledMap;
 @class HKTMXLayer;
@@ -36,6 +37,9 @@
 @property (assign, readwrite) CGSize mapSize;
 
 @property (assign, readwrite) unsigned int landingStripTerrain;
+
+@property (assign, readwrite) CGPoint entryPoint;
+@property (assign, readwrite) CardinalDirections entryPointDirection;
 
 - (id) initWithRandomSeed:(unsigned int)seed;
 

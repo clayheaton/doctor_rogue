@@ -14,4 +14,8 @@
     
 }
 
+@property (copy, readwrite)   NSString *name;
+@property (retain, readwrite) CCSprite *primarySprite;
+
+
 @end
