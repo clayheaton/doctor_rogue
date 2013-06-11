@@ -34,10 +34,9 @@
 - (void) prepareMapTemplatesWithTerrain:(NSString *)terrainType
 {
     // TODO: Make this programmatic in the future, for now, just use strings
-    // TODO: Reinstate 75x75 when RMG performance improves
     
     NSArray *availableTemplates = [NSArray arrayWithObjects:
-                                   // @"75x75", 
+                                   @"75x75", 
                                    @"50x50",
                                    @"50x25",
                                    @"25x50",

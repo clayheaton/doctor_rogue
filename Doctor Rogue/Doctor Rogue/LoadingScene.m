@@ -3,7 +3,6 @@
 //  FieldHospital
 //
 //  Created by Clay Heaton on 4/26/12.
-//  Copyright 2012 The Perihelion Group. All rights reserved.
 //
 
 #import "LoadingScene.h"
@@ -35,6 +34,9 @@
 	{
         _loadingStarted = NO;
         _gameSceneLoaded = NO;
+        _switchExecuted = NO;
+        _rmgUpdateLabel = @"Starting the plane...";
+        _rmgLabelNeedsUpdate = NO;
         
         CGSize size = [[CCDirector sharedDirector] winSize];
         
@@ -48,6 +50,39 @@
             title = @"Loading";
         }
         
+        CCLabelTTF *rmgLabel = [CCLabelTTF labelWithString:_rmgUpdateLabel
+                                                  fontName:[[UIFont systemFontOfSize:12] familyName]
+                                                  fontSize:18];
+        
+		rmgLabel.position = CGPointMake(size.width / 2, size.height / 3);
+		[self addChild:rmgLabel z:1 tag:kTag_LoadingScene_mapUpdate];
+        
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rmgUpdate:) name:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil];
+
+        // http://stackoverflow.com/questions/7954905/how-can-i-listen-for-all-notifications-sent-to-the-ios-nsnotificationcenters-de
+        NSNotificationCenter *notifyCenter = [NSNotificationCenter defaultCenter];
+        [notifyCenter addObserverForName:nil
+                                  object:nil
+                                   queue:nil
+                              usingBlock:^(NSNotification* notification){
+                                  // Explore notification
+                                  /*
+                                  NSLog(@"Notification found with:"
+                                        "\r\n     name:     %@"
+                                        "\r\n     object:   %@"
+                                        "\r\n     userInfo: %@",
+                                        [notification name],
+                                        [notification object],
+                                        [notification userInfo]);
+                                   */
+                                  
+                                  if ([[notification name] isEqualToString:NOTIFICATION_MAP_GENERATOR_UPDATE]) {
+                                      _rmgUpdateLabel = [[notification userInfo] objectForKey:NOTIFICATION_LOADING_UPDATE];
+                                      _rmgLabelNeedsUpdate = YES;
+                                      
+                                  }
+                                  
+                              }];
         
         CCLabelBMFont *label = [CCLabelBMFont labelWithString:title fntFile:@"fedora-titles-35.fnt"];
 		label.position = CGPointMake(size.width / 2, size.height / 2);
@@ -56,6 +91,7 @@
 		// Must wait one frame before loading the target scene!
 		// Two reasons: first, it would crash if not. Second, the Loading label wouldn't be displayed.
 		[self scheduleUpdate];
+        
 	}
 	
 	return self;
@@ -69,24 +105,59 @@
 - (void) onExit
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super onEnter];
+    [self unscheduleAllSelectors];
+    [self removeAllChildrenWithCleanup:YES];
+    [super onExit];
 }
 
-- (void) loadMainGameScene
+- (void) randomize:(HKTMXTiledMap *)map
 {
-    NSString *mapTemplateName = [_locationInfo objectAtIndex:1];
-    _mainGameScene = [MainGameScene sceneWithMapTemplate:mapTemplateName];
+    [_rmg randomize:map];
+    
     _gameSceneLoaded = YES;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self transitionToMap:map];
+    });
+}
+
+- (void) transitionToMap:(HKTMXTiledMap *)map
+{
+    
+    [_rmg setNewTiles];
+    _mainGameScene = [MainGameScene sceneWithRandomizedMap:map];
+    
+    CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:_mainGameScene withColor:ccBLACK];
+    [[CCDirector sharedDirector] replaceScene:transition];
+}
+
+- (void) replaceRMGLabel
+{
+    [self removeChildByTag:kTag_LoadingScene_mapUpdate cleanup:YES];
+    
+    CGSize size = [[CCDirector sharedDirector] winSize];
+    CCLabelTTF *rmgLabel = [CCLabelTTF labelWithString:_rmgUpdateLabel
+                                              fontName:[[UIFont systemFontOfSize:12] familyName]
+                                              fontSize:18];
+    rmgLabel.position = CGPointMake(size.width / 2, size.height / 3);
+    [self addChild:rmgLabel z:1 tag:kTag_LoadingScene_mapUpdate];
+    
+    _rmgLabelNeedsUpdate = NO;
 }
 
 -(void) update:(ccTime)delta
 {
+    if (_rmgLabelNeedsUpdate) {
+        [self replaceRMGLabel];
+    }
+    
 	// It's not strictly necessary, as we're changing the scene anyway. But just to be safe.
-	[self unscheduleAllSelectors];
+	// [self unscheduleAllSelectors];
 
 	// Decide which scene to load based on the TargetScenes enum.
 	// You could also use TargetScene to load the same with using a variety of transitions.
-        
+    
+    if (!_switchExecuted) {
         switch (targetScene_)
         {
             case LoadingTargetScene_MainMenuScene:
@@ -109,14 +180,22 @@
             case LoadingTargetScene_MainGameScene:
             {
                 if (!_loadingStarted) {
-                    [self loadMainGameScene];
+                    // [self loadMainGameScene];
+                    
+                    NSString *mapTemplateName = [_locationInfo objectAtIndex:1];
+                    // _mainGameScene = [MainGameScene sceneWithMapTemplate:mapTemplateName];
+                    
+                    HKTMXTiledMap      *map = [HKTMXTiledMap tiledMapWithTMXFile:mapTemplateName];
+                    _rmg = [[RandomMapGenerator alloc] init];
+                    
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
+                                                             (unsigned long)NULL), ^(void) {
+                        [self randomize:map];
+                    });
+                    
                     _loadingStarted = YES;
                 }
                 
-                if (_gameSceneLoaded) {
-                    CCTransitionFade* transition = [CCTransitionFade transitionWithDuration:1 scene:_mainGameScene withColor:ccBLACK];
-                    [[CCDirector sharedDirector] replaceScene:transition];
-                }
                 break;
             }
                 
@@ -126,6 +205,9 @@
                 NSAssert2(nil, @"%@: unsupported TargetScene %i", NSStringFromSelector(_cmd), targetScene_);
                 break;
         }
+        _switchExecuted = YES;
+    }
+        
 
 }
 

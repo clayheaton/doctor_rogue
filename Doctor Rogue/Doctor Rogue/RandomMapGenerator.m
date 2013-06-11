@@ -47,7 +47,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 
 // This is the entry point for map randomization
 
-- (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map
+- (void)randomize:(HKTMXTiledMap *)map
 {
     // TODO: Reseed with srand() using the value in the AdventureLocation
     // this will create a consistent randomization experience, me thinks,
@@ -55,11 +55,9 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     // Check for map property test_map with a value of YES
     
-    BOOL isTest = [[map propertyNamed:@"test_map"] boolValue];
-    
-    if (isTest) {
-        CCLOG(@"RandomMapGenerator detects a test map: skipping randomizer.");
-        return map;
+    _map = map;
+    if (!_map) {
+        NSAssert(_map != nil, @"The map is nil.");
     }
     
     CCLOG(@"RandomMapGenerator is generating the map.");
@@ -70,24 +68,25 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     // TODO: Read this from a tile property instead of assigning it here.
     _landingStripTerrain = 0;
     
-    [self createLayerReferencesFrom:map];
+    [self createLayerReferencesFrom:_map];
     
     // This removes the placeholder tiles on each layer in the .tmx file.
     // Map randomization will not work properly if you remove this line.
-    [self cleanTempTilesFrom:map];
+    [self cleanTempTilesFrom:_map];
     
-    [self parseTileset:map];
+    [self parseTileset:_map];
     
-    [self establishWorkingMapFrom:map];
+    [self establishWorkingMapFrom:_map];
     
     // Just for testing purposes
-    [self clayTestRandomizeOutdoorMap:map];
-    
-    [self convertWorkingMapToRealMap];
+    [self clayTestRandomizeOutdoorMap:_map];
     
     CCLOG(@"Map randomization complete");
+}
 
-    return map;
+- (void)setNewTiles
+{
+    [self convertWorkingMapToRealMap];
 }
 
 #pragma mark -
@@ -165,7 +164,7 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     
     [self spotPaintTerrain:@"grass_heavy" atPercentageOfMap:0.1];
     [self spotPaintTerrain:@"grass_light" atPercentageOfMap:0.05];
-    [self spotPaintTerrain:@"hole" atPercentageOfMap:0.01];
+    [self spotPaintTerrain:@"hole"        atPercentageOfMap:0.01];
     
     // If you want to paint tiles one at a time, then you can submit them like this:
     
@@ -216,6 +215,11 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
     } else {
         terrType = @"water_deep";
     }
+    
+    NSString *update = [NSString stringWithFormat:@"Painting a river with %@", terrType];
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObject:update forKey:NOTIFICATION_LOADING_UPDATE];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
     
     Tile *terrain  = [self tileForTerrainType:terrType];
     
@@ -415,28 +419,11 @@ const CGPoint CGPointNull = {(CGFloat)NAN, (CGFloat)NAN};
 
 - (void) doubleCheckTiles
 {
-    /*
-    for (int i = 0; i < _mapSize.width; i++) {
-        for (int j = 0; j < _mapSize.height; j++) {
-            NSValue *ptVal = [NSValue valueWithCGPoint:ccp(i, j)];
-            if ([_modifiedTiles member:ptVal]) {
-                [_modifiedTiles removeObject:ptVal];
-            } else {
-                continue; // Only check modified tiles.
-            }
-            
-            NSString *currentSignature   = [[self tileAt:[ptVal CGPointValue]] signatureAsString];
-            NSString *preferredSignature = [self signatureForMapCoord:[ptVal CGPointValue] matchTo:InvalidDirection];
-            if ([currentSignature isEqualToString:preferredSignature]) {
-                continue;
-            } else {
-                Tile *preferred = [self bestTileForSignature:preferredSignature mustMatchNW:NO mustMatchNE:NO mustMatchSW:NO mustMatchSE:NO];
-                [self paintTile:preferred atPoint:[ptVal CGPointValue]];
-            }
-            
-        }
-    }
-     */
+    NSString *update = [NSString stringWithFormat:@"Double-checking placed tiles..."];
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObject:update forKey:NOTIFICATION_LOADING_UPDATE];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MAP_GENERATOR_UPDATE object:nil userInfo:dict];
+    
     CCLOG(@"Double-checking tiles");
     NSArray *modifiedArray = [_modifiedTiles allObjects];
     for (int i=0; i<modifiedArray.count; i++) {

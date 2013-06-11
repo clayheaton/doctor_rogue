@@ -3,12 +3,13 @@
 //  FieldHospital
 //
 //  Created by Clay Heaton on 4/26/12.
-//  Copyright 2012 The Perihelion Group. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
 #import "Constants.h"
+#import "HKTMXTiledMap.h"
+#import "RandomMapGenerator.h"
 
 @interface LoadingScene : CCScene {
     LoadingTargetScenes targetScene_;
@@ -19,6 +20,12 @@
 @property (assign, readwrite) BOOL         *loadingStarted;
 @property (retain, readwrite) CCScene      *mainGameScene;
 @property (assign, readwrite) BOOL         *gameSceneLoaded;
+@property (assign, readwrite) BOOL         *switchExecuted;
+
+@property (copy, readwrite) NSString       *rmgUpdateLabel;
+@property (assign, readwrite) BOOL         *rmgLabelNeedsUpdate;
+
+@property (retain, readwrite) RandomMapGenerator *rmg;
 
 +(id) sceneWithTargetScene:(LoadingTargetScenes)targetScene;
 -(id) initWithTargetScene:(LoadingTargetScenes)targetScene;

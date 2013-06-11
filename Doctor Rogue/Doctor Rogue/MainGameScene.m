@@ -22,6 +22,39 @@
 	return scene;
 }
 
++ (CCScene *) sceneWithRandomizedMap:(HKTMXTiledMap *)map
+{
+    CCScene *scene       = [CCScene node];
+    MainGameScene   *mgs = [[MainGameScene alloc] initWithRandomizedMap:map];
+    
+	[scene addChild: mgs];
+	return scene;
+}
+
+- (id) initWithRandomizedMap:(HKTMXTiledMap *)map
+{
+    self = [super init];
+    
+    if (self) {
+        
+        _usingUnderlayer = NO;
+        
+        _gameWorld     = [GameWorld node];
+        
+        MapLayer *mapLayer = [[MapLayer alloc] initWithMap:map andGameWorld:_gameWorld];
+        [self addChild:mapLayer z:1 tag:kTag_MainGameScene_mapLayer];
+        
+        UILayer *uiLayer   = [UILayer node];
+        [self addChild:uiLayer z:2 tag:kTag_MainGameScene_uiLayer];
+        
+        if ([mapLayer underlayerIsNeeded]) {
+            [self establishUnderlayer];
+        }
+        
+    }
+    return self;
+}
+
 - (id) initWithMapTemplate:(NSString *)templateName
 {
     self = [super init];
@@ -118,14 +151,10 @@
     underlayer.position = ccp(-[[CCDirector sharedDirector] winSize].width,-[[CCDirector sharedDirector] winSize].height);
     underlayer.visible = YES;
     
-    
     CCParticleSystemQuad *chasm_wind = [CCParticleSystemQuad particleWithFile:@"chasm_wind.plist"];
     chasm_wind.position = ccp(-20, [[CCDirector sharedDirector]winSize].height * 0.5);//ccp(underlayer.contentSize.width/2,underlayer.contentSize.height/2);
     chasm_wind.visible = YES;
     [self addChild:chasm_wind z:-1 tag:kTag_MainGameScene_chasmwind];
-    
-     
-     
     
     // Hide the mapLayer for testing
     //[self getChildByTag:kTag_MainGameScene_mapLayer].visible = NO;

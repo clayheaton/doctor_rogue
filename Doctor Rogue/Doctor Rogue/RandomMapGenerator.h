@@ -15,6 +15,8 @@
     
 }
 
+@property (retain, readwrite) HKTMXTiledMap *map;
+
 @property (retain, readwrite) HKTMXLayer *terrainLayer;
 @property (retain, readwrite) HKTMXLayer *objectsLayer;
 @property (retain, readwrite) HKTMXLayer *collisionsLayer;
@@ -33,6 +35,7 @@
 
 @property (assign, readwrite) unsigned int landingStripTerrain;
 
-- (HKTMXTiledMap *)randomize:(HKTMXTiledMap *)map;
+- (void)randomize:(HKTMXTiledMap *)map;
+- (void)setNewTiles;
 
 @end

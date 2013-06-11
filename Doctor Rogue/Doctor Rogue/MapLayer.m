@@ -52,7 +52,7 @@
         
         // [RandomMapGenerator randomize:] returns a HKTMXTiledMap, but since we're passing a pointer,
         // we don't need to explicitly store the return value
-        [rmg randomize:map];
+        // CLAY [rmg randomize:map];
         
         // At this point, we can assume the map is randomized,
         // and is safe to parse into the GameWorld

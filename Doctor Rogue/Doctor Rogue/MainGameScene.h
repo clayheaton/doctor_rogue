@@ -12,6 +12,7 @@
 @class MapLayer;
 @class UILayer;
 @class GameWorld;
+@class HKTMXTiledMap;
 
 @interface MainGameScene : CCLayer {
     
@@ -23,8 +24,10 @@
 @property (assign, readwrite) float underlayerDimension;
 
 + (CCScene *) sceneWithMapTemplate:(NSString *)templateName;
++ (CCScene *) sceneWithRandomizedMap:(HKTMXTiledMap *)map;
 
 - (id) initWithMapTemplate:(NSString *)templateName;
+- (id) initWithRandomizedMap:(HKTMXTiledMap *)map;
 
 - (MapLayer *)mapLayer;
 - (UILayer  *)uiLayer;
