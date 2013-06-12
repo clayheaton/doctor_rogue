@@ -61,4 +61,10 @@ static GameState *gameState;
     _currentLocationNumber = -1;
 }
 
+- (void) advanceTurn
+{
+    _turn += 1;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_TURN_ADVANCED object:nil];
+}
+
 @end

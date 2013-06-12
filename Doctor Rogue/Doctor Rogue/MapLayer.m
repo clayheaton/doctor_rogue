@@ -207,12 +207,6 @@
     if (_highlightDoubleTappedTile) {
         [self highlightTile];
     }
-    /*
-    if ([self getChildByTag:kTag_GameObject_plane]) {
-        HKTMXLayer *terrain = [_currentMap layerNamed:@"terrain"];
-        [self getChildByTag:kTag_GameObject_plane].position = [terrain positionAt:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue]];
-    }
-     */
 }
 
 #pragma mark -

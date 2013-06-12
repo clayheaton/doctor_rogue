@@ -18,11 +18,14 @@
 #define NOTIFICATION_HIDE_TILE_INFO       @"Hide tile info"
 #define NOTIFICATION_MAP_GENERATOR_UPDATE @"MapGeneratorUpdate"
 #define NOTIFICATION_LOADING_UPDATE       @"MapGeneratorUpdate"
+#define NOTIFICATION_TURN_ADVANCED        @"TurnAdvanced"
 
 #define MAP_LAYER_TERRAIN               @"terrain"
 #define MAP_LAYER_OBJECTS               @"objects"
 #define MAP_LAYER_COLLISIONS            @"collisions"
 #define MAP_LAYER_FOG                   @"fog_of_war"
+
+#define GAME_WORLD_TILE                 @"GameWorldTile"
 
 #define MAP_OUTDOOR_LOCATION_FIRST_MAP  @"outdoorLocationFirstMap"
 

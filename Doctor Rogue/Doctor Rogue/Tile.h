@@ -5,6 +5,9 @@
 //  Created by Clay Heaton on 6/4/13.
 //
 
+//  This class only is used during random map generation.
+//  The MapTile class is used during gameplay. 
+
 #import <Foundation/Foundation.h>
 #import "Constants.h"
 

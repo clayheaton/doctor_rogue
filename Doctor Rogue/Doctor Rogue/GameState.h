@@ -6,10 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Constants.h"
 
 @interface GameState : NSObject
 
 @property (assign, readwrite) uint seed;
+@property (assign, readwrite) uint turn;
 
 @property (assign, readwrite) unsigned short numLocations;
 @property (retain, readwrite) NSMutableArray *adventureLocations;
@@ -31,4 +33,6 @@
 - (NSArray *) nextMapAndLocation;
 
 - (void) temporaryReset;
+
+- (void) advanceTurn;
 @end

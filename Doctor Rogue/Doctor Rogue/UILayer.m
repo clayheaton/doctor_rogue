@@ -61,17 +61,17 @@
                                                       fontName:[[UIFont systemFontOfSize:12] familyName]
                                                       fontSize:20];
     
-    quitButtonLabel.position = ccp(size.width - 10, 10);
-    quitButtonLabel.anchorPoint = ccp(1,0);
-    [self addChild:quitButtonLabel z:2 tag:kTag_UILayer_tempQuitButton];
+    quitButtonLabel.position = ccp(size.width - 10, size.height - 10);
+    quitButtonLabel.anchorPoint = ccp(1,1);
+    [self addChild:quitButtonLabel z:100 tag:kTag_UILayer_tempQuitButton];
     
     CCLabelTTF *toggleGridLabel  = [CCLabelTTF labelWithString:@"Toggle Grid"
                                                       fontName:[[UIFont systemFontOfSize:12] familyName]
                                                       fontSize:20];
     
-    toggleGridLabel.position = ccp(10, 10);
-    toggleGridLabel.anchorPoint = ccp(0,0);
-    [self addChild:toggleGridLabel z:2 tag:kTag_UILayer_toggleGridButton];
+    toggleGridLabel.position = ccp(size.width - 10 - (quitButtonLabel.boundingBox.size.width * 1.5), size.height - 10);
+    toggleGridLabel.anchorPoint = ccp(1,1);
+    [self addChild:toggleGridLabel z:100 tag:kTag_UILayer_toggleGridButton];
 
 }
 

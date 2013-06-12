@@ -41,7 +41,16 @@
     _mapGrid = [[NSMutableArray alloc] initWithCapacity:mw];
     
     for (int i = 0; i < mw; i++) {
-        [_mapGrid addObject:[[NSMutableArray alloc] initWithCapacity:mh]];
+        NSMutableArray *nestedArray = [[NSMutableArray alloc] initWithCapacity:mh];
+        [_mapGrid addObject:nestedArray];
+    }
+    
+    // Put a mutable dictionary at each nested array point
+    for (int i = 0; i < mw; i++) {
+        for (int j = 0; j < mh; j++) {
+            NSMutableDictionary *nestedDict = [[NSMutableDictionary alloc] init];
+            [[_mapGrid objectAtIndex:i] setObject:nestedDict atIndex:j];
+        }
     }
     
     // Get the map terrain prefix
@@ -71,17 +80,12 @@
             [self gatherTileDescription:tID withPrefix:terrain_prefix];
             [self gatherTileDescription:fID withPrefix:terrain_prefix];
             
-            // Put the tile in the proper spot in the array
-            [[_mapGrid objectAtIndex:i] setObject:tile atIndex:j];
+            // Put the tile in the proper spot in the dictionary
+            [[[_mapGrid objectAtIndex:i] objectAtIndex:j] setObject:tile forKey:GAME_WORLD_TILE];
         }
     }
     
     [self gatherTileDescriptionsWithTerrainPrefix:terrain_prefix];
-    
-    
-    // CCLOG(@"tile types dict: %@", _tileTypes);
-    
-    CCLOG(@"--- > Map parsing is complete\n\n");
 }
 
 #pragma mark -
@@ -126,9 +130,6 @@
     
     // Make sure that the tile type is in the dictionary of descriptions if it has one
     if (![_tileTypes objectForKey:[NSString stringWithFormat:@"%i", tileID]]) {
-        
-        
-        // TODO: There is a bug here... sometimes this fails to retain the string
 
         NSString *terrain_type_str = [[_map propertiesForGID:tileID] objectForKey:@"terrain_type"];
         
@@ -186,7 +187,7 @@
 
 - (MapTile *) mapTileForCoord:(CGPoint)coord
 {
-    return [[_mapGrid objectAtIndex:coord.x] objectAtIndex:coord.y];
+    return [[[_mapGrid objectAtIndex:coord.x] objectAtIndex:coord.y] objectForKey:GAME_WORLD_TILE];
 }
 
 @end
