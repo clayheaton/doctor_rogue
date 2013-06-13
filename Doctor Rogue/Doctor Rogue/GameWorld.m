@@ -9,7 +9,7 @@
 #import "HKTMXTiledMap.h"
 #import "HKTMXLayer+Experimental.h"
 #import "MapTile.h"
-#import "Constants.h"
+#import "GameObject.h"
 
 @implementation GameWorld
 
@@ -32,6 +32,8 @@
     
     // Retain a pointer to the map
     _map = map;
+    
+    _objectsLayer = [_map layerNamed:@"objects"];
     
     unsigned short mw = _map.mapSize.width;
     unsigned short mh = _map.mapSize.height;
@@ -189,5 +191,21 @@
 {
     return [[[_mapGrid objectAtIndex:coord.x] objectAtIndex:coord.y] objectForKey:GAME_WORLD_TILE];
 }
+
+#pragma mark -
+#pragma mark GameObject Management Hub
+
+// Everything will be a child of the faux spriteLayer that is a child of the map
+- (void) addGameObject:(GameObject *)gameObject
+          toMapAtPoint:(CGPoint)point
+              usingTag:(ChildTags)childTag
+                  andZ:(int)zValue
+{
+
+    gameObject.position = [_objectsLayer positionAt:point];
+    CCNode *spriteLayer = [_map getChildByTag:kTag_Map_spriteLayer];
+    [spriteLayer addChild:gameObject z:zValue tag:childTag];
+}
+
 
 @end

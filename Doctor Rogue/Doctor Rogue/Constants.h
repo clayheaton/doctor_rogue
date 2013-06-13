@@ -25,6 +25,13 @@
 #define MAP_LAYER_COLLISIONS            @"collisions"
 #define MAP_LAYER_FOG                   @"fog_of_war"
 
+#define MAP_LAYER_TERRAIN_Z             0
+#define MAP_LAYER_GRID_Z                1
+#define MAP_LAYER_SPRITES_Z             2
+#define MAP_LAYER_OBJECTS_Z             3
+#define MAP_LAYER_COLLISIONS_Z          4
+#define MAP_LAYER_FOG_Z                 5
+
 #define GAME_WORLD_TILE                 @"GameWorldTile"
 
 #define MAP_OUTDOOR_LOCATION_FIRST_MAP  @"outdoorLocationFirstMap"
@@ -61,6 +68,8 @@
 #define MAP_SCROLL_DAMPING                  0.95f
 #define MAP_SCROLL_DAMPING_RETINA           0.5f
 
+
+
 typedef enum
 {
     CaseTypeDescriptorObject = 0,
@@ -72,20 +81,29 @@ typedef enum
 // kTag_Parent_Child
 typedef enum {
     kTagMIN = 0,
+    
     kTag_LoadingScene_mapUpdate,
     kTag_LoadingScene_loadingHelper,
     kTag_LoadingScene_plane,
+    
     kTag_MainGameScene_mapLayer,
     kTag_MainGameScene_uiLayer,
     kTag_MainGameScene_underlayer,
     kTag_MainGameScene_chasmwind,
+    
+    kTag_Map_spriteLayer,           // faux layer inserted between tmx layers, for displaying sprites
+    kTag_Map_gridLayer,
+    
     kTag_MapLayer_currentMap,
+    
     kTag_GameObject_plane,
+    
     kTag_UILayer_tempQuitButton,
     kTag_UILayer_toggleGridButton,
     kTag_UILayer_tileInfoBar,
     kTag_UILayer_tileInfoBarTileDescription,
     kTag_UILayer_topInfoBar,
+    
     kTagMAX
 } ChildTags;
 

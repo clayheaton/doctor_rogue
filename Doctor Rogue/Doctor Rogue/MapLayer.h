@@ -11,6 +11,7 @@
 @class HKTMXTiledMap;
 @class CCPanZoomController;
 @class GameWorld;
+@class GridLayer;
 
 @interface MapLayer : CCLayer {
     
@@ -25,6 +26,8 @@
 @property (assign, readwrite) CGPoint previousTileDoubleTapped;
 @property (assign, readwrite) CGPoint tileDoubleTapped;
 @property (assign, readwrite) BOOL    highlightDoubleTappedTile;
+
+@property (retain, readwrite) GridLayer *gridLayer; // should be retained by the map
 
 @property (retain, readwrite) CCPanZoomController *panZoomController;
 @property (assign, readwrite) BOOL showGrid;

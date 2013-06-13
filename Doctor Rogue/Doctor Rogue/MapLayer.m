@@ -13,6 +13,7 @@
 #import "GameWorld.h"
 #import "MainGameScene.h"
 #import "GameObject.h"
+#import "GridLayer.h"
 
 @interface MapLayer (PrivateMethods)
 - (void) registerForNotifications;
@@ -91,11 +92,8 @@
 #pragma mark Notification Handling
 - (void) registerForNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(toggleGrid:)
-                                                 name:NOTIFICATION_TOGGLE_GRID
-                                               object:nil];
-     }
+
+}
 
 #pragma mark Map Loading and Initialization
 -(void) setUpWithMap:(HKTMXTiledMap *)mapToUse
@@ -114,6 +112,23 @@
     objects.visible         = NO;
     
     [_currentMap setAnchorPoint:ccp(0,0)];
+    
+    // Reorder the layers and insert a faux map layer that will hold our sprites
+    // http://www.cocos2d-iphone.org/forums/topic/tilemaps-and-sprites/
+    [_currentMap reorderChild:collisions z:MAP_LAYER_COLLISIONS_Z];
+    [_currentMap reorderChild:objects    z:MAP_LAYER_OBJECTS_Z];
+    [_currentMap reorderChild:[_currentMap layerNamed:MAP_LAYER_TERRAIN] z:MAP_LAYER_TERRAIN_Z];
+    [_currentMap reorderChild:[_currentMap layerNamed:MAP_LAYER_FOG]     z:MAP_LAYER_FOG_Z];
+    
+    CCNode *spriteLayer = [CCNode node];
+    [_currentMap addChild:spriteLayer z:MAP_LAYER_SPRITES_Z tag:kTag_Map_spriteLayer];
+    
+    // Create the layer that will draw the grid and selected tiles
+    _gridLayer = [[GridLayer alloc] init];
+    _gridLayer.mapSize  = _currentMap.mapSize;
+    _gridLayer.tileSize = _currentMap.tileSize;
+    [_currentMap addChild:_gridLayer z:MAP_LAYER_GRID_Z tag:kTag_Map_gridLayer];
+    _gridLayer.showGrid = YES;
     
     // Note from Clay:
     // Since the _panZoomController is attached to MapLayer and not to the map,
@@ -201,67 +216,27 @@
 
 - (void) draw
 {
-    if (_showGrid) {
-        [self drawGrid];
-    }
-    if (_highlightDoubleTappedTile) {
-        [self highlightTile];
-    }
+
 }
 
 #pragma mark -
 #pragma mark Object Placement
 - (void) placeAirplane
 {
-    // This will need to be redone
-    GameObject *plane = [GameObject node];
-    CCSprite *planeSprite = [CCSprite spriteWithFile:@"hawker_hart.png"];
+    // TODO: Handle this in GameWorld?
+    
+    GameObject *plane       = [GameObject node];
+    CCSprite   *planeSprite = [CCSprite spriteWithFile:@"hawker_hart.png"];
     [plane setPrimarySprite:planeSprite];
     [plane addChild:planeSprite z:1 tag:kTag_GameObject_plane];
     
-    [self addChild:plane z:1 tag:kTag_GameObject_plane];
-    
-    HKTMXLayer *terrain = [_currentMap layerNamed:@"terrain"];
-    plane.position = [terrain positionAt:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue]];
+    CGPoint planePosition = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
+    [_gameWorld addGameObject:plane toMapAtPoint:planePosition usingTag:kTag_GameObject_plane andZ:1];
 }
 
 #pragma mark -
 #pragma mark Drawing the Grid
-- (void) toggleGrid:(NSNotification *)notification
-{
-    _showGrid = !_showGrid;
-}
 
-- (void) highlightTile
-{
-    glLineWidth(3 * self.scale);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ccDrawColor4B(255, 255, 255, 255);
-    
-    HKTMXLayer *terrain = [_currentMap layerNamed:@"terrain"];
-    CGPoint t = [terrain positionAt:_tileDoubleTapped];
-    t.x += [_currentMap tileSize].width * 0.5;
-    t.y += [_currentMap tileSize].height * 0.5;
-    
-    ccDrawCircle( ccp(t.x, t.y), 30, CC_DEGREES_TO_RADIANS(90), 50, NO);
-}
-
-- (void) drawGrid
-{
-    glLineWidth(1);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ccDrawColor4B(255, 255, 255, 40);
-
-    CGSize ts = [_currentMap tileSize];
-    for (int i = 0; i < _currentMap.mapSize.width; i++) {
-        ccDrawLine(ccp(i * ts.width,0), ccp(i * ts.width,_currentMap.mapSize.height * ts.height));
-    }
-    for (int i = 0; i < _currentMap.mapSize.height; i++) {
-        ccDrawLine(ccp(0,i * ts.height), ccp(_currentMap.mapSize.width * ts.width, i * ts.height));
-    }
-}
 
 #pragma mark -
 #pragma mark Finding Tiles
@@ -310,7 +285,11 @@
     
     _previousTileDoubleTapped = _tileDoubleTapped;
     _tileDoubleTapped         = tileCoord;
+
     
+    [_gridLayer processDoubleTapWith:_previousTileDoubleTapped andCurrent:_tileDoubleTapped];
+    
+    // TODO: Move some of this to _gridLayer
     // Testing of highlighting a tile; mainly to see if we're mapping to the tilemap correctly
     if (CGPointEqualToPoint(_previousTileDoubleTapped, _tileDoubleTapped)) {
         _highlightDoubleTappedTile = !_highlightDoubleTappedTile;
