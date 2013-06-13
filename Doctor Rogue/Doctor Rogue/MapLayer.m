@@ -14,6 +14,7 @@
 #import "MainGameScene.h"
 #import "GameObject.h"
 #import "GridLayer.h"
+#import "GameState.h"
 
 @interface MapLayer (PrivateMethods)
 - (void) registerForNotifications;
@@ -195,7 +196,6 @@
         _panZoomController.scrollRate           = MAP_SCROLL_RATE_RETINA;
         _panZoomController.scrollDamping        = MAP_SCROLL_DAMPING_RETINA;
         
-        [_panZoomController zoomOnPoint:testMapLoadPoint duration:0 scale:0.5f];
     } else {
         
         _panZoomController.zoomOutLimit         = zoomOutLimit;
@@ -204,14 +204,38 @@
         _panZoomController.scrollRate           = MAP_SCROLL_RATE;
         _panZoomController.scrollDamping        = MAP_SCROLL_DAMPING;
         
-        [_panZoomController centerOnPoint:testMapLoadPoint];
     }
     
     CCLOG(@"Map Entry Point: %@", [[mapToUse properties] objectForKey:MAP_ENTRY_POINT]);
     CCLOG(@"Map Entry Type : %@", [[mapToUse properties] objectForKey:MAP_ENTRY_TYPE]);
     
-    if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP]) {
-        [self placeAirplane];
+    CGPoint entryPoint;
+    
+    if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP] && ![[GameState gameState] mapVisited]) {
+        CCLOG(@"Map is not previously visited.");
+        int randX = rand() % (int)ms.width;
+        int yPt   = ms.height - 1;
+        entryPoint = ccp(randX,yPt);
+        
+    } else if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP]) {
+        entryPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
+        
+    } else {
+        entryPoint = ccp(10,10);
+    }
+
+    [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
+    
+    if (![[GameState gameState] mapVisited]) {
+        [[GameState gameState] markMapVisited:YES];
+        CCLOG(@"Marking the map as visited");
+        
+        [self placeAirplaneAtPoint:entryPoint runLanding:YES];
+        
+    } else {
+        if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP]) {
+            [self placeAirplaneAtPoint:entryPoint runLanding:NO];
+        }
     }
 }
 
@@ -222,7 +246,7 @@
 
 #pragma mark -
 #pragma mark Object Placement
-- (void) placeAirplane
+- (void) placeAirplaneAtPoint:(CGPoint)pt runLanding:(BOOL)landPlane
 {
     // TODO: Handle this in GameWorld?
     
@@ -231,8 +255,11 @@
     [plane setPrimarySprite:planeSprite];
     [plane addChild:planeSprite z:1 tag:kTag_GameObject_plane];
     
-    CGPoint planePosition = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
-    [_gameWorld addGameObject:plane toMapAtPoint:planePosition usingTag:kTag_GameObject_plane andZ:1];
+    [_gameWorld addGameObject:plane toMapAtPoint:pt usingTag:kTag_GameObject_plane andZ:1];
+    
+    if (landPlane) {
+        CCLOG(@"Now will land plane");
+    }
 }
 
 #pragma mark -
@@ -287,6 +314,12 @@
     _previousTileDoubleTapped = _tileDoubleTapped;
     _tileDoubleTapped         = tileCoord;
 
+
+    // CCLOG(@"dtPoint:     %@", NSStringFromCGPoint(dtPoint));
+    // CCLOG(@"screenCoord: %@", NSStringFromCGPoint(screenCoord));
+    // CCLOG(@"tileCoord:   %@", NSStringFromCGPoint(tileCoord));
+    
+    [self centerPanZoomControllerOnCoordinate:tileCoord duration:1.0f rate:3.0f];
     
     [_gridLayer processDoubleTapWith:_previousTileDoubleTapped andCurrent:_tileDoubleTapped];
     
@@ -323,6 +356,15 @@
     
 }
 
+- (void) centerPanZoomControllerOnCoordinate:(CGPoint)mapCoord duration:(float)duration rate:(float)rate
+{
+    float yPos = _mapDimensions.y - (mapCoord.y * _currentMap.tileSize.height) - (_currentMap.tileSize.height * 0.5);
+    float xPos = mapCoord.x * _currentMap.tileSize.width + (_currentMap.tileSize.width * 0.5);
+    
+    [_panZoomController centerOnPoint:ccp(xPos,yPos) duration:duration rate:rate];
+    
+}
+
 -(CGPoint) locationFromTouch:(UITouch*)touch
 {
 	CGPoint touchLocation = [touch locationInView: [touch view]];
@@ -334,12 +376,26 @@
     return [self locationFromTouch:[touches anyObject]];
 }
 
+/*
+- (CGPoint) mapCoordToLocation:(CGPoint)mapCoord tileMap:(HKTMXTiledMap*)tileMap
+{
+    CGPoint pos = mapCoord;
+    pos.x = pos.x * tileMap.tileSize.width;
+    pos.y = ((pos.y + tileMap.mapSize.height * tileMap.tileSize.height) * tileMap.tileSize.height);
+    
+    
+    return pos;
+}
+ */
+
 - (CGPoint) tilePosFromLocation:(CGPoint)location tileMap:(HKTMXTiledMap*)tileMap
 {
     CGPoint pos = ccpSub(location, tileMap.position);
     
     pos.x = (int)(pos.x/tileMap.tileSize.width);
+    
     pos.y = (int)((tileMap.mapSize.height * tileMap.tileSize.height - pos.y) / tileMap.tileSize.height);
+    
     return pos;
 }
 

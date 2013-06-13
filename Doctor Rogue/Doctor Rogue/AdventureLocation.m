@@ -15,6 +15,7 @@
     if (self) {
         _numMaps = nMaps;
         _maps    = [[NSMutableArray alloc] initWithCapacity:_numMaps];
+        _mapsVisited = [[NSMutableArray alloc] initWithCapacity:_numMaps];
         
         // Generate the seeds for the maps
         NSMutableArray *seeds = [NSMutableArray arrayWithCapacity:_numMaps];
@@ -50,6 +51,9 @@
         
         NSString *chosenTemplate = [NSString stringWithFormat:@"map_%@_%@.tmx", terrainType,[availableTemplates objectAtIndex:randTemplate]];
         [tempMapTemplates addObject:chosenTemplate];
+        
+        // Track whether the player has visited the map
+        [_mapsVisited addObject:[NSNumber numberWithBool:NO]];
     }
     
     _mapTemplates = [NSArray arrayWithArray:tempMapTemplates];

@@ -13,6 +13,8 @@
 @property (assign, readwrite) uint seed;
 @property (assign, readwrite) uint turn;
 
+@property (assign, readwrite) BOOL paused; // When the game is paused, the turns cannot progress. For use in cut scenes, etc.
+
 @property (assign, readwrite) unsigned short numLocations;
 @property (retain, readwrite) NSMutableArray *adventureLocations;
 
@@ -35,4 +37,7 @@
 - (void) temporaryReset;
 
 - (void) advanceTurn;
+
+- (BOOL) mapVisited;
+- (void) markMapVisited:(BOOL)visited;
 @end

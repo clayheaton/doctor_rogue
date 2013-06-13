@@ -25,6 +25,7 @@
 
 @property (assign, readwrite)    unsigned short numMaps;
 @property (nonatomic, readwrite) NSMutableArray *maps;
+@property (readwrite, readwrite) NSMutableArray *mapsVisited;
 
 - (id) initWithNumMaps:(unsigned short)nMaps;
 - (void) prepareMapTemplatesWithTerrain:(NSString *)terrainType;

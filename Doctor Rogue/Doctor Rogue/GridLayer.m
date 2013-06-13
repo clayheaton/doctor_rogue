@@ -87,7 +87,7 @@
                                                 withRed:255
                                                   green:255
                                                    blue:255
-                                               andAlpha:70];
+                                               andAlpha:50];
     
     [self addChild:tileHighlight z:3 tag:kTag_Map_gridLayer_highlightTile];
     tileHighlight.anchorPoint = ccp(0,0);

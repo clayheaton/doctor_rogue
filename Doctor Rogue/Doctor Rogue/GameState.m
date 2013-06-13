@@ -27,6 +27,7 @@ static GameState *gameState;
     if (self) {
         _currentLocationNumber      = -1;
         _currentMapNumberInLocation = -1;
+        _paused = YES;
     }
     return self;
 }
@@ -65,6 +66,17 @@ static GameState *gameState;
 {
     _turn += 1;
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_TURN_ADVANCED object:nil];
+}
+
+- (BOOL) mapVisited
+{
+    return [[[[_adventureLocations objectAtIndex:_currentLocationNumber] mapsVisited] objectAtIndex:_currentLocationNumber] boolValue];
+}
+
+- (void) markMapVisited:(BOOL)visited
+{
+    NSMutableArray *mapsVisited = [[_adventureLocations objectAtIndex:_currentLocationNumber] mapsVisited];
+    [mapsVisited insertObject:[NSNumber numberWithBool:visited] atIndex:_currentMapNumberInLocation];
 }
 
 @end

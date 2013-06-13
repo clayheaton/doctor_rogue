@@ -448,6 +448,7 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
 
 - (void)ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
 {
+    
     //pinching case (zooming)
 	if ([_touches count] >= 3)
 	{
@@ -716,8 +717,6 @@ CGPoint pt5 = [touch5 locationInView:[touch view]]
     CGPoint diff   = ccpMult(ccpSub(mid, pt), damping);
     CGPoint oldPos = _node.position;
     CGPoint newPos = ccpAdd(oldPos, diff);
-    
-    //NSLog(@"Centering on: (%.2f, %.2f)", newPos.x, newPos.y);
     
     [self updatePosition:newPos];
 }
