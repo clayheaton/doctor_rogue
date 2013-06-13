@@ -10,6 +10,7 @@
 #import "HKTMXLayer.h"
 #import "HKTMXTiledMap.h"
 #import "Constants.h"
+#import "CCSprite+GLBoxes.h"
 
 @implementation GridLayer
 
@@ -50,15 +51,14 @@
     } else {
         _highlightDoubleTappedTile = YES;
     }
+    
+    [self showHighlightTile:_highlightDoubleTappedTile];
 }
 
 - (void) draw
 {
     if (_showGrid) {
         [self drawGrid];
-    }
-    if (_highlightDoubleTappedTile) {
-        [self highlightTile];
     }
 }
 
@@ -68,6 +68,32 @@
     _showGrid = !_showGrid;
 }
 
+- (void) showHighlightTile:(BOOL)showIt
+{
+    if (showIt) {
+        HKTMXLayer *terrain = [(HKTMXTiledMap *)[self parent] layerNamed:@"terrain"];
+        CGPoint t = [terrain positionAt:_tileDoubleTapped];
+        
+        [self getChildByTag:kTag_Map_gridLayer_highlightTile].position = t;
+        [self getChildByTag:kTag_Map_gridLayer_highlightTile].visible  = YES;
+    } else {
+        [self getChildByTag:kTag_Map_gridLayer_highlightTile].visible = NO;
+    }
+}
+
+- (void) establishHighlightTile
+{
+    CCSprite *tileHighlight = [CCSprite rectangleOfSize:_tileSize
+                                                withRed:255
+                                                  green:255
+                                                   blue:255
+                                               andAlpha:70];
+    
+    [self addChild:tileHighlight z:3 tag:kTag_Map_gridLayer_highlightTile];
+    tileHighlight.anchorPoint = ccp(0,0);
+    tileHighlight.position = ccp(0,0);
+    tileHighlight.visible = NO;
+}
 
 - (void) highlightTile
 {

@@ -20,6 +20,7 @@
 @property (assign, readwrite) CGPoint tileDoubleTapped;
 @property (assign, readwrite) BOOL    highlightDoubleTappedTile;
 
-- (void)processDoubleTapWith:(CGPoint)previous andCurrent:(CGPoint)current;
+- (void) establishHighlightTile;
+- (void) processDoubleTapWith:(CGPoint)previous andCurrent:(CGPoint)current;
 
 @end

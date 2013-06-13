@@ -93,6 +93,7 @@ typedef enum {
     
     kTag_Map_spriteLayer,           // faux layer inserted between tmx layers, for displaying sprites
     kTag_Map_gridLayer,
+    kTag_Map_gridLayer_highlightTile,
     
     kTag_MapLayer_currentMap,
     

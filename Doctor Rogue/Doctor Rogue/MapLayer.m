@@ -127,6 +127,7 @@
     _gridLayer = [[GridLayer alloc] init];
     _gridLayer.mapSize  = _currentMap.mapSize;
     _gridLayer.tileSize = _currentMap.tileSize;
+    [_gridLayer establishHighlightTile];
     [_currentMap addChild:_gridLayer z:MAP_LAYER_GRID_Z tag:kTag_Map_gridLayer];
     _gridLayer.showGrid = YES;
     
