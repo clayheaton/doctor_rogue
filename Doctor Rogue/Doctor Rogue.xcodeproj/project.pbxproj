@@ -214,6 +214,7 @@
 		6FBC5536176B2AB500B0CFE5 /* AirplaneExhauseRight.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FBC5533176B2AB500B0CFE5 /* AirplaneExhauseRight.plist */; };
 		6FBC5537176B2AB500B0CFE5 /* AirplaneExhaust.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FBC5534176B2AB500B0CFE5 /* AirplaneExhaust.plist */; };
 		6FBC5538176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FBC5535176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist */; };
+		6FBC553B176BB61D00B0CFE5 /* Airplane.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBC553A176BB61D00B0CFE5 /* Airplane.m */; };
 		6FBF7C0017656F4D003E8967 /* TransitionPlan.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF7BFF17656F4D003E8967 /* TransitionPlan.m */; };
 		6FC4E475174873E000C36B5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6FC4E474174873E000C36B5A /* Localizable.strings */; };
 		6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0611747FCCE002ECBE7 /* place_names.csv */; };
@@ -612,6 +613,8 @@
 		6FBC5533176B2AB500B0CFE5 /* AirplaneExhauseRight.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirplaneExhauseRight.plist; sourceTree = "<group>"; };
 		6FBC5534176B2AB500B0CFE5 /* AirplaneExhaust.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirplaneExhaust.plist; sourceTree = "<group>"; };
 		6FBC5535176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirplaneExhaustLeft.plist; sourceTree = "<group>"; };
+		6FBC5539176BB61D00B0CFE5 /* Airplane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Airplane.h; sourceTree = "<group>"; };
+		6FBC553A176BB61D00B0CFE5 /* Airplane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Airplane.m; sourceTree = "<group>"; };
 		6FBF7BFE17656F4D003E8967 /* TransitionPlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionPlan.h; sourceTree = "<group>"; };
 		6FBF7BFF17656F4D003E8967 /* TransitionPlan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionPlan.m; sourceTree = "<group>"; };
 		6FC4E474174873E000C36B5A /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -735,6 +738,8 @@
 				6F35965F173DE7C400C9C717 /* CCPanZoomController.m */,
 				6F359651173DC9E500C9C717 /* MapLayer.h */,
 				6F359652173DC9E500C9C717 /* MapLayer.m */,
+				6FBC5539176BB61D00B0CFE5 /* Airplane.h */,
+				6FBC553A176BB61D00B0CFE5 /* Airplane.m */,
 				6F9F3B0A17695A9300CC8E2E /* GridLayer.h */,
 				6F9F3B0B17695A9300CC8E2E /* GridLayer.m */,
 				6FD7479D174B12D3002AFF93 /* MapTile.h */,
@@ -1653,6 +1658,7 @@
 				6FBF7C0017656F4D003E8967 /* TransitionPlan.m in Sources */,
 				6FDE9FF217676EE400292B88 /* Utilities.m in Sources */,
 				6F9F3B0C17695A9300CC8E2E /* GridLayer.m in Sources */,
+				6FBC553B176BB61D00B0CFE5 /* Airplane.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

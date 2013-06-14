@@ -15,6 +15,7 @@
 #import "GameObject.h"
 #import "GridLayer.h"
 #import "GameState.h"
+#import "Airplane.h"
 
 
 @interface MapLayer (PrivateMethods)
@@ -95,7 +96,7 @@
 #pragma mark Notification Handling
 - (void) registerForNotifications
 {
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(planeLanded) name:@"planeLanded" object:nil];
 }
 
 #pragma mark Map Loading and Initialization
@@ -240,13 +241,9 @@
         entryPoint = ccp(rand() % (int)(_currentMap.mapSize.width - 1), _currentMap.mapSize.height - 1);
     }
     
-    landingPoint     = [self positionOnTerrain:origlandingPoint];
+    landingPoint       = [self positionOnTerrain:origlandingPoint];
     
-    GameObject *plane       = [GameObject node];
-    CCSprite   *planeSprite = [CCSprite spriteWithFile:@"hawker_hart.png"];
-    planeSprite.anchorPoint = ccp(0.5,0.75);
-    [plane setPrimarySprite:planeSprite];
-    [plane addChild:planeSprite z:1 tag:kTag_GameObject_plane];
+    Airplane   *plane  = [Airplane planeWithEntryPoint:entryPoint];
     
     _plane = plane;
     
@@ -255,41 +252,11 @@
     [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
 
     if (landThePlane) {
-        // Exhaust Smoke
-        CCParticleSystemQuad *exhaust = [CCParticleSystemQuad particleWithFile:@"AirplaneExhaust.plist"];
-        exhaust.position = ccp(0.5,0.5);//ccp(underlayer.contentSize.width/2,underlayer.contentSize.height/2);
-        exhaust.visible = YES;
-        [plane addChild:exhaust z:-1 tag:kTag_GameObject_plane_smoke];
-        
-        // Find the proper angle to the landing point and rotate the plane to face it
-        // Cocos2d has some funky trig. This link helped sort it out.
-        // http://www.pavley.com/2011/11/28/cocos2d-iphone-sprite-rotation-to-an-arbitrary-point/
-        
-        CGPoint difference      = ccpSub([self positionOnTerrain:entryPoint], landingPoint);
-        CGFloat rotationRadians = ccpToAngle(difference);
-        CGFloat rotationDegrees = -CC_RADIANS_TO_DEGREES(rotationRadians);
-        rotationDegrees         -= 90.0f;
-        
-        plane.rotation          = rotationDegrees;
-        plane.scale             = 2.5f;
-        
-        float distance          = sqrtf(difference.x*difference.x + difference.y * difference.y);
-        float standard          = 75 * _currentMap.tileSize.height;
-        float factor            = distance / standard;
-        float time              = 10 * factor;
-        
-        id actionMove           = [CCMoveTo    actionWithDuration:time position:landingPoint];
-        id actionRotate         = [CCRotateTo  actionWithDuration:0.5f angle:0];
-        id actionScale          = [CCScaleTo   actionWithDuration:time scale:1.0f];
-        id actionMoveDone       = [CCCallFuncN actionWithTarget:self   selector:@selector(planeLanded)];
-        [plane runAction:[CCSequence actions:actionMove, actionRotate, actionMoveDone, nil]];
-        [plane runAction:actionScale];
+        [plane landOnMap:_currentMap atPoint:landingPoint];
         
         [_panZoomController disable];
         self.touchEnabled = NO;
         _trackObject = YES;
-        // Move the camera along with it
-        // [self centerPanZoomControllerOnCoordinate:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue] duration:time rate:0];
     }
     
 }
@@ -300,10 +267,6 @@
     
     self.touchEnabled = YES;
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
-    
-    CCParticleSystemQuad * exhaust = (CCParticleSystemQuad *)[_plane getChildByTag:kTag_GameObject_plane_smoke];
-    
-    [exhaust stopSystem];
     
     _trackObject = NO;
     _plane = nil;

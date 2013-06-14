@@ -41,7 +41,7 @@
                                    @"50x50",
                                    @"50x25",
                                    @"25x50",
-                                   @"25x25",
+                                   // @"25x25",
                                    nil];
     
     NSMutableArray *tempMapTemplates = [NSMutableArray arrayWithCapacity:_numMaps];
