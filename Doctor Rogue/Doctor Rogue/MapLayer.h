@@ -12,6 +12,7 @@
 @class CCPanZoomController;
 @class GameWorld;
 @class GridLayer;
+@class GameObject;
 
 @interface MapLayer : CCLayer {
     
@@ -35,6 +36,11 @@
 
 // Tutorial for gesture recognizers: http://www.raywenderlich.com/4817/how-to-integrate-cocos2d-and-uikit
 @property (retain) UITapGestureRecognizer * doubleTapRecognizer;
+
+
+@property (retain, readwrite) GameObject *objectToTrack;
+@property (assign, readwrite) BOOL      trackObject;
+@property (assign, readwrite) CGPoint   objectStartLocation;
 
 - (id) initWithMap:(HKTMXTiledMap *)map andGameWorld:(GameWorld *)gw;
 

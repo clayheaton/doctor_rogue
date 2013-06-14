@@ -76,6 +76,7 @@
     _doubleTapRecognizer.numberOfTapsRequired = 2;
     
     [[[CCDirector sharedDirector] view] addGestureRecognizer:_doubleTapRecognizer];
+    [self scheduleUpdate];
 }
 
 - (void) onExit
@@ -159,8 +160,6 @@
     
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
     
-    CGPoint testMapLoadPoint = ccp((ms.width * ts.width) * 0.1, (ms.height * ts.height) * 0.9);
-    
     // Zoom fixing for small maps.. Retina always will be 0.5 times the value for non-retina
     
     // Determine the width of the map, in pixels. The zoom out limit should be the greater
@@ -209,61 +208,69 @@
     CCLOG(@"Map Entry Point: %@", [[mapToUse properties] objectForKey:MAP_ENTRY_POINT]);
     CCLOG(@"Map Entry Type : %@", [[mapToUse properties] objectForKey:MAP_ENTRY_TYPE]);
     
-    CGPoint entryPoint;
     
-    if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP] && ![[GameState gameState] mapVisited]) {
-        CCLOG(@"Map is not previously visited.");
-        int randX = rand() % (int)ms.width;
-        int yPt   = ms.height - 1;
-        entryPoint = ccp(randX,yPt);
-        
-    } else if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP]) {
-        entryPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
-        
-    } else {
-        entryPoint = ccp(10,10);
-    }
+    CGPoint entryPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
 
-    [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
-    
-    if (![[GameState gameState] mapVisited]) {
-        [[GameState gameState] markMapVisited:YES];
-        CCLOG(@"Marking the map as visited");
-        
-        [self placeAirplaneAtPoint:entryPoint runLanding:YES];
-        
-    } else {
-        if ([[[mapToUse properties] objectForKey:MAP_ENTRY_TYPE] isEqualToString:MAP_OUTDOOR_LOCATION_FIRST_MAP]) {
-            [self placeAirplaneAtPoint:entryPoint runLanding:NO];
-        }
-    }
+    [self insertAirplaneWithLanding:YES];
+     
 }
 
 - (void) draw
 {
-
+    
 }
 
 #pragma mark -
 #pragma mark Object Placement
-- (void) placeAirplaneAtPoint:(CGPoint)pt runLanding:(BOOL)landPlane
+
+- (CGPoint)positionOnTerrain:(CGPoint)tileCoordinate
 {
-    // TODO: Handle this in GameWorld?
+    HKTMXLayer *terrain = [_currentMap layerNamed:@"objects"];
+    return [terrain positionAt:tileCoordinate];
+}
+
+- (void) insertAirplaneWithLanding:(BOOL)landThePlane
+{
+    CGPoint entryPoint, landingPoint;
+    
+    if (!landThePlane) {
+        entryPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
+    } else {
+        entryPoint = ccp(12, _currentMap.mapSize.height - 1);
+    }
+    [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
+    
+    landingPoint = [self positionOnTerrain:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue]];
     
     GameObject *plane       = [GameObject node];
     CCSprite   *planeSprite = [CCSprite spriteWithFile:@"hawker_hart.png"];
     [plane setPrimarySprite:planeSprite];
     [plane addChild:planeSprite z:1 tag:kTag_GameObject_plane];
     
-    [_gameWorld addGameObject:plane toMapAtPoint:pt usingTag:kTag_GameObject_plane andZ:1];
+    [_gameWorld addGameObject:plane toMapAtPoint:entryPoint usingTag:kTag_GameObject_plane andZ:1];
     
-    if (landPlane) {
-        CCLOG(@"Now will land plane");
+    CCLOG(@"Entry: %@ Land: %@ ", NSStringFromCGPoint(plane.position), NSStringFromCGPoint(landingPoint));
+
+    if (landThePlane) {
+        id actionMove       = [CCMoveTo actionWithDuration:10.0 position:landingPoint];
+        id actionMoveDone   = [CCCallFuncN actionWithTarget:self selector:@selector(planeLanded)];
+        [plane runAction:[CCSequence actions:actionMove, actionMoveDone, nil]];
     }
+    
 }
 
-#pragma mark -
-#pragma mark Drawing the Grid
+- (void) planeLanded
+{
+    _trackObject = NO;
+    _objectToTrack = nil;
+}
+
+- (CGPoint) mapCoordFromTileCoord:(CGPoint)coord
+{
+    float yPos = _mapDimensions.y - (coord.y * _currentMap.tileSize.height) - (_currentMap.tileSize.height * 0.5);
+    float xPos = coord.x * _currentMap.tileSize.width + (_currentMap.tileSize.width * 0.5);
+    return ccp(xPos,yPos);
+}
 
 
 #pragma mark -
@@ -313,11 +320,6 @@
     
     _previousTileDoubleTapped = _tileDoubleTapped;
     _tileDoubleTapped         = tileCoord;
-
-
-    // CCLOG(@"dtPoint:     %@", NSStringFromCGPoint(dtPoint));
-    // CCLOG(@"screenCoord: %@", NSStringFromCGPoint(screenCoord));
-    // CCLOG(@"tileCoord:   %@", NSStringFromCGPoint(tileCoord));
     
     [self centerPanZoomControllerOnCoordinate:tileCoord duration:1.0f rate:3.0f];
     
@@ -376,18 +378,6 @@
     return [self locationFromTouch:[touches anyObject]];
 }
 
-/*
-- (CGPoint) mapCoordToLocation:(CGPoint)mapCoord tileMap:(HKTMXTiledMap*)tileMap
-{
-    CGPoint pos = mapCoord;
-    pos.x = pos.x * tileMap.tileSize.width;
-    pos.y = ((pos.y + tileMap.mapSize.height * tileMap.tileSize.height) * tileMap.tileSize.height);
-    
-    
-    return pos;
-}
- */
-
 - (CGPoint) tilePosFromLocation:(CGPoint)location tileMap:(HKTMXTiledMap*)tileMap
 {
     CGPoint pos = ccpSub(location, tileMap.position);
@@ -402,31 +392,17 @@
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
-        //CCLOG(@"MapLayer tapped");
+
         _tapIsTargetingMapLayer = YES;
-        
-        /*
-        CGPoint screenCoord = [self locationFromTouch:[touches anyObject]];
-        CCLOG(@"ccTouchesBegan screenCoord: %@", NSStringFromCGPoint(screenCoord));
-        CGPoint tileCoord   = [self tileCoordFromScreenPoint:screenCoord];
-        
-        _previousTileTapped = _tileTapped;
-        _tileTapped         = tileCoord;
-         
-         */
-        
-        /* Debugging
-        CCLOG(@"\nSelecting something at screen coord: %@", NSStringFromCGPoint(screenCoord));
-        CCLOG(@"  [self position]: %@", NSStringFromCGPoint([self position]));
-        CCLOG(@"  tile coordinate: %@", NSStringFromCGPoint(tileCoord));
-        CCLOG(@"  map coordinate : %@", NSStringFromCGPoint([[_currentMap layerNamed:@"terrain"] positionAt:tileCoord]));
-        CCLOG(@"  scale factor: %f", [self scale]);
-         */
         
     } else {
         _tapIsTargetingMapLayer = NO;
+        if ([touches count] == 2) {
+            // CCLOG(@"MapLayer detects two-finger touch");
+        }
 
     }
+    
 }
 
 - (void) ccTouchesMoved:(NSSet*)touches withEvent:(UIEvent *)event
@@ -435,16 +411,25 @@
         _tapIsTargetingMapLayer = YES;
     } else {
         _tapIsTargetingMapLayer = NO;
-
+        if ([touches count] == 2) {
+            //CCLOG(@"Two-finger touch is moving");
+        }
     }
 }
 
 -(void) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([touches count] == 1) {
-        // MapLayer end touch
+
     } else {
 
+    }
+}
+
+-(void) update:(ccTime)delta
+{
+    if (_trackObject) {
+        //CCLOG(@"gameObject at position: %@", NSStringFromCGPoint(_objectToTrack.position));
     }
 }
 

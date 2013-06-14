@@ -203,6 +203,7 @@
 {
 
     gameObject.position = [_objectsLayer positionAt:point];
+    CCLOG(@"GameObject added to spriteLayer at %@", NSStringFromCGPoint(gameObject.position));
     CCNode *spriteLayer = [_map getChildByTag:kTag_Map_spriteLayer];
     [spriteLayer addChild:gameObject z:zValue tag:childTag];
 }
