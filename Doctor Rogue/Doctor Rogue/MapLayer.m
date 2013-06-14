@@ -244,18 +244,27 @@
     
     GameObject *plane       = [GameObject node];
     CCSprite   *planeSprite = [CCSprite spriteWithFile:@"hawker_hart.png"];
+    planeSprite.anchorPoint = ccp(0.5,0.75);
     [plane setPrimarySprite:planeSprite];
     [plane addChild:planeSprite z:1 tag:kTag_GameObject_plane];
     
-    _objectToTrack = plane;
+    _plane = plane;
     
     [_gameWorld addGameObject:plane toMapAtPoint:entryPoint usingTag:kTag_GameObject_plane andZ:1];
     
     [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
 
     if (landThePlane) {
+        // Exhaust Smoke
+        CCParticleSystemQuad *exhaust = [CCParticleSystemQuad particleWithFile:@"AirplaneExhaust.plist"];
+        exhaust.position = ccp(0.5,0.5);//ccp(underlayer.contentSize.width/2,underlayer.contentSize.height/2);
+        exhaust.visible = YES;
+        [plane addChild:exhaust z:-1 tag:kTag_GameObject_plane_smoke];
+        
         // Find the proper angle to the landing point and rotate the plane to face it
-
+        // Cocos2d has some funky trig. This link helped sort it out.
+        // http://www.pavley.com/2011/11/28/cocos2d-iphone-sprite-rotation-to-an-arbitrary-point/
+        
         CGPoint difference      = ccpSub([self positionOnTerrain:entryPoint], landingPoint);
         CGFloat rotationRadians = ccpToAngle(difference);
         CGFloat rotationDegrees = -CC_RADIANS_TO_DEGREES(rotationRadians);
@@ -287,11 +296,17 @@
 
 - (void) planeLanded
 {
-    _trackObject = NO;
-    _objectToTrack = nil;
+    CCLOG(@"Plane Landed.");
     
     self.touchEnabled = YES;
     [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
+    
+    CCParticleSystemQuad * exhaust = (CCParticleSystemQuad *)[_plane getChildByTag:kTag_GameObject_plane_smoke];
+    
+    [exhaust stopSystem];
+    
+    _trackObject = NO;
+    _plane = nil;
 }
 
 - (CGPoint) mapCoordFromTileCoord:(CGPoint)coord
@@ -458,7 +473,7 @@
 -(void) update:(ccTime)delta
 {
     if (_trackObject) {
-        [_panZoomController centerOnPoint:_objectToTrack.position damping:0.5f];
+        [_panZoomController centerOnPoint:_plane.position damping:0.5f];
     }
 }
 

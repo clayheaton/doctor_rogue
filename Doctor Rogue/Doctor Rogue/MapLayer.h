@@ -38,7 +38,7 @@
 @property (retain) UITapGestureRecognizer * doubleTapRecognizer;
 
 
-@property (retain, readwrite) GameObject *objectToTrack;
+@property (retain, readwrite) GameObject *plane;
 @property (assign, readwrite) BOOL      trackObject;
 
 - (id) initWithMap:(HKTMXTiledMap *)map andGameWorld:(GameWorld *)gw;

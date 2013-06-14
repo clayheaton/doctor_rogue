@@ -98,6 +98,7 @@ typedef enum {
     kTag_MapLayer_currentMap,
     
     kTag_GameObject_plane,
+    kTag_GameObject_plane_smoke,
     
     kTag_UILayer_tempQuitButton,
     kTag_UILayer_toggleGridButton,

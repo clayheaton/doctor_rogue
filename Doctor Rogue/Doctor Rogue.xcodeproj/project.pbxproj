@@ -211,6 +211,9 @@
 		6F8799B21741271600CA9E08 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8799AD1741271600CA9E08 /* NSString+ActiveSupportInflector.m */; };
 		6F9F3B0C17695A9300CC8E2E /* GridLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9F3B0B17695A9300CC8E2E /* GridLayer.m */; };
 		6FA00F7B174D879F002345E5 /* CCSprite+GLBoxes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FA00F7A174D879E002345E5 /* CCSprite+GLBoxes.m */; };
+		6FBC5536176B2AB500B0CFE5 /* AirplaneExhauseRight.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FBC5533176B2AB500B0CFE5 /* AirplaneExhauseRight.plist */; };
+		6FBC5537176B2AB500B0CFE5 /* AirplaneExhaust.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FBC5534176B2AB500B0CFE5 /* AirplaneExhaust.plist */; };
+		6FBC5538176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FBC5535176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist */; };
 		6FBF7C0017656F4D003E8967 /* TransitionPlan.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF7BFF17656F4D003E8967 /* TransitionPlan.m */; };
 		6FC4E475174873E000C36B5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6FC4E474174873E000C36B5A /* Localizable.strings */; };
 		6FCAC0661747FCCE002ECBE7 /* place_names.csv in Resources */ = {isa = PBXBuildFile; fileRef = 6FCAC0611747FCCE002ECBE7 /* place_names.csv */; };
@@ -606,6 +609,9 @@
 		6F9F3B0B17695A9300CC8E2E /* GridLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridLayer.m; sourceTree = "<group>"; };
 		6FA00F79174D879E002345E5 /* CCSprite+GLBoxes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CCSprite+GLBoxes.h"; sourceTree = "<group>"; };
 		6FA00F7A174D879E002345E5 /* CCSprite+GLBoxes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CCSprite+GLBoxes.m"; sourceTree = "<group>"; };
+		6FBC5533176B2AB500B0CFE5 /* AirplaneExhauseRight.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirplaneExhauseRight.plist; sourceTree = "<group>"; };
+		6FBC5534176B2AB500B0CFE5 /* AirplaneExhaust.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirplaneExhaust.plist; sourceTree = "<group>"; };
+		6FBC5535176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirplaneExhaustLeft.plist; sourceTree = "<group>"; };
 		6FBF7BFE17656F4D003E8967 /* TransitionPlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionPlan.h; sourceTree = "<group>"; };
 		6FBF7BFF17656F4D003E8967 /* TransitionPlan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionPlan.m; sourceTree = "<group>"; };
 		6FC4E474174873E000C36B5A /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -1304,6 +1310,9 @@
 			children = (
 				6F6E889E174CD6AA008500EA /* Flower.plist */,
 				6F6E88A4174D1EE6008500EA /* chasm_wind.plist */,
+				6FBC5533176B2AB500B0CFE5 /* AirplaneExhauseRight.plist */,
+				6FBC5534176B2AB500B0CFE5 /* AirplaneExhaust.plist */,
+				6FBC5535176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist */,
 			);
 			name = "Particle Effects";
 			sourceTree = "<group>";
@@ -1462,6 +1471,9 @@
 				6F16CD7E175672D1003FFC38 /* grasslands.tsx in Resources */,
 				6F16CD81175673B5003FFC38 /* fog-hd.tsx in Resources */,
 				6F16CD82175673B5003FFC38 /* fog.tsx in Resources */,
+				6FBC5536176B2AB500B0CFE5 /* AirplaneExhauseRight.plist in Resources */,
+				6FBC5537176B2AB500B0CFE5 /* AirplaneExhaust.plist in Resources */,
+				6FBC5538176B2AB500B0CFE5 /* AirplaneExhaustLeft.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
