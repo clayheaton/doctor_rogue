@@ -16,6 +16,7 @@
 #import "GridLayer.h"
 #import "GameState.h"
 
+
 @interface MapLayer (PrivateMethods)
 - (void) registerForNotifications;
 - (void) setUpWithMap:(HKTMXTiledMap *)mapToUse;
@@ -208,8 +209,6 @@
     CCLOG(@"Map Entry Point: %@", [[mapToUse properties] objectForKey:MAP_ENTRY_POINT]);
     CCLOG(@"Map Entry Type : %@", [[mapToUse properties] objectForKey:MAP_ENTRY_TYPE]);
     
-    
-    CGPoint entryPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
 
     [self insertAirplaneWithLanding:YES];
      
@@ -231,30 +230,57 @@
 
 - (void) insertAirplaneWithLanding:(BOOL)landThePlane
 {
-    CGPoint entryPoint, landingPoint;
+    CGPoint entryPoint, origlandingPoint, landingPoint;
+    
+    origlandingPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
     
     if (!landThePlane) {
-        entryPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
+        entryPoint = origlandingPoint;
     } else {
-        entryPoint = ccp(12, _currentMap.mapSize.height - 1);
+        entryPoint = ccp(rand() % (int)(_currentMap.mapSize.width - 1), _currentMap.mapSize.height - 1);
     }
-    [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
     
-    landingPoint = [self positionOnTerrain:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue]];
+    landingPoint     = [self positionOnTerrain:origlandingPoint];
     
     GameObject *plane       = [GameObject node];
     CCSprite   *planeSprite = [CCSprite spriteWithFile:@"hawker_hart.png"];
     [plane setPrimarySprite:planeSprite];
     [plane addChild:planeSprite z:1 tag:kTag_GameObject_plane];
     
+    _objectToTrack = plane;
+    
     [_gameWorld addGameObject:plane toMapAtPoint:entryPoint usingTag:kTag_GameObject_plane andZ:1];
     
-    CCLOG(@"Entry: %@ Land: %@ ", NSStringFromCGPoint(plane.position), NSStringFromCGPoint(landingPoint));
+    [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
 
     if (landThePlane) {
-        id actionMove       = [CCMoveTo actionWithDuration:10.0 position:landingPoint];
-        id actionMoveDone   = [CCCallFuncN actionWithTarget:self selector:@selector(planeLanded)];
-        [plane runAction:[CCSequence actions:actionMove, actionMoveDone, nil]];
+        // Find the proper angle to the landing point and rotate the plane to face it
+
+        CGPoint difference      = ccpSub([self positionOnTerrain:entryPoint], landingPoint);
+        CGFloat rotationRadians = ccpToAngle(difference);
+        CGFloat rotationDegrees = -CC_RADIANS_TO_DEGREES(rotationRadians);
+        rotationDegrees         -= 90.0f;
+        
+        plane.rotation          = rotationDegrees;
+        plane.scale             = 2.5f;
+        
+        float distance          = sqrtf(difference.x*difference.x + difference.y * difference.y);
+        float standard          = 75 * _currentMap.tileSize.height;
+        float factor            = distance / standard;
+        float time              = 10 * factor;
+        
+        id actionMove           = [CCMoveTo    actionWithDuration:time position:landingPoint];
+        id actionRotate         = [CCRotateTo  actionWithDuration:0.5f angle:0];
+        id actionScale          = [CCScaleTo   actionWithDuration:time scale:1.0f];
+        id actionMoveDone       = [CCCallFuncN actionWithTarget:self   selector:@selector(planeLanded)];
+        [plane runAction:[CCSequence actions:actionMove, actionRotate, actionMoveDone, nil]];
+        [plane runAction:actionScale];
+        
+        [_panZoomController disable];
+        self.touchEnabled = NO;
+        _trackObject = YES;
+        // Move the camera along with it
+        // [self centerPanZoomControllerOnCoordinate:[[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue] duration:time rate:0];
     }
     
 }
@@ -263,6 +289,9 @@
 {
     _trackObject = NO;
     _objectToTrack = nil;
+    
+    self.touchEnabled = YES;
+    [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
 }
 
 - (CGPoint) mapCoordFromTileCoord:(CGPoint)coord
@@ -429,7 +458,7 @@
 -(void) update:(ccTime)delta
 {
     if (_trackObject) {
-        //CCLOG(@"gameObject at position: %@", NSStringFromCGPoint(_objectToTrack.position));
+        [_panZoomController centerOnPoint:_objectToTrack.position damping:0.5f];
     }
 }
 

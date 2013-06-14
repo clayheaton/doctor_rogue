@@ -40,7 +40,6 @@
 
 @property (retain, readwrite) GameObject *objectToTrack;
 @property (assign, readwrite) BOOL      trackObject;
-@property (assign, readwrite) CGPoint   objectStartLocation;
 
 - (id) initWithMap:(HKTMXTiledMap *)map andGameWorld:(GameWorld *)gw;
 
