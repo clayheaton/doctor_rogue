@@ -13,6 +13,7 @@
 @class GameWorld;
 @class GridLayer;
 @class GameObject;
+@class MapEntryExitManager;
 
 @interface MapLayer : CCLayer {
     
@@ -38,11 +39,16 @@
 @property (retain) UITapGestureRecognizer * doubleTapRecognizer;
 
 
-@property (retain, readwrite) GameObject *plane;
+@property (retain, readwrite) GameObject *objectToTrack;
 @property (assign, readwrite) BOOL      trackObject;
+
+@property (retain, readwrite) MapEntryExitManager *entryExitManager;
 
 - (id) initWithMap:(HKTMXTiledMap *)map andGameWorld:(GameWorld *)gw;
 
 - (BOOL) underlayerIsNeeded;
+
+- (CGPoint)positionOnTerrain:(CGPoint)tileCoordinate;
+- (void) centerPanZoomControllerOnCoordinate:(CGPoint)mapCoord duration:(float)duration rate:(float)rate;
 
 @end

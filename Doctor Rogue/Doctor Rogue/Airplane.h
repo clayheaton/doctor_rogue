@@ -21,5 +21,6 @@
 + (Airplane *) planeWithEntryPoint:(CGPoint)entry;
 
 - (void) landOnMap:(HKTMXTiledMap *)map atPoint:(CGPoint)landingPoint;
+- (void) planeMoveComplete;
 
 @end

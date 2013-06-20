@@ -18,8 +18,17 @@
         planeSprite.anchorPoint = ccp(0.5,0.75);
         [self setPrimarySprite:planeSprite];
         [self addChild:planeSprite z:1 tag:kTag_GameObject_plane];
+        
+        self.revealsMapThroughFog = YES;
+        self.name = @"Airplane"; // TODO: Add to localization
     }
     return self;
+}
+
+- (void) onExit
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super onExit];
 }
 
 + (Airplane *) planeWithEntryPoint:(CGPoint)entry
@@ -37,8 +46,6 @@
 
 - (void) landOnMap:(HKTMXTiledMap *)map atPoint:(CGPoint)landingPoint
 {
-    CCLOG(@"landingPoint: %@", NSStringFromCGPoint(landingPoint));
-    
     // Exhaust Smoke
     CCParticleSystemQuad *exhaust = [CCParticleSystemQuad particleWithFile:@"AirplaneExhaust.plist"];
     exhaust.position = ccp(0.5,0.5);//ccp(underlayer.contentSize.width/2,underlayer.contentSize.height/2);
@@ -65,16 +72,21 @@
     id actionMove           = [CCMoveTo    actionWithDuration:time position:landingPoint];
     id actionRotate         = [CCRotateTo  actionWithDuration:0.5f angle:0];
     id actionScale          = [CCScaleTo   actionWithDuration:time scale:1.0f];
-    id actionMoveDone       = [CCCallFuncN actionWithTarget:self   selector:@selector(planeLanded)];
-    [self runAction:[CCSequence actions:actionMove, actionRotate, actionMoveDone, nil]];
+    id actionStopExhaust    = [CCCallFuncN actionWithTarget:self   selector:@selector(stopExhaust)];
+    id actionMoveDone       = [CCCallFuncN actionWithTarget:self   selector:@selector(planeMoveComplete)];
+    [self runAction:[CCSequence actions:actionMove, actionStopExhaust, actionRotate, actionMoveDone, nil]];
     [self runAction:actionScale];
 }
 
-- (void) planeLanded
+- (void) stopExhaust
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"planeLanded" object:nil];
     CCParticleSystemQuad *smoke =  (CCParticleSystemQuad *)[self getChildByTag:kTag_GameObject_plane_smoke];
     [smoke stopSystem];
+}
+
+- (void) planeMoveComplete
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_PLANE_LANDED object:nil];
 }
 
 @end

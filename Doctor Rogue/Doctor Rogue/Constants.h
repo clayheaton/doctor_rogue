@@ -19,40 +19,41 @@
 #define NOTIFICATION_MAP_GENERATOR_UPDATE @"MapGeneratorUpdate"
 #define NOTIFICATION_LOADING_UPDATE       @"MapGeneratorUpdate"
 #define NOTIFICATION_TURN_ADVANCED        @"TurnAdvanced"
+#define NOTIFICATION_PLANE_LANDED         @"PlaneLanded"
 
-#define MAP_LAYER_TERRAIN               @"terrain"
-#define MAP_LAYER_OBJECTS               @"objects"
-#define MAP_LAYER_COLLISIONS            @"collisions"
-#define MAP_LAYER_FOG                   @"fog_of_war"
+#define MAP_LAYER_TERRAIN                 @"terrain"
+#define MAP_LAYER_OBJECTS                 @"objects"
+#define MAP_LAYER_COLLISIONS              @"collisions"
+#define MAP_LAYER_FOG                     @"fog_of_war"
 
-#define MAP_LAYER_TERRAIN_Z             0
-#define MAP_LAYER_GRID_Z                1
-#define MAP_LAYER_SPRITES_Z             2
-#define MAP_LAYER_OBJECTS_Z             3
-#define MAP_LAYER_COLLISIONS_Z          4
-#define MAP_LAYER_FOG_Z                 5
+#define MAP_LAYER_TERRAIN_Z               0
+#define MAP_LAYER_GRID_Z                  1
+#define MAP_LAYER_SPRITES_Z               2
+#define MAP_LAYER_OBJECTS_Z               3
+#define MAP_LAYER_COLLISIONS_Z            4
+#define MAP_LAYER_FOG_Z                   5
 
-#define GAME_WORLD_TILE                 @"GameWorldTile"
+#define GAME_WORLD_TILE                   @"GameWorldTile"
 
-#define MAP_OUTDOOR_LOCATION_FIRST_MAP  @"outdoorLocationFirstMap"
+#define MAP_OUTDOOR_LOCATION_FIRST_MAP    @"outdoorLocationFirstMap"
 
-#define MAP_ENTRY_TYPE                  @"mapEntryType"
-#define MAP_ENTRY_POINT                 @"mapEntryPoint"
-#define MAP_ENTRY_DIRECTION             @"mapEntryDirection"
+#define MAP_ENTRY_TYPE                    @"mapEntryType"
+#define MAP_ENTRY_POINT                   @"mapEntryPoint"
+#define MAP_ENTRY_DIRECTION               @"mapEntryDirection"
 
-#define FOG_BLACK                       @"fog_black"
-#define FOG_GREY                        @"fog_grey"
+#define FOG_BLACK                         @"fog_black"
+#define FOG_GREY                          @"fog_grey"
 
-#define TILE                            @"tile"
-#define TILE_DESCRIPTION                @"tile_description"
+#define TILE                              @"tile"
+#define TILE_DESCRIPTION                  @"tile_description"
 
-#define MAP_PREFIX_GRASSLANDS           @"grasslands"
+#define MAP_PREFIX_GRASSLANDS             @"grasslands"
 
 // Terrain Dictionary
-#define TERRAIN_DICT_TERRAINS_BY_NUMBER           @"TerrainsOrderedByNumber"
-#define TERRAIN_DICT_TERRAINS_BY_NAME             @"TerrainsByName"
-#define TERRAIN_DICT_DEFAULT                      @"DefaultTerrain"
-#define TERRAIN_DICT_ALL_TILES_SET                @"AllTilesSet"
+#define TERRAIN_DICT_TERRAINS_BY_NUMBER   @"TerrainsOrderedByNumber"
+#define TERRAIN_DICT_TERRAINS_BY_NAME     @"TerrainsByName"
+#define TERRAIN_DICT_DEFAULT              @"DefaultTerrain"
+#define TERRAIN_DICT_ALL_TILES_SET        @"AllTilesSet"
 
 // Higher scrollRate is slower; default is 9
 // Default scrollDamping is 0.85f;

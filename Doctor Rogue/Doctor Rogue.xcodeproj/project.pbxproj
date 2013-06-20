@@ -232,6 +232,7 @@
 		6FD7EDBA1743E344001022EB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FD7EDB81743E134001022EB /* libz.dylib */; };
 		6FDE9FF217676EE400292B88 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDE9FF117676EE400292B88 /* Utilities.m */; };
 		6FE34663175E7E8500BD9418 /* Tile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE34662175E7E8500BD9418 /* Tile.m */; };
+		6FE414A917735CC2001A0C86 /* MapEntryExitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE414A817735CC2001A0C86 /* MapEntryExitManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -638,6 +639,8 @@
 		6FDE9FF117676EE400292B88 /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		6FE34661175E7E8400BD9418 /* Tile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tile.h; sourceTree = "<group>"; };
 		6FE34662175E7E8500BD9418 /* Tile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tile.m; sourceTree = "<group>"; };
+		6FE414A717735CC2001A0C86 /* MapEntryExitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapEntryExitManager.h; sourceTree = "<group>"; };
+		6FE414A817735CC2001A0C86 /* MapEntryExitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapEntryExitManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -738,6 +741,8 @@
 				6F35965F173DE7C400C9C717 /* CCPanZoomController.m */,
 				6F359651173DC9E500C9C717 /* MapLayer.h */,
 				6F359652173DC9E500C9C717 /* MapLayer.m */,
+				6FE414A717735CC2001A0C86 /* MapEntryExitManager.h */,
+				6FE414A817735CC2001A0C86 /* MapEntryExitManager.m */,
 				6FBC5539176BB61D00B0CFE5 /* Airplane.h */,
 				6FBC553A176BB61D00B0CFE5 /* Airplane.m */,
 				6F9F3B0A17695A9300CC8E2E /* GridLayer.h */,
@@ -1659,6 +1664,7 @@
 				6FDE9FF217676EE400292B88 /* Utilities.m in Sources */,
 				6F9F3B0C17695A9300CC8E2E /* GridLayer.m in Sources */,
 				6FBC553B176BB61D00B0CFE5 /* Airplane.m in Sources */,
+				6FE414A917735CC2001A0C86 /* MapEntryExitManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

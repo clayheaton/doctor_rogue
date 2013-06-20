@@ -17,5 +17,10 @@
 @property (copy, readwrite)   NSString *name;
 @property (retain, readwrite) CCSprite *primarySprite;
 
+@property (assign, readwrite) BOOL selectable;
+
+@property (assign, readwrite) BOOL blocksLineOfSight;
+@property (assign, readwrite) BOOL revealsMapThroughFog;
+
 
 @end

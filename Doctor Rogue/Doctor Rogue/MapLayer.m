@@ -15,7 +15,7 @@
 #import "GameObject.h"
 #import "GridLayer.h"
 #import "GameState.h"
-#import "Airplane.h"
+#import "MapEntryExitManager.h"
 
 
 @interface MapLayer (PrivateMethods)
@@ -84,19 +84,22 @@
 - (void) onExit
 {
     CCLOG(@"MapLayer onExit");
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_panZoomController disable];
     [self removeAllChildrenWithCleanup:YES];
     
     [[[CCDirector sharedDirector] view] removeGestureRecognizer:_doubleTapRecognizer];
     
+    _objectToTrack    = nil;
+    _entryExitManager = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super onExit];
 }
 
 #pragma mark Notification Handling
 - (void) registerForNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(planeLanded) name:@"planeLanded" object:nil];
+    
 }
 
 #pragma mark Map Loading and Initialization
@@ -207,78 +210,17 @@
         
     }
     
-    CCLOG(@"Map Entry Point: %@", [[mapToUse properties] objectForKey:MAP_ENTRY_POINT]);
-    CCLOG(@"Map Entry Type : %@", [[mapToUse properties] objectForKey:MAP_ENTRY_TYPE]);
     
-
-    [self insertAirplaneWithLanding:YES];
-     
+    // Process the map entry
+    
+    _entryExitManager = [[MapEntryExitManager alloc] initWithMapLayer:self];
+    [_entryExitManager processEntry];     
 }
 
 - (void) draw
 {
     
 }
-
-#pragma mark -
-#pragma mark Object Placement
-
-- (CGPoint)positionOnTerrain:(CGPoint)tileCoordinate
-{
-    HKTMXLayer *terrain = [_currentMap layerNamed:@"objects"];
-    return [terrain positionAt:tileCoordinate];
-}
-
-- (void) insertAirplaneWithLanding:(BOOL)landThePlane
-{
-    CGPoint entryPoint, origlandingPoint, landingPoint;
-    
-    origlandingPoint = [[[_currentMap properties] objectForKey:MAP_ENTRY_POINT] CGPointValue];
-    
-    if (!landThePlane) {
-        entryPoint = origlandingPoint;
-    } else {
-        entryPoint = ccp(rand() % (int)(_currentMap.mapSize.width - 1), _currentMap.mapSize.height - 1);
-    }
-    
-    landingPoint       = [self positionOnTerrain:origlandingPoint];
-    
-    Airplane   *plane  = [Airplane planeWithEntryPoint:entryPoint];
-    
-    _plane = plane;
-    
-    [_gameWorld addGameObject:plane toMapAtPoint:entryPoint usingTag:kTag_GameObject_plane andZ:1];
-    
-    [self centerPanZoomControllerOnCoordinate:entryPoint duration:0 rate:0];
-
-    if (landThePlane) {
-        [plane landOnMap:_currentMap atPoint:landingPoint];
-        
-        [_panZoomController disable];
-        self.touchEnabled = NO;
-        _trackObject = YES;
-    }
-    
-}
-
-- (void) planeLanded
-{
-    CCLOG(@"Plane Landed.");
-    
-    self.touchEnabled = YES;
-    [_panZoomController enableWithTouchPriority:0 swallowsTouches:NO];
-    
-    _trackObject = NO;
-    _plane = nil;
-}
-
-- (CGPoint) mapCoordFromTileCoord:(CGPoint)coord
-{
-    float yPos = _mapDimensions.y - (coord.y * _currentMap.tileSize.height) - (_currentMap.tileSize.height * 0.5);
-    float xPos = coord.x * _currentMap.tileSize.width + (_currentMap.tileSize.width * 0.5);
-    return ccp(xPos,yPos);
-}
-
 
 #pragma mark -
 #pragma mark Finding Tiles
@@ -297,6 +239,19 @@
     tileCoord.y = [_currentMap mapSize].height - tileCoord.y - 1;
 	
 	return tileCoord;
+}
+
+- (CGPoint)positionOnTerrain:(CGPoint)tileCoordinate
+{
+    HKTMXLayer *terrain = [_currentMap layerNamed:@"objects"];
+    return [terrain positionAt:tileCoordinate];
+}
+
+- (CGPoint) mapCoordFromTileCoord:(CGPoint)coord
+{
+    float yPos = _mapDimensions.y - (coord.y * _currentMap.tileSize.height) - (_currentMap.tileSize.height * 0.5);
+    float xPos = coord.x * _currentMap.tileSize.width + (_currentMap.tileSize.width * 0.5);
+    return ccp(xPos,yPos);
 }
 
 
@@ -436,7 +391,7 @@
 -(void) update:(ccTime)delta
 {
     if (_trackObject) {
-        [_panZoomController centerOnPoint:_plane.position damping:0.5f];
+        [_panZoomController centerOnPoint:_objectToTrack.position damping:0.5f];
     }
 }
 
